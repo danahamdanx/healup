@@ -12,8 +12,8 @@ class _MainPageState extends State<MainPage> {
 
   // Define page options
   final List<Widget> _pages = [
-    DoctorProfilePage(),
     AppointmentManagementPage(),
+    DoctorProfilePage(),
   ];
 
   // Function to switch pages
@@ -35,12 +35,12 @@ class _MainPageState extends State<MainPage> {
         unselectedItemColor: Colors.grey[500],  // Set unselected item icon color to blue
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profile",
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: "Appointments",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
           ),
         ],
       ),

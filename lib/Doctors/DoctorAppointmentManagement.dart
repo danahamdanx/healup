@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // For JSON parsing
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart'; // For parsing custom date format
+import 'PrescriptionFormPage.dart';
+import 'reportForm.dart';
 
 class AppointmentManagementPage extends StatefulWidget {
   const AppointmentManagementPage({Key? key}) : super(key: key);
@@ -365,16 +367,78 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                   IconButton(
                     icon: const Icon(Icons.medical_services, color: Colors.blue),
                     onPressed: () {
-                      // Add action for prescription
-                      print('Prescription icon pressed');
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            // Calculate patient's age from DOB (Date of Birth)
+                            String dob = appointment['patient_id']['DOB']; // "2002-09-07"
+                            DateTime birthDate = DateTime.parse(dob); // Convert the string to DateTime
+                            DateTime today = DateTime.now(); // Get today's date
+                            int age = today.year - birthDate.year; // Calculate the age in years
+
+                            // Adjust if the birthday hasn't occurred yet this year
+                            if (today.month < birthDate.month ||
+                                (today.month == birthDate.month && today.day < birthDate.day)) {
+                              age--;
+                            }
+
+                            // Navigate to the PrescriptionFormPage with all required parameters
+                            return PrescriptionFormPage(
+                              doctorId: appointment['doctor_id']['_id'],
+                              doctorName: appointment['doctor_id']['name'],
+                              doctorSpeclization:appointment['doctor_id']['specialization'],
+                              doctorPhone:appointment['doctor_id']['phone'],
+                              doctorAddress:appointment['doctor_id']['address'],
+                              patientId: appointment['patient_id']['_id'],
+                              patientName: appointment['patient_id']['username'],
+                              patientAge: age,
+                              appDate: appointment['app_date'],
+                              appointmentId: appointment['_id'],
+                            );
+                          },
+                        ),
+                      );
                     },
                   ),
                   // Report Icon for Past Appointments
                   IconButton(
-                    icon: const Icon(Icons.article, color: Colors.orange),
+                    icon: const Icon(Icons.article, color: Colors.yellow),
                     onPressed: () {
-                      // Add action for report
-                      print('Report icon pressed');
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            // Calculate patient's age from DOB (Date of Birth)
+                            String dob = appointment['patient_id']['DOB']; // "2002-09-07"
+                            DateTime birthDate = DateTime.parse(dob); // Convert the string to DateTime
+                            DateTime today = DateTime.now(); // Get today's date
+                            int age = today.year - birthDate.year; // Calculate the age in years
+
+                            // Adjust if the birthday hasn't occurred yet this year
+                            if (today.month < birthDate.month ||
+                                (today.month == birthDate.month && today.day < birthDate.day)) {
+                              age--;
+                            }
+
+                            // Navigate to the PrescriptionFormPage with all required parameters
+                            return ReportFormPage(
+                              doctorName: appointment['doctor_id']['name'],
+                              doctorSpeclization:appointment['doctor_id']['specialization'],
+                              doctorPhone:appointment['doctor_id']['phone'],
+                              doctorAddress:appointment['doctor_id']['address'],
+                              doctorSeal: appointment['doctor_id']['seal'],
+                              patientName: appointment['patient_id']['username'],
+                              medicalHistory:appointment['patient_id']['medical_history'],
+                              patientAge: age,
+                              appointmentDate: appointment['app_date'],
+                              appointmentId: appointment['_id'],
+                            );
+                          },
+                        ),
+                      );
                     },
                   ),
                 ],
