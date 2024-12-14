@@ -8,11 +8,13 @@ class ReportFormPage extends StatefulWidget {
   final String doctorName;
   final String doctorSpeclization;
   final String doctorPhone;
-  final String doctorAddress;
+  final String doctorHospital;
   final String doctorSeal;
   final String patientName;
   final int patientAge;
   final String medicalHistory;
+  final Function(String) onReportSubmitted;  // Add callback
+
 
   const ReportFormPage({
     Key? key,
@@ -21,11 +23,13 @@ class ReportFormPage extends StatefulWidget {
     required this.doctorName,
     required this.doctorSpeclization,
     required this.doctorPhone,
-    required this.doctorAddress,
+    required this.doctorHospital,
     required this.doctorSeal,
     required this.patientName,
     required this.patientAge,
     required this.medicalHistory,
+    required this.onReportSubmitted,  // Accept callback
+
   }) : super(key: key);
 
   @override
@@ -39,7 +43,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
   late TextEditingController _allergiesController;
 
   Future<void> submitReport(String appointmentId, String allergies, String result) async {
-    const String backendUrl = "http://localhost:5000/api/healup/ehr/add"; // Replace with your backend URL
+    const String backendUrl = "http://10.0.2.2:5000/api/healup/ehr/add"; // Replace with your backend URL
 
     print("im in submit report");
 
@@ -81,6 +85,31 @@ class _ReportFormPageState extends State<ReportFormPage> {
       print("Error in submitReport: $e");
     }
   }
+
+  void _submitForm() async {
+    final String allergies = _allergiesController.text.trim();
+    final String result = _resultController.text.trim();
+
+    if (allergies.isEmpty || result.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Allergies and result are required!")),
+      );
+      return;
+    }
+
+    await submitReport(widget.appointmentId, allergies, result);
+
+    // Inform the parent page that the report was submitted
+    widget.onReportSubmitted(widget.appointmentId);
+
+    // Show a success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Report submitted successfully!")),
+    );
+
+    Navigator.pop(context, true);  // Return to previous screen
+  }
+
 
   @override
   void initState() {
@@ -126,39 +155,6 @@ class _ReportFormPageState extends State<ReportFormPage> {
   }
 
 
-  void _submitForm() async {
-    final String allergies = _allergiesController.text.trim(); // Trim spaces
-    final String result = _resultController.text.trim(); // Trim spaces
-
-    // Manually check if the fields are empty
-    if (allergies.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Allergies are required!")),
-      );
-      return; // Exit the function early if allergies are empty
-    }
-
-    if (result.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Result is required!")),
-      );
-      return; // Exit the function early if result is empty
-    }
-
-    print("Form is valid! Submitting report...");
-    print("Allergies: $allergies");
-    print("Result: $result");
-
-    // Proceed with the report submission
-    await submitReport(widget.appointmentId, allergies, result);
-
-    // Show a success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Report submitted successfully!")),
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,7 +179,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                         Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16)),
                         Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16)),
                         Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16)),
-                        Text("Address: ${widget.doctorAddress}", style: TextStyle(fontSize: 16)),
+                        Text("Address: ${widget.doctorHospital}", style: TextStyle(fontSize: 16)),
                       ],
                     ),
                   ),
@@ -253,10 +249,17 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 decoration: InputDecoration(
                   labelText: "Doctor Seal",
                   border: OutlineInputBorder(),
+                  labelStyle: TextStyle(
+                    height: 10.0,  // Adjust the line height for the label
+                  ),
                 ),
-                maxLines: 2,
+                style: TextStyle(
+                  fontFamily: 'Rockybilly',  // Apply the font family to the text in the field
+                  height: 5,  // Adjust the line height for the text inside the field
+                ),
                 readOnly: true,
               ),
+
               const SizedBox(height: 24),
 
               // Submit Button

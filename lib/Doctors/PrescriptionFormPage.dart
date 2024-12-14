@@ -8,7 +8,7 @@ class PrescriptionFormPage extends StatelessWidget {
   final String doctorName;
   final String doctorSpeclization;
   final String doctorPhone;
-  final String doctorAddress;
+  final String doctorHospital;
   final String patientName;
   final int patientAge;
   final String appDate;
@@ -20,7 +20,7 @@ class PrescriptionFormPage extends StatelessWidget {
     required this.doctorName,
     required this.doctorSpeclization,
     required this.doctorPhone,
-    required this.doctorAddress,
+    required this.doctorHospital,
     required this.patientName,
     required this.patientAge,
     required this.appDate,
@@ -39,7 +39,7 @@ class PrescriptionFormPage extends StatelessWidget {
           doctorName: doctorName, // Pass doctorName here
           doctorSpeclization:doctorSpeclization,
           doctorPhone:doctorPhone,
-          doctorAddress:doctorAddress,
+          doctorHospital:doctorHospital,
           patientId: patientId,
           patientName: patientName,  // Pass patientName here
           patientAge: patientAge,  // Pass patientAge here

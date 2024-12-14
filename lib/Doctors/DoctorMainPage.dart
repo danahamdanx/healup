@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'DoctorAppointmentManagement.dart';
 import 'DoctorProfilePage.dart';
+import 'search_screen.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _MainPageState extends State<MainPage> {
   // Define page options
   final List<Widget> _pages = [
     AppointmentManagementPage(),
+    SearchScreen(),
     DoctorProfilePage(),
   ];
 
@@ -37,6 +39,10 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: "Appointments",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: "EHR Search",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

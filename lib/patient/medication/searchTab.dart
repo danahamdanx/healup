@@ -36,7 +36,7 @@ class _MedicinePageState extends State<SearchMedicinePage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://localhost:5000/api/healup/medication/otcmedication'),
+        Uri.parse('http://10.0.2.2:5000/api/healup/medication/otcmedication'),
       );
 
       if (response.statusCode == 200) {

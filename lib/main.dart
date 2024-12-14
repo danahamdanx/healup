@@ -1,3 +1,5 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:first/patient/login&signUP/signUp.dart';
 import 'package:flutter/material.dart';
 import 'patient/PatientPage.dart';
@@ -7,9 +9,12 @@ import 'homepage.dart';
 import 'patient/login&signUP/login.dart'; // Import the ThemeNotifier class
 import 'patient/login&signUP/ResetPasswordPage.dart';
 import 'Doctors/DoctorLoginPage.dart';
+import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Initialize Firebase
+  await NotificationService.initialize(); // Initialize notifications
 
 
   runApp(
@@ -23,8 +28,21 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
+  void retrieveAndSendToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    if (token != null) {
+      // Send this token to your backend for the user
+      // Example: sendTokenToBackend(token);
+    }
+  }
+
+
+
   @override
   void initState() {
+    retrieveAndSendToken();
 
   }
 

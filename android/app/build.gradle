@@ -1,6 +1,6 @@
 plugins {
-    id "com.android.application"
-    id "com.google.gms.google-services"
+    id("com.android.application")
+    id("com.google.gms.google-services")
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -14,12 +14,19 @@ android {
     ndkVersion = "25.1.8937393"
 
     compileOptions {
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = "1.8"  // Ensure Kotlin uses Java 1.8 as well
+    }
+
+    packagingOptions {
+        jniLibs {
+            pickFirst '**/*.so'
+        }
     }
 
     defaultConfig {
@@ -49,11 +56,15 @@ flutter {
 // Add Firebase BoM and dependencies
 dependencies {
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
 
-    // Add Firebase Analytics (add more Firebase products as needed)
+
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")
 
-    // TODO: Add the dependencies for any other desired Firebase products
-    // Example: implementation("com.google.firebase:firebase-auth") for Firebase Authentication
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+
+    // Add the dependencies for any other desired Firebase products
+    // https://firebase.google.com/docs/android/setup#available-libraries
 }

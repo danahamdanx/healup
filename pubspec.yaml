@@ -34,6 +34,7 @@ dependencies:
   font_awesome_flutter: ^10.2.0 # Check for the latest version
   http: ^1.0.5
   firebase_core: ^2.32.0
+  firebase_messaging: ^14.6.7 # Adjust this version to match compatibility
   permission_handler: ^10.2.0 # Make sure you're using the latest stable version
   image_picker: ^0.8.7+3
   in_app_review: ^2.0.3
@@ -41,6 +42,7 @@ dependencies:
   flutter_secure_storage: ^6.0.0   # Make sure the version is correct (latest stable)
   uuid: ^3.0.4  # Make sure the version is correct (latest stable)
   file_picker: ^5.2.0  # Ensure you're using the latest version
+  geocoding: ^2.0.5 # Check for the latest version
 
 
 
@@ -114,6 +116,7 @@ flutter:
      - images/Loratadine.jpg
      - images/calcium-vitamin D.jpg
      - images/Pyrantel.jpg
+     - images/675ca6aa23c6df1d87ec4576_profile_image.png
 
 
 
@@ -145,5 +148,9 @@ flutter:
      - family: Hello Valentina
        fonts:
            - asset: fonts/Hello Valentina.ttf
+
+     - family: Rockybilly
+       fonts:
+         - asset: fonts/Rockybilly.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

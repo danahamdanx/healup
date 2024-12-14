@@ -7,7 +7,7 @@ class PrescriptionForm extends StatefulWidget {
   final String doctorName;
   final String doctorSpeclization;
   final String doctorPhone;
-  final String doctorAddress;
+  final String doctorHospital;
   final String patientId;
   final String patientName;
   final int patientAge;
@@ -19,7 +19,7 @@ class PrescriptionForm extends StatefulWidget {
     required this.doctorName,
     required this.doctorSpeclization,
     required this.doctorPhone,
-    required this.doctorAddress,
+    required this.doctorHospital,
     required this.patientId,
     required this.patientName,
     required this.patientAge,
@@ -40,6 +40,8 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
   String? _dosage;
   String? _medicationId;
   bool _isLoading = false;
+  bool _isSubmitting = false;  // Track submission state
+  bool _isSubmitted = false; // Tracks if the prescription was successfully submitted
 
   // Define FocusNode for the input fields to change colors on focus
   final FocusNode _medicationFocusNode = FocusNode();
@@ -74,7 +76,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
     try {
       // Make the API request to get medication ID by name
       final response = await http.get(Uri.parse(
-          'http://localhost:5000/api/healup/medication/medication-id/$medicationName'));
+          'http://10.0.2.2:5000/api/healup/medication/medication-id/$medicationName'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -118,61 +120,34 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
 
 
 
-  Future<void> _submitForm() async {
-    if (_medications.isNotEmpty) {
-      // Validate that other fields (quantity, dosage) are not empty or invalid
-      bool isValid = _medications.every((medication) {
-        // Ensure that the medication ID, quantity, and dosage are all valid
-        var quantity = medication["quantity"];
-        var dosage = medication["dosage"];
 
-        // Check that medication id exists
-        bool idValid = medication["medication_id"] != null;
-
-        // Ensure quantity and dosage are not null, not empty and are numeric
-        bool quantityValid = quantity != null && quantity.toString().isNotEmpty && double.tryParse(quantity.toString()) != null;
-        bool dosageValid = dosage != null && dosage.toString().isNotEmpty && double.tryParse(dosage.toString()) != null;
-
-        return idValid && quantityValid && dosageValid;
-      });
-
-      if (!isValid) {
-        // Show error if other fields are invalid
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All medications must have valid quantity and dosage.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
-
-      // Prepare the prescription data from the list of medications
-      final prescriptionData = {
-        "appointment_id": widget.appointmentId,
-        "medications": _medications.map((medication) {
-          return {
-            "medication_id": medication["medication_id"],
-            "quantity": medication["quantity"],
-            "dosage": medication["dosage"],
-          };
-        }).toList(),
-      };
-
+  Future<void> _submitForm(String appointmentId, List<Map<String, dynamic>> medications) async {
+    if (medications.isNotEmpty) {
       setState(() {
-        _isLoading = true;
+        _isSubmitting = true;
       });
+
+      final apiUrl = "http://10.0.2.2:5000/api/healup/prescriptions/add";
 
       try {
+        // Prepare the request body
+        final requestBody = {
+          "appointment_id": appointmentId,
+          "medications": medications, // List of medications with IDs, quantities, and dosages
+        };
+
+        // Make the API call
         final response = await http.post(
-          Uri.parse('http://localhost:5000/api/healup/prescriptions/add'),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(prescriptionData),
+          Uri.parse(apiUrl),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(requestBody),
         );
 
         if (response.statusCode == 201) {
-          final responseData = json.decode(response.body);
-          print("Prescription created: ${responseData['message']}");
+          // Successfully created prescription
+          setState(() {
+            _isSubmitting = false;
+          });
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -180,33 +155,26 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
               backgroundColor: Colors.green,
             ),
           );
-        } else {
-          final responseData = json.decode(response.body);
-          print("Error: ${responseData['message']}");
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to submit prescription. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          Navigator.pop(context, true); // Return "true" to the previous page
+        } else {
+          // Handle errors returned by the backend
+          final errorMessage = jsonDecode(response.body)['message'] ?? 'An error occurred';
+          throw Exception(errorMessage);
         }
       } catch (error) {
-        print("Error while submitting prescription: $error");
+        setState(() {
+          _isSubmitting = false;
+        });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('An error occurred. Please try again.'),
+          SnackBar(
+            content: Text('Error: $error'),
             backgroundColor: Colors.red,
           ),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
       }
     } else {
-      // No medications added
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No medications added. Please add medications before submitting.'),
@@ -215,6 +183,8 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
       );
     }
   }
+
+
 
 
 
@@ -334,7 +304,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
   Future<void> _deleteMedicationFromBackend(String medicationId) async {
     final response = await http.delete(
       Uri.parse(
-          'http://localhost:5000/api/healup/prescriptions/remove-medication/$medicationId'),
+          'http://10.0.2.2:5000/api/healup/prescriptions/remove-medication/$medicationId'),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -431,7 +401,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                           Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16)),
                           Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16)),
                           Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16)),
-                          Text("Address: ${widget.doctorAddress}", style: TextStyle(fontSize: 16)),
+                          Text("Hospital: ${widget.doctorHospital}", style: TextStyle(fontSize: 16)),
                         ],
                       ),
                     ),
@@ -603,7 +573,9 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                 // Submit Prescription Button
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: _isSubmitting
+                        ? null
+                        : () {
                       // Show confirmation dialog
                       showDialog(
                         context: context,
@@ -614,9 +586,15 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                                 "Are you sure you want to submit the prescription?"),
                             actions: [
                               TextButton(
-                                onPressed: () {
+                                onPressed: _isSubmitting
+                                    ? null
+                                    : () {
+                                  // Ensure the prescription is submitted with the correct parameters
+                                  setState(() {
+                                    _isSubmitting = true; // Prevent further clicks
+                                  });
                                   Navigator.pop(context); // Close the dialog
-                                  _submitForm(); // Submit function
+                                  _submitForm(widget.appointmentId, _medications); // Pass the required arguments
                                 },
                                 child: const Text(
                                   'Yes',
@@ -634,20 +612,24 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                               ),
                             ],
                           );
+
                         },
                       );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff2f9a8f),
                     ),
-                    child: const Text(
+                    child: _isSubmitting
+                        ? CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                        : const Text(
                       "Submit Prescription",
                       style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
+
                 ),
               ],
             ),
