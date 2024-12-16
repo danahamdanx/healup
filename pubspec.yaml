@@ -43,6 +43,8 @@ dependencies:
   uuid: ^3.0.4  # Make sure the version is correct (latest stable)
   file_picker: ^5.2.0  # Ensure you're using the latest version
   geocoding: ^2.0.5 # Check for the latest version
+  pdf: ^3.10.6
+  path_provider: ^2.0.15
 
 
 

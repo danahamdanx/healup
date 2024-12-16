@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'patientPrescriptionForm.dart';
-import 'EHRdetailsPage.dart';
+import 'package:first/patient/Appointement/EHRdetailsPage.dart'; // Adjust the import path as needed
+import 'package:first/patient/Appointement/patientPrescriptionForm.dart'; // Adjust the import path as needed
 
 class ScheduleScreen extends StatefulWidget {
   final String patientId;
