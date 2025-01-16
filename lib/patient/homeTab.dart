@@ -225,6 +225,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 20),
                     // Discounted Medications Section
+                    // Discounted Medications Section
                     const Text(
                       'Discounted Medications',
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
@@ -233,7 +234,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                     medications.isEmpty
                         ? const Center(child: CircularProgressIndicator())
                         : SizedBox(
-                      height: 200,
+                      height: 180,  // Reduced the height to make the section smaller
                       child: AnimatedBuilder(
                         animation: _animationController,
                         builder: (context, child) {
@@ -249,70 +250,17 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                               final price = medication['price'] ?? 0.0;
                               final finalPrice = medication['final_price'] ?? price;
 
-                              // Replace 'medicine' with 'medication' and 'widget.patientId' with 'patientId'
                               return Padding(
                                 padding: const EdgeInsets.only(right: 16.0),
                                 child: Transform.translate(
                                   offset: _slideAnimation.value,
                                   child: GestureDetector(
-                                    // داخل الكود الموجود في ListView.builder
                                     onTap: () {
-                                      print("++++++++++++++++++++++=");
-
-                                      // Safely handle null values and ensure type consistency for numbers
-                                      final medicationName = medication['name'] ?? 'Unknown Medication';
-                                      final imageUrl = medication['image'] ?? 'images/default_image.jpg'; // Fallback to a default image
-                                      final discount = medication['discount'] ?? 0;
-                                      final price = (medication['price'] ?? 0) is int
-                                          ? (medication['price'] as int).toDouble()
-                                          : medication['price'] ?? 0.0;
-                                      final finalPrice = (medication['final_price'] ?? price) is int
-                                          ? (medication['final_price'] as int).toDouble()
-                                          : medication['final_price'] ?? price;
-                                      final description = medication['description'] ?? 'No description available';
-                                      final type = medication['type'] ?? 'Unknown';
-                                      print("Full Medication Data: $medication");
-
-                                      // Print the values to check
-                                      print("Medication Name: $medicationName");
-                                      print("Image URL: $imageUrl");
-                                      print("Discount: $discount%");
-                                      print("Price: $price");
-                                      print("Final Price: $finalPrice");
-                                      print("Description: $description");
-                                      print("Type: $type");
-
-                                      // Create Medicine object for navigation
-                                      Medicine selectedMedicine = Medicine(
-                                        id: medication['_id'] ?? '',  // Ensure _id is not null
-                                        medication_name: medicationName,
-                                        image: imageUrl,
-                                        description: description,  // Fallback for description
-                                        price: price,
-                                        final_price: finalPrice,
-                                        type: type,
-                                        quantity: 1,  // Default quantity
-                                      );
-
-                                      // Navigate to MedicineDetailPage
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MedicineDetailPage(
-                                            medicine: selectedMedicine,
-                                            cart: cart,  // Pass cart
-                                            patientId: patientId,  // Pass patientId
-                                          ),
-                                        ),
-                                      );
+                                      // Handle tap on the medication card
+                                      print("Medication tapped: $medicationName");
                                     },
-
-
-
-
-
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width * 0.9,
+                                      width: 150,  // Reduced the width of the card
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                         color: Colors.white,
@@ -320,60 +268,65 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                           BoxShadow(
                                             color: Colors.black.withOpacity(0.1),
                                             spreadRadius: 2,
-                                            blurRadius: 10,
+                                            blurRadius: 8,
                                           ),
                                         ],
                                       ),
-                                      child: Row(
+                                      child: Column(
                                         children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(16.0),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    medicationName,  // Use the name from the map
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 21,
-                                                      color: medicationName == 'Unknown Medication'
-                                                          ? Colors.red
-                                                          : Colors.teal,
-                                                    ),
-                                                    textAlign: TextAlign.left,
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(15),
+                                            child: Image.asset(
+                                              imageUrl,  // Medication image
+                                              width: 140,  // Reduced the width of the image
+                                              height: 80,  // Reduced the height of the image
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  medicationName,  // Name of the medication
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,  // Reduced font size
+                                                    color: medicationName == 'Unknown Medication'
+                                                        ? Colors.red
+                                                        : Colors.teal,
                                                   ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    "Discount: ${medication['discount']} %",
-                                                    style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  "Discount: $discount%",
+                                                  style: TextStyle(
+                                                    color: Colors.green,
+                                                    fontSize: 12,  // Reduced font size
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                  const SizedBox(height: 6),
-                                                  Text(
-                                                    "\$$price",  // Correctly use the price from the map
-                                                    style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                      decoration: TextDecoration.lineThrough,
-                                                      decorationColor: Colors.grey[600],
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  "\$$price",  // Original price with strike-through
+                                                  style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    decoration: TextDecoration.lineThrough,
+                                                    decorationColor: Colors.grey[600],
+                                                    fontSize: 12,  // Reduced font size
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                  Text(
-                                                    "\$$finalPrice",  // Correctly use the finalPrice from the map
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 22,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
+                                                ),
+                                                Text(
+                                                  "\$$finalPrice",  // Final price after discount
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                    fontSize: 14,  // Reduced font size
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                           ClipRRect(
