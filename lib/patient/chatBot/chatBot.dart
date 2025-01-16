@@ -192,7 +192,7 @@ class _ChatBotState extends State<ChatBot> {
             // Message 1: Informing about the condition
             _messages.add({
               "sender": "bot",
-              "text": "Based on your symptoms, and your medical history which is $medical_history,I recommend you consult a ${data['recommendedSpecialist']}Specialist"
+              "text": "Based on your symptoms, and your medical history which is $medical_history,I recommend you consult a ${data['recommendedSpecialist']} Specialist"
             });
 
             // Message 3: Prompting for additional input
@@ -230,27 +230,27 @@ class _ChatBotState extends State<ChatBot> {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Symptom Chatbot'),
-          backgroundColor: const Color(0xff6be4d7), // Set the AppBar background color
+          backgroundColor: const Color(0xff6be4d7),
         ),
         body: Stack(
           children: [
             // Background image with reduced opacity
             Opacity(
-              opacity: 0.5, // Adjust the opacity (0.0 to 1.0)
+              opacity: 0.5,
               child: Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("images/back.jpg"),
-                    fit: BoxFit.cover, // Ensures the image covers the entire screen
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-            // Chat content on top
+            // Chat content
             Center(
               child: Container(
-                constraints: const BoxConstraints(maxWidth: 800),
-                // Limits the width for readability on large screens
+                constraints: const BoxConstraints(maxWidth: 800), // Limit the width for web
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     // Chat messages
@@ -264,48 +264,75 @@ class _ChatBotState extends State<ChatBot> {
                           return Container(
                             margin: const EdgeInsets.symmetric(
                                 vertical: 5, horizontal: 10),
-                            alignment: isUserMessage
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: isUserMessage
-                                    ? const Color(0xff2f9a8f)
-                                    : Colors.grey[300],
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                message["text"] ?? "",
-                                style: TextStyle(
-                                  color: isUserMessage
-                                      ? Colors.white
-                                      : Colors.black,
+                            child: Row(
+                              mainAxisAlignment: isUserMessage
+                                  ? MainAxisAlignment.end // Align sent messages to the right
+                                  : MainAxisAlignment.start, // Align received messages to the left
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 600, // Limit message width
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isUserMessage
+                                        ? const Color(0xff2f9a8f) // Sent message color
+                                        : Colors.grey[300], // Received message color
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: const Radius.circular(20),
+                                      topRight: const Radius.circular(20),
+                                      bottomLeft: isUserMessage
+                                          ? const Radius.circular(20)
+                                          : const Radius.circular(0),
+                                      bottomRight: isUserMessage
+                                          ? const Radius.circular(0)
+                                          : const Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    message["text"] ?? "",
+                                    style: TextStyle(
+                                      color: isUserMessage
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
                           );
                         },
                       ),
                     ),
                     const Divider(height: 1),
-                    // Input field container
+                    // Rounded Input Field
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      color: Colors.white.withOpacity(0.9),
-                      // Slightly transparent background for the input field
+                      color: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       child: Row(
                         children: [
                           Expanded(
                             child: TextField(
                               controller: _messageController,
-                              decoration: const InputDecoration.collapsed(
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
                                 hintText: "Type your response here...",
+                                hintStyle: const TextStyle(color: Colors.grey),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                  borderSide: BorderSide.none,
+                                ),
                               ),
                             ),
                           ),
+                          const SizedBox(width: 8),
                           IconButton(
-                            icon: const Icon(Icons.send),
+                            icon: const Icon(Icons.send, color: Color(0xff2f9a8f)),
                             onPressed: () => sendMessage(_messageController.text),
                           ),
                         ],
