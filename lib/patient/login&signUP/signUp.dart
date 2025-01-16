@@ -77,6 +77,8 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
               context,
               MaterialPageRoute(builder: (context) => VerifyEmailPage(token: token)),
             );
+
+
           },
         ).show();
       } else {
