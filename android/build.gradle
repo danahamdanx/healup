@@ -1,10 +1,20 @@
-plugins {
-    // ...
+// Move the buildscript block before the plugins block
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Ensure this is updated to AGP 8.2.1 for full Java 21 support
+        classpath 'com.android.tools.build:gradle:8.2.1'
+    }
+}
 
+plugins {
     // Add the dependency for the Google services Gradle plugin
     id("com.google.gms.google-services") version "4.4.2" apply false
-
 }
+
 allprojects {
     repositories {
         google()
@@ -16,6 +26,19 @@ rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (namespace == null) {
+                    namespace project.group
+                }
+            }
+        }
+    }
+}
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
@@ -23,3 +46,42 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+
+//plugins {
+//    // ...
+//
+//    // Add the dependency for the Google services Gradle plugin
+//    id("com.google.gms.google-services") version "4.4.2" apply false
+//
+//}
+//allprojects {
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//}
+//
+//rootProject.buildDir = "../build"
+//subprojects {
+//    project.buildDir = "${rootProject.buildDir}/${project.name}"
+//}
+//
+//subprojects {
+//    afterEvaluate { project ->
+//        if (project.hasProperty('android')) {
+//            project.android {
+//                if (namespace == null) {
+//                    namespace project.group
+//                }
+//            }
+//        }
+//    }
+//}
+//subprojects {
+//    project.evaluationDependsOn(":app")
+//}
+//
+//tasks.register("clean", Delete) {
+//    delete rootProject.buildDir
+//}

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // For parsing the JSON response
 import 'patApp.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+
 class AllDoctorsPage extends StatefulWidget {
   final String? initialSpecialty; // Accept an optional initial specialty
   final String patientId; // Add this field to accept the patientId
@@ -16,9 +18,17 @@ class AllDoctorsPage extends StatefulWidget {
 
 class _AllDoctorsPageState extends State<AllDoctorsPage> {
   List<Map<String, dynamic>> allDoctors = [];
-  List<String> specialties = ['All', 'General', 'Cardiology', 'Pediatrics', 'Neurology', 'Orthopedics', 'Dermatology'];
+  List<String> specialties = ['All', 'General', 'Cardiology', 'Pediatrics', 'Neurology', 'Orthopedics', 'Dermatology','infectious disease'];
   String selectedSpecialty = 'All';
   String searchText = '';
+  // Define the callback here
+  void onRatingUpdated(double newRating, int newReviews) {
+    setState(() {
+      // Handle the updated rating and reviews here
+      print('New Rating: $newRating, New Reviews: $newReviews');
+      // You can update some state here if necessary
+    });
+  }
 
   @override
   void initState() {
@@ -32,7 +42,13 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
   }
 
   Future<void> fetchAllDoctors() async {
-    final response = await http.get(Uri.parse('http://localhost:5000/api/healup/doctors/doctors'));
+    // Use different base URL based on platform (web or mobile)
+    final String baseUrl = kIsWeb
+        ? 'http://localhost:5000/api/healup/doctors/doctors' // For web
+        : 'http://10.0.2.2:5000/api/healup/doctors/doctors'; // For mobile (emulator)
+
+    // Make the GET request
+    final response = await http.get(Uri.parse(baseUrl));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -60,6 +76,7 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
     }
   }
 
+
   List<Map<String, dynamic>> getFilteredDoctors() {
     List<Map<String, dynamic>> filteredDoctors = allDoctors;
 
@@ -79,7 +96,131 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
+    // Check if the platform is web
+    if (kIsWeb) {
+      // Web layout
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('All Doctors'),
+          backgroundColor: const Color(0xff6be4d7),
+        ),
+        body: Stack(
+          children: [
+            // Background Image
+            Positioned.fill(
+              child: Image.asset(
+                'images/pat.jpg', // Replace with your image path
+                fit: BoxFit.cover,
+              ),
+            ),
+            // Content for Web
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0), // Add more horizontal padding for web
+                child: Column(
+                  children: [
+                    // Search bar for Web
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            searchText = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Search for doctors",
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Specialty Slider for Web
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: specialties.map((specialty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 16),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    selectedSpecialty = specialty;
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20), // Adjust button size for Web
+                                  backgroundColor: selectedSpecialty == specialty
+                                      ? Color(0xff0C969C) // Highlight selected
+                                      : Color(0xff6be4d7),
+                                  foregroundColor: Colors.white, // Text color
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      specialty, // Add specialty text here
+                                      style: const TextStyle(
+                                        fontSize: 16, // Set the font size
+                                        fontWeight: FontWeight.bold, // Bold text
+                                      ),
+                                    ),
+                                    if (selectedSpecialty == specialty)
+                                      const Icon(Icons.check, color: Colors.white),
+                                    // Show checkmark if selected
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+
+                    // Doctor List for Web
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7, // Adjust the height of the doctor list
+                      child: getFilteredDoctors().isEmpty
+                          ? const Center(child: CircularProgressIndicator())
+                          : ListView.builder(
+                        itemCount: getFilteredDoctors().length,
+                        itemBuilder: (context, index) {
+                          final doctor = getFilteredDoctors()[index];
+                          return DoctorCard(
+                            doctor_id: doctor['_id'],
+                            name: doctor['name'],
+                            photo: doctor['photo'],
+                            address: doctor['address'],
+                            hospital: doctor['hospital'],
+                            specialization: doctor['specialization'],
+                            availability: doctor['availability'],
+                            price: doctor['price'],
+                            reviews: doctor['reviews'],
+                            rating: doctor['rating'],
+                            yearsOfExperience: doctor['yearExperience'],
+                            patientId: widget.patientId,
+                            onRatingUpdated: onRatingUpdated, // Pass the callback here
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }else{
     return Scaffold(
       appBar: AppBar(
         title: const Text('All Doctors'),
@@ -173,6 +314,7 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
                       doctor_id: doctor['_id'],
                       name: doctor['name'],
                       photo: doctor['photo'],
+                      address:doctor['address'],
                       hospital: doctor['hospital'],
                       specialization: doctor['specialization'],
                       availability: doctor['availability'],
@@ -180,7 +322,9 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
                       reviews: doctor['reviews'],
                       rating: doctor['rating'],
                       yearsOfExperience: doctor['yearExperience'],
-                      patientId: widget.patientId,  // Pass patientId to DoctorCard
+                      patientId: widget.patientId,
+                      onRatingUpdated: onRatingUpdated,  // Pass the callback here
+// Pass patientId to DoctorCard
                     );
                   },
                 ),
@@ -190,6 +334,7 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
         ],
       ),
     );
+    }
   }
 }
 
@@ -198,6 +343,7 @@ class DoctorCard extends StatelessWidget {
   final String doctor_id;
   final String name;
   final String photo;
+  final String address;
   final String hospital;
   final String specialization;
   final String availability;
@@ -205,13 +351,15 @@ class DoctorCard extends StatelessWidget {
   final double price;
   final int yearsOfExperience;
   final double rating;
-  final String patientId;  // Add patientId parameter
+  final String patientId;
+  final Function(double newRating, int newReviews) onRatingUpdated;  // Add this callback
 
   const DoctorCard({
     super.key,
     required this.doctor_id,
     required this.name,
     required this.photo,
+    required this.address,
     required this.hospital,
     required this.specialization,
     required this.availability,
@@ -220,6 +368,7 @@ class DoctorCard extends StatelessWidget {
     required this.yearsOfExperience,
     required this.rating,
     required this.patientId,  // Include patientId in the constructor
+    required this.onRatingUpdated,  // Include the callback in the constructor
   });
 
   @override
@@ -234,7 +383,10 @@ class DoctorCard extends StatelessWidget {
               name: name,
               specialization: specialization,
               photo: photo,
-              address: hospital,  // You might want to pass hospital as address
+              rating:rating,
+              reviews:reviews,
+              address:address,
+              hospital: hospital,  // You might want to pass hospital as address
               availability: availability,  // You can customize this part as per your data
               yearsOfExperience: yearsOfExperience,  // You can also pass the actual years of experience if available
               price: price,  // Price for consultation, update as per your data
@@ -243,6 +395,7 @@ class DoctorCard extends StatelessWidget {
               onAppointmentBooked: (appointmentDetails) {
                 // Handle appointment booking if needed
               },
+              onRatingUpdated: onRatingUpdated,  // Pass the callback here
             ),
           ),
         );
@@ -255,11 +408,11 @@ class DoctorCard extends StatelessWidget {
         elevation: 5,
         child: ListTile(
           leading: CircleAvatar(
-            backgroundImage: NetworkImage(photo.isEmpty ? 'default-image-url' : photo),  // Handle empty photo
+            backgroundImage: AssetImage(photo.isEmpty ? 'default-image-url' : photo),
             radius: 25,
           ),
           title: Text(
-            name.isNotEmpty ? name : 'No Name',  // Default if name is empty
+            name.isNotEmpty ? name : 'No Name',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           subtitle: Column(
@@ -272,7 +425,7 @@ class DoctorCard extends StatelessWidget {
                     style: const TextStyle(fontSize: 14, color: Colors.black),
                   ),
                   Text(
-                    hospital.isNotEmpty ? hospital : 'No Hospital',  // Default if hospital is empty
+                    hospital.isNotEmpty ? hospital : 'No Hospital',
                     style: const TextStyle(fontSize: 14, color: Colors.black),
                   ),
                 ],

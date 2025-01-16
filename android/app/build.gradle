@@ -1,8 +1,7 @@
 plugins {
-    id "com.android.application"
-    id "com.google.gms.google-services"
+    id("com.android.application")
+    id("com.google.gms.google-services")
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 
 }
@@ -10,34 +9,52 @@ plugins {
 
 android {
     namespace = "com.example.first"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
+    // compileSdk = flutter.compileSdkVersion
     ndkVersion = "25.1.8937393"
 
     compileOptions {
+
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = "1.8"  // Ensure Kotlin uses Java 1.8 as well
+    }
+
+    packagingOptions {
+        jniLibs {
+            pickFirst '**/*.so'
+        }
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.first"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.compileSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+        multiDexEnabled = true
+//        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+//        applicationId = "com.example.first"
+//        // You can update the following values to match your application needs.
+//        // For more information, see: https://flutter.dev/to/review-gradle-config.
+//        minSdk = 21
+//        targetSdk = flutter.targetSdkVersion
+//        versionCode = flutter.versionCode
+//        versionName = flutter.versionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
+//            // TODO: Add your own signing config for the release build.
+//            // Signing with the debug keys for now, so `flutter run --release` works.
+//            signingConfig = signingConfigs.debug
+//
         }
     }
 }
@@ -48,12 +65,114 @@ flutter {
 
 // Add Firebase BoM and dependencies
 dependencies {
-    // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
-
-    // Add Firebase Analytics (add more Firebase products as needed)
+    // Firebase dependencies with BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+    implementation 'com.google.firebase:firebase-storage:21.0.1'
+    implementation 'com.google.firebase:firebase-messaging:24.1.0'
+    implementation 'com.google.firebase:firebase-iid:21.1.0' // Adjust version if needed
     implementation("com.google.firebase:firebase-analytics")
 
-    // TODO: Add the dependencies for any other desired Firebase products
-    // Example: implementation("com.google.firebase:firebase-auth") for Firebase Authentication
+    // ML Kit dependencies
+    implementation "com.google.mlkit:text-recognition:16.0.1"
+
+    // Core library desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+//    // Import the Firebase BoM
+//    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+//
+//
+//    // TODO: Add the dependencies for Firebase products you want to use
+//    // When using the BoM, don't specify versions in Firebase dependencies
+//    implementation("com.google.firebase:firebase-analytics")
+//
+//    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+//
+//    // Add the dependencies for any other desired Firebase products
+//    // https://firebase.google.com/docs/android/setup#available-libraries
+
 }
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://maven.google.com' }
+    }
+}
+
+// Add the following block outside the `android` block
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-Xlint:unchecked", "-Xlint:deprecation"]
+}
+
+
+//plugins {
+//    id("com.android.application")
+//    id("com.google.gms.google-services")
+//    id "kotlin-android"
+//    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+//    id "dev.flutter.flutter-gradle-plugin"
+//
+//}
+//
+//
+//android {
+//    namespace = "com.example.first"
+//    compileSdk = flutter.compileSdkVersion
+//    ndkVersion = "25.1.8937393"
+//
+//    compileOptions {
+//
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
+//    }
+//
+//    kotlinOptions {
+//        jvmTarget = "1.8"  // Ensure Kotlin uses Java 1.8 as well
+//    }
+//
+//    packagingOptions {
+//        jniLibs {
+//            pickFirst '**/*.so'
+//        }
+//    }
+//
+//    defaultConfig {
+//        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+//        applicationId = "com.example.first"
+//        // You can update the following values to match your application needs.
+//        // For more information, see: https://flutter.dev/to/review-gradle-config.
+//        minSdk = 21
+//        targetSdk = flutter.targetSdkVersion
+//        versionCode = flutter.versionCode
+//        versionName = flutter.versionName
+//    }
+//
+//    buildTypes {
+//        release {
+//            // TODO: Add your own signing config for the release build.
+//            // Signing with the debug keys for now, so `flutter run --release` works.
+//            signingConfig = signingConfigs.debug
+//        }
+//    }
+//}
+//
+//flutter {
+//    source = "../.."
+//}
+//
+//// Add Firebase BoM and dependencies
+//dependencies {
+//    // Import the Firebase BoM
+//    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+//
+//
+//    // TODO: Add the dependencies for Firebase products you want to use
+//    // When using the BoM, don't specify versions in Firebase dependencies
+//    implementation("com.google.firebase:firebase-analytics")
+//
+//    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+//
+//    // Add the dependencies for any other desired Firebase products
+//    // https://firebase.google.com/docs/android/setup#available-libraries
+//}
+//

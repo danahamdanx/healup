@@ -1,53 +1,110 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'map_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'ScheduleScreen.dart';
+import 'package:first/services/notification_service.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+
 
 class PatApp extends StatefulWidget {
   final String name;
   final String specialization;
   final String photo;
+  late double rating; // Mutable
+  late int reviews;   // Mutable
   final String address;
+  final String hospital;
   final String availability;
   final int yearsOfExperience;
   final double price;
   final String patientId;
   final String doctorId;
   final Function(Map<String, String>) onAppointmentBooked;
+  final Function(double newRating, int newReviews) onRatingUpdated; // Add this
 
-  const PatApp({
+  PatApp({
     Key? key,
     required this.name,
     required this.specialization,
     required this.photo,
+    required this.rating,
+    required this.reviews,
     required this.address,
+    required this.hospital,
     required this.availability,
     required this.yearsOfExperience,
     required this.price,
     required this.patientId,
     required this.doctorId,
     required this.onAppointmentBooked,
+    required this.onRatingUpdated,  // Include it in the constructor
+
   }) : super(key: key);
+  @override
+  _PatAppState createState() => _PatAppState(); // Move createState here
+
+}
+
 
   @override
-  _PatAppState createState() => _PatAppState();
-}
 
 class _PatAppState extends State<PatApp> {
   String? selectedDate;
   String? selectedTime;
   DateTime currentMonth = DateTime.now();
   final Map<String, Set<String>> reservedTimesByDate = {};
+  // Callback to update the rating in the parent widget
+  void updateRating(double newRating, int newReviews) {
+    setState(() {
+      widget.rating = newRating;
+      widget.reviews = newReviews;
+    });
+  }
+  // Fetch the coordinates of the address
+  Future<LatLng> _getCoordinates(String address) async {
+    if (kIsWeb) {
+      // Use Google Maps Geocoding API for Web
+      final apiKey = "AIzaSyB-86UTgKSTmSjppYQccJKIbHLjXfc-Q0o";
+      final url = Uri.parse("https://maps.googleapis.com/maps/api/geocode/json?address=${Uri.encodeComponent(address)}&key=$apiKey");
+
+      try {
+        final response = await http.get(url);
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          if (data['results'].isNotEmpty) {
+            double lat = data['results'][0]['geometry']['location']['lat'];
+            double lng = data['results'][0]['geometry']['location']['lng'];
+            return LatLng(lat, lng);
+          }
+        }
+      } catch (e) {
+        print("Error fetching coordinates: $e");
+      }
+      return LatLng(0.0, 0.0); // Default fallback
+    } else {
+      // Use the geocoding plugin for mobile
+      try {
+        List<Location> locations = await locationFromAddress(address);
+        return LatLng(locations.first.latitude, locations.first.longitude);
+      } catch (e) {
+        print("Error getting coordinates: $e");
+        return LatLng(0.0, 0.0); // Default fallback
+      }
+    }
+  }
+
 
 
   // Fetch the reserved time slots for the selected doctor and date
   Future<void> fetchReservedTimes() async {
     if (selectedDate == null) return;
 
-    final apiUrl = "http://localhost:5000/api/healup/appointments/doctor/${widget.doctorId}/available-slots/$selectedDate";
+    final apiUrl = "http://10.0.2.2:5000/api/healup/appointments/doctor/${widget.doctorId}/available-slots/$selectedDate";
     try {
       final response = await http.get(Uri.parse(apiUrl));
 
@@ -111,16 +168,13 @@ class _PatAppState extends State<PatApp> {
       return;
     }
 
-    final apiUrl = "http://localhost:5000/api/healup/appointments/book"; // Replace localhost with IP
+    // Sanitize the time string
+    String sanitizedTime = time.replaceAll(RegExp(r'[\u00A0\u202F\u200B]'), ' ').trim();
 
-    // Print the patientId, doctorId, and payload to debug
-    print("Patient ID: ${widget.patientId}");
-    print("Doctor ID: ${widget.doctorId}");
-    print("Payload: ${jsonEncode({
-      "patient_id": widget.patientId,
-      "doctor_id": widget.doctorId,
-      "app_date": "$date $time",
-    })}");
+    final apiUrl = "http://10.0.2.2:5000/api/healup/appointments/book";
+
+    String? deviceToken = await FirebaseMessaging.instance.getToken();
+    print("Device Token: $deviceToken");
 
     try {
       final response = await http.post(
@@ -129,20 +183,22 @@ class _PatAppState extends State<PatApp> {
         body: jsonEncode({
           "patient_id": widget.patientId,
           "doctor_id": widget.doctorId,
-          "app_date": "$date $time",
+          "app_date": "$date $sanitizedTime",
+          "device_token": deviceToken,
         }),
       );
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 201) {
         setState(() {
           reservedTimesByDate[date] ??= {};
-          reservedTimesByDate[date]!.add(time);
+          reservedTimesByDate[date]!.add(sanitizedTime);
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Appointment successfully booked!")),
+        );
+        NotificationService.showNotification(
+          "Appointment Booked",
+          "Your appointment with Dr. ${widget.name} is confirmed!",
         );
       } else {
         final responseData = jsonDecode(response.body);
@@ -159,11 +215,393 @@ class _PatAppState extends State<PatApp> {
     }
   }
 
+  void _showRatingDialog(BuildContext context) {
+    double selectedRating = 0; // Initial rating value
 
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Rate Doctor'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'How was your experience with ${widget.name}?',
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return IconButton(
+                    icon: Icon(
+                      selectedRating > index ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        selectedRating = index + 1.0; // Set the rating value
+                      });
+                    },
+                  );
+                }),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context), // Close dialog
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (selectedRating > 0) {
+                  await _submitRating(selectedRating); // Submit the rating
+                  Navigator.pop(context); // Close dialog after submission
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Please select a rating before submitting."),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _submitRating(double rating) async {
+    final apiUrl = "http://10.0.2.2:5000/api/healup/doctors/${widget.doctorId}";
+
+    try {
+      print('Sending PUT request to: $apiUrl');
+
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "rating": rating,
+          "reviews": widget.reviews + 1, // Increment the reviews count
+        }),
+      );
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        // Check if 'rating' is null before updating
+        double newRating = responseData['rating'] != null ? double.parse(responseData['rating'].toString()) : 0.0;
+        int newReviews = responseData['reviews'] != null ? responseData['reviews'] : 0;
+
+        // Call the callback to update the parent state with new rating and reviews
+        widget.onRatingUpdated(newRating, newReviews);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Thank you for your feedback!")),
+        );
+      } else {
+        print('Failed to submit rating. Status Code: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to submit rating. Please try again.")),
+        );
+      }
+    } catch (error) {
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("An error occurred. Please try again.")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     print('Patient ID: ${widget.patientId}'); // Debugging statement
+
+    if (kIsWeb) {
+      print(widget.hospital); // To debug and check the value
+      if (widget.hospital == null || widget.hospital.isEmpty) {
+        // Handle the case when the hospital name is missing or invalid
+        print('Hospital data is missing');
+      }
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.name),
+          backgroundColor: const Color(0xff6be4d7),
+        ),
+        body: Container(
+          color: const Color(0xfff0f0f0), // Set the color of the background here
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0), // Padding around the content
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Doctor Info Section
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 80,
+                        backgroundImage: AssetImage(widget.photo),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.name,
+                              style: const TextStyle(
+                                  fontSize: 28, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              widget.specialization,
+                              style: const TextStyle(
+                                  fontSize: 22, color: Colors.grey),
+                            ),
+                            Text('${widget.yearsOfExperience} years Experience'),
+                            const SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: () {
+                                _showRatingDialog(context);
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.star, color: Colors.amber, size: 24),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${widget.rating.toStringAsFixed(1)} (${widget.reviews} reviews)',
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text('\₪${widget.price}/hr',
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.location_on,
+                                  color: Colors.red,
+                                  size: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      LatLng coordinates = await _getCoordinates(widget.hospital);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MapScreen(
+                                            address: widget.hospital,
+                                            location: coordinates,
+                                          ),
+                                        ),
+                                      );
+                                    },
+
+                                    child: Text(
+
+                                      widget.hospital,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+
+                                    ),
+
+                                  ),
+                                ),
+                              ],
+
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  // Month Navigation
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: currentMonth.isAfter(DateTime.now())
+                            ? () {
+                          setState(() {
+                            currentMonth = DateTime(
+                              currentMonth.year,
+                              currentMonth.month - 1,
+                            );
+                          });
+                        }
+                            : null,
+                      ),
+                      Text(
+                        DateFormat('MMMM yyyy').format(currentMonth),
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.arrow_forward),
+                        onPressed: () {
+                          setState(() {
+                            currentMonth = DateTime(
+                              currentMonth.year,
+                              currentMonth.month + 1,
+                            );
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Days of the Month
+                  const SizedBox(height: 30), // Increased space before the days section
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(_daysInMonth(currentMonth), (index) {
+                        final day = index + 1;
+                        final date = DateTime(currentMonth.year, currentMonth.month, day);
+                        final isPast = date.isBefore(DateTime.now());
+                        final isSelected = selectedDate == DateFormat('yyyy-MM-dd').format(date);
+
+                        return GestureDetector(
+                          onTap: !isPast
+                              ? () {
+                            setState(() {
+                              selectedDate = DateFormat('yyyy-MM-dd').format(date);
+                            });
+                          }
+                              : null,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: isSelected ? const Color(0xff6be4d7) : Colors.white,
+                              borderRadius: BorderRadius.circular(25),
+                              border: Border.all(
+                                color: isPast ? Colors.grey : Colors.black,
+                                width: isSelected ? 2 : 1,
+                              ),
+                            ),
+                            child: Text(
+                              '$day',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isPast ? Colors.grey : Colors.black,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Time Slots Section
+                  Text('Time Slots', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 10),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: generateTimeIntervals(widget.availability)
+                          .map((time) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: _buildTimeButton(time),
+                      ))
+                          .toList(),
+                    ),
+                  ),
+                  const SizedBox(height: 80),
+
+            // Book Now Button
+            Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
+                child: ElevatedButton(
+                  onPressed: selectedDate != null && selectedTime != null
+                      ? () => bookAppointmentToBackend(selectedDate, selectedTime)
+                      : () {
+                    // Display Snackbar if date or time is not selected
+                    final snackBar = SnackBar(
+                      content: Text(
+                        selectedDate == null
+                            ? 'Please select a date.'
+                            : 'Please select a time.',
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      backgroundColor: Colors.redAccent,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff6be4d7),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  ),
+                  child: const Text(
+                    'Book Now',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+                  // Add this container under the Book Now button with the same color
+                  Container(
+                    color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        // Your additional content here, for example:
+                        Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
+                        ),),                      ],
+                    ),
+                  ),
+                  Container(
+                    color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        // Your additional content here, for example:
+                        Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
+                        ),),                      ],
+                    ),
+                  ),
+                  Container(
+                    color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        // Your additional content here, for example:
+                        Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
+                        ),),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+
+  else{
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.name),
@@ -205,12 +643,75 @@ class _PatAppState extends State<PatApp> {
                               style: const TextStyle(fontSize: 18, color: Colors.grey),
                             ),
                             Text('${widget.yearsOfExperience} years Experience'),
-                            Text('\$${widget.price}/hr', style: const TextStyle(fontWeight: FontWeight.bold)),
+                            const SizedBox(height: 8), // Add some space
+                            // Wrap the Rating Row with GestureDetector
+                            GestureDetector(
+                              onTap: () {
+                                _showRatingDialog(context); // Call the dialog when tapped
+                              },
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.star, color: Colors.amber, size: 20), // Star Icon
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '${widget.rating.toStringAsFixed(1)} (${widget.reviews} reviews)',
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+
+                            Text('\₪${widget.price}/hr', style: const TextStyle(fontWeight: FontWeight.bold)),
+
+                            // Hospital Address with Location Icon
+                            const SizedBox(height: 8), // Adding some space between price and address
+                            // Address Section with Location Icon
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: Colors.red, // Red color for location icon
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8), // Space between icon and address text
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      // Get the coordinates of the address
+                                      LatLng coordinates = await _getCoordinates(widget.hospital);
+                                      // Navigate to MapScreen with the address and location
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MapScreen(
+                                            address: widget.hospital,
+                                            location: coordinates,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      widget.hospital,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black, // Address text color
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      overflow: TextOverflow.ellipsis, // To avoid text overflow
+                                      maxLines: 1, // To display address on a single line
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
                           ],
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 20),
 
                   // Month Navigation
@@ -349,6 +850,7 @@ class _PatAppState extends State<PatApp> {
         ],
       ),
     );
+    }
   }
 
   int _daysInMonth(DateTime date) {
@@ -357,11 +859,13 @@ class _PatAppState extends State<PatApp> {
 
   Widget _buildTimeButton(String time) {
     final now = DateTime.now();
-    final isExpiredToday = selectedDate == DateFormat('yyyy-MM-dd').format(now) &&
+    final isExpiredToday = selectedDate ==
+        DateFormat('yyyy-MM-dd').format(now) &&
         _parseTime(time.split(' - ')[0]).isBefore(now);
 
     final isSelected = selectedTime == time; // Check if this time is selected
-    final isReserved = reservedTimesByDate[selectedDate]?.contains(time) ?? false;
+    final isReserved = reservedTimesByDate[selectedDate]?.contains(time) ??
+        false;
 
     return GestureDetector(
       onTap: !isExpiredToday && !isReserved
@@ -372,7 +876,8 @@ class _PatAppState extends State<PatApp> {
       }
           : null,
       child: Container(
-        alignment: Alignment.center, // Center time text
+        alignment: Alignment.center,
+        // Center time text
         margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           color: isExpiredToday
@@ -384,7 +889,9 @@ class _PatAppState extends State<PatApp> {
               : Colors.white)), // Default white for unselected time
           borderRadius: BorderRadius.circular(25), // Oval shape
           border: Border.all(
-            color: isReserved ? Color(0xff6be4d7) : (isSelected ? Colors.black : Colors.grey), // Black edges for selected time
+            color: isReserved ? Color(0xff6be4d7) : (isSelected
+                ? Colors.black
+                : Colors.grey), // Black edges for selected time
             width: isSelected ? 2 : 1, // Thicker edges for selected time
           ),
         ),
@@ -393,7 +900,8 @@ class _PatAppState extends State<PatApp> {
           time,
           style: TextStyle(
             fontSize: 18,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, // Bold for selected time
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            // Bold for selected time
             color: isExpiredToday
                 ? Colors.black45 // Greyed out for expired times
                 : isReserved
@@ -404,10 +912,4 @@ class _PatAppState extends State<PatApp> {
       ),
     );
   }
-
-
-
-
-
-
 }
