@@ -246,99 +246,117 @@ class _ChatBotState extends State<ChatBot> {
                 ),
               ),
             ),
-            // Chat content
+            // Chat content with a frame
             Center(
               child: Container(
-                constraints: const BoxConstraints(maxWidth: 800), // Limit the width for web
+                constraints: const BoxConstraints(maxWidth: 800), // Limit width for web
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    // Chat messages
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _messages.length,
-                        itemBuilder: (context, index) {
-                          final message = _messages[index];
-                          final isUserMessage = message["sender"] == "user";
-
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: isUserMessage
-                                  ? MainAxisAlignment.end // Align sent messages to the right
-                                  : MainAxisAlignment.start, // Align received messages to the left
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 600, // Limit message width
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isUserMessage
-                                        ? const Color(0xff2f9a8f) // Sent message color
-                                        : Colors.grey[300], // Received message color
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: const Radius.circular(20),
-                                      topRight: const Radius.circular(20),
-                                      bottomLeft: isUserMessage
-                                          ? const Radius.circular(20)
-                                          : const Radius.circular(0),
-                                      bottomRight: isUserMessage
-                                          ? const Radius.circular(0)
-                                          : const Radius.circular(20),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    message["text"] ?? "",
-                                    style: TextStyle(
-                                      color: isUserMessage
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9), // Background color for chat
+                    borderRadius: BorderRadius.circular(15), // Rounded corners for the frame
+                    border: Border.all(
+                      color: const Color(0xff2f9a8f), // Frame border color
+                      width: 2, // Border width
                     ),
-                    const Divider(height: 1),
-                    // Rounded Input Field
-                    Container(
-                      color: Colors.transparent,
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _messageController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                hintText: "Type your response here...",
-                                hintStyle: const TextStyle(color: Colors.grey),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
-                                  vertical: 12,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                  borderSide: BorderSide.none,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1), // Subtle shadow
+                        blurRadius: 8,
+                        offset: const Offset(0, 4), // Shadow position
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(16.0), // Padding inside the frame
+                  child: Column(
+                    children: [
+                      // Chat messages
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: _messages.length,
+                          itemBuilder: (context, index) {
+                            final message = _messages[index];
+                            final isUserMessage = message["sender"] == "user";
+
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment: isUserMessage
+                                    ? MainAxisAlignment.end // Align sent messages to the right
+                                    : MainAxisAlignment.start, // Align received messages to the left
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 600, // Limit message width
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isUserMessage
+                                          ? const Color(0xff2f9a8f) // Sent message color
+                                          : Colors.grey[300], // Received message color
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: const Radius.circular(20),
+                                        topRight: const Radius.circular(20),
+                                        bottomLeft: isUserMessage
+                                            ? const Radius.circular(20)
+                                            : const Radius.circular(0),
+                                        bottomRight: isUserMessage
+                                            ? const Radius.circular(0)
+                                            : const Radius.circular(20),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      message["text"] ?? "",
+                                      style: TextStyle(
+                                        color: isUserMessage
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const Divider(height: 1),
+                      // Rounded Input Field
+                      Container(
+                        color: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _messageController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  hintText: "Type your response here...",
+                                  hintStyle: const TextStyle(color: Colors.grey),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 12,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                    borderSide: BorderSide.none,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            icon: const Icon(Icons.send, color: Color(0xff2f9a8f)),
-                            onPressed: () => sendMessage(_messageController.text),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            IconButton(
+                              icon: const Icon(Icons.send, color: Color(0xff2f9a8f)),
+                              onPressed: () => sendMessage(_messageController.text),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
