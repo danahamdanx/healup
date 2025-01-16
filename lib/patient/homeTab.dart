@@ -12,6 +12,7 @@ import 'medication/MedicineDetailPage.dart';
 import 'medication/cart.dart';
 import 'medication/medicine.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
+import 'dart:async';  // Add this import to use Timer
 
 class HomeTab extends StatefulWidget {
   final Function(Map<String, dynamic>) onAppointmentBooked;
@@ -35,13 +36,17 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   List<Map<String, dynamic>> doctors = [];
   List<Map<String, dynamic>> medications = []; // To store discounted medications
   static List<Map<String, dynamic>> cart = [];
-
-  late AnimationController _animationController; // Controller for animation
-  late Animation<Offset> _slideAnimation; // Animation for sliding
-
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation;
   String userName = "";
   String patientId = ""; // Add a variable to store the patient ID
   final FlutterSecureStorage _storage = FlutterSecureStorage(); // Declare the storage instance
+
+
+  // Timer for automatic sliding
+  late Timer _timer;
+  int _currentIndex = 0;
+  double _itemWidth = 400.0; // You can dynamically adjust this based on your card size
 
   void onRatingUpdated(double newRating, int newReviews) {
     setState(() {
@@ -53,31 +58,43 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
+
+    // Initialize the animation controller
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),  // Slower transition
+      vsync: this,
+    );
+
+    // Create the sliding animation
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(1.0, 0.0),  // Start off-screen (to the right)
+      end: Offset(-_itemWidth / 5, 0),  // Adjust how far the items move
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start the animation loop
+    _startSlidingTimer();
+
     fetchDoctors();
     fetchDiscountedMedications();  // Fetch discounted medications
-    _setupAnimation();  // Setup the animation
 
     _getUserName();
     _getPatientId(); // Fetch the patient ID when the screen initializes
   }
 
-  // Setup the sliding animation
-  void _setupAnimation() {
-    _animationController = AnimationController(
-      vsync: this,  // 'this' refers to the TickerProvider provided by the mixin
-      duration: Duration(seconds: 3),  // Adjusted duration for each slide
-    )..repeat(reverse: true); // Repeat the animation with reverse motion
-
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0),  // Starting position (0, 0)
-      end: Offset(-1.0, 0), // Ending position (moving left)
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.linear,
-      ),
-    );
+  void _startSlidingTimer() {
+    // Set a timer to automatically slide the cards every 3 seconds
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      setState(() {
+        _currentIndex = (_currentIndex + 1) % medications.length;
+      });
+      _animationController.forward(from: 0.0);  // Restart the animation
+    });
   }
+
 
   Future<void> _getUserName() async {
     final storage = FlutterSecureStorage();
@@ -156,7 +173,8 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();  // Dispose the animation controller
+    _animationController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -169,7 +187,6 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
     // Check if it's Web
     if (kIsWeb) {
       return Scaffold(
-
         body: Row(
           children: [
             // Main Content (no sidebar)
@@ -205,7 +222,6 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                         // Right side: Notification and Help Icons
                         Row(
                           children: [
-
                             IconButton(
                               icon: const Icon(Icons.live_help_sharp, size: 33),
                               color: Colors.black,
@@ -225,16 +241,15 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 20),
                     // Discounted Medications Section
-                    // Discounted Medications Section
                     const Text(
                       'Discounted Medications',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
                     medications.isEmpty
                         ? const Center(child: CircularProgressIndicator())
                         : SizedBox(
-                      height: 180,  // Reduced the height to make the section smaller
+                      height: 200,
                       child: AnimatedBuilder(
                         animation: _animationController,
                         builder: (context, child) {
@@ -256,84 +271,115 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                   offset: _slideAnimation.value,
                                   child: GestureDetector(
                                     onTap: () {
-                                      // Handle tap on the medication card
-                                      print("Medication tapped: $medicationName");
+                                      print("++++++++++++++++++++++=");
+
+                                      final medicationName = medication['name'] ?? 'Unknown Medication';
+                                      final imageUrl = medication['image'] ?? 'images/default_image.jpg'; // Fallback to a default image
+                                      final discount = medication['discount'] ?? 0;
+                                      final price = (medication['price'] ?? 0) is int
+                                          ? (medication['price'] as int).toDouble()
+                                          : medication['price'] ?? 0.0;
+                                      final finalPrice = (medication['final_price'] ?? price) is int
+                                          ? (medication['final_price'] as int).toDouble()
+                                          : medication['final_price'] ?? price;
+                                      final description = medication['description'] ?? 'No description available';
+                                      final type = medication['type'] ?? 'Unknown';
+                                      print("Full Medication Data: $medication");
+
+                                      Medicine selectedMedicine = Medicine(
+                                        id: medication['_id'] ?? '',  // Ensure _id is not null
+                                        medication_name: medicationName,
+                                        image: imageUrl,
+                                        description: description,  // Fallback for description
+                                        price: price,
+                                        final_price: finalPrice,
+                                        type: type,
+                                        quantity: 1,  // Default quantity
+                                      );
+
+                                      // Navigate to MedicineDetailPage
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => MedicineDetailPage(
+                                            medicine: selectedMedicine,
+                                            cart: cart,  // Pass cart
+                                            patientId: patientId,  // Pass patientId
+                                          ),
+                                        ),
+                                      );
                                     },
                                     child: Container(
-                                      width: 150,  // Reduced the width of the card
+                                      // Adjusted width to make the card smaller
+                                      width: 400, // Set width to 250 instead of using the full screen width
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        color: Colors.white,
+                                        color: Color(0xffE0F3F5),  // Custom background color (light greyish-blue)
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black.withOpacity(0.1),
                                             spreadRadius: 2,
-                                            blurRadius: 8,
+                                            blurRadius: 10,
                                           ),
                                         ],
                                       ),
-                                      child: Column(
+                                      child: Row(
                                         children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(15),
-                                            child: Image.asset(
-                                              imageUrl,  // Medication image
-                                              width: 140,  // Reduced the width of the image
-                                              height: 80,  // Reduced the height of the image
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  medicationName,  // Name of the medication
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 14,  // Reduced font size
-                                                    color: medicationName == 'Unknown Medication'
-                                                        ? Colors.red
-                                                        : Colors.teal,
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(16.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    medicationName,  // Use the name from the map
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 21,
+                                                      color: medicationName == 'Unknown Medication'
+                                                          ? Colors.red
+                                                          : Colors.teal,
+                                                    ),
+                                                    textAlign: TextAlign.left,
                                                   ),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  "Discount: $discount%",
-                                                  style: TextStyle(
-                                                    color: Colors.green,
-                                                    fontSize: 12,  // Reduced font size
-                                                    fontWeight: FontWeight.bold,
+                                                  const SizedBox(height: 8),
+                                                  Text(
+                                                    "Discount: ${medication['discount']} %",
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  "\$$price",  // Original price with strike-through
-                                                  style: TextStyle(
-                                                    color: Colors.grey[600],
-                                                    decoration: TextDecoration.lineThrough,
-                                                    decorationColor: Colors.grey[600],
-                                                    fontSize: 12,  // Reduced font size
-                                                    fontWeight: FontWeight.bold,
+                                                  const SizedBox(height: 6),
+                                                  Text(
+                                                    "\$$price",  // Correctly use the price from the map
+                                                    style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                      decoration: TextDecoration.lineThrough,
+                                                      decorationColor: Colors.grey[600],
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
-                                                ),
-                                                Text(
-                                                  "\$$finalPrice",  // Final price after discount
-                                                  style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontSize: 14,  // Reduced font size
-                                                    fontWeight: FontWeight.bold,
+                                                  Text(
+                                                    "\$$finalPrice",  // Correctly use the finalPrice from the map
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 22,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(15),
                                             child: Image.asset(
                                               imageUrl,  // Correctly use the image URL from the map
-                                              width: 210,
+                                              width: 120,  // Adjust image width to fit the smaller card
                                               height: 120,
                                               fit: BoxFit.cover,
                                             ),
@@ -344,8 +390,6 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                   ),
                                 ),
                               );
-
-
                             },
                           );
                         },
@@ -564,7 +608,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
 // Discounted Medications Section
                   const Text(
                     'Discounted Medications',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
                   medications.isEmpty
@@ -579,6 +623,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           itemCount: medications.length,
                           itemBuilder: (context, index) {
                             final medication = medications[index];
+
 
                             final medicationName = medication['name'] ?? 'Unknown Medication';
                             final imageUrl = medication['image'] ?? 'images/default_image.jpg'; // Fallback to a default image
@@ -645,22 +690,20 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                   },
 
 
-
-
-
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width * 0.9,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          spreadRadius: 2,
-                                          blurRadius: 10,
-                                        ),
-                                      ],
-                                    ),
+                            child: Container(
+                            // Adjusted width to make the card smaller
+                              width: MediaQuery.of(context).size.width * 0.9,
+                            decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Color(0xffE0F3F5),  // Custom background color (light greyish-blue)
+                            boxShadow: [
+                            BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            spreadRadius: 2,
+                            blurRadius: 10,
+                            ),
+                            ],
+                            ),
                                     child: Row(
                                       children: [
                                         Expanded(
