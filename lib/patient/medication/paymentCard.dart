@@ -148,6 +148,7 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';  // Import the intl package for DateFormat
 import "BillPage.dart";
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class PayPalPayment extends StatefulWidget {
   final double totalPrice;
@@ -178,10 +179,18 @@ class _PayPalPaymentState extends State<PayPalPayment> {
 
   bool isMedicationsLoaded = false; // New flag to check if medications are loaded
 
+
+  String getBaseUrl() {
+    if (kIsWeb) {
+      return "http://localhost:5000"; // For web
+    } else {
+      return "http://10.0.2.2:5000"; // For mobile (Android emulator)
+    }
+  }
   Future<String> createOrder() async {
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/api/healup/paypal/create-order'),
+        Uri.parse('${getBaseUrl()}/api/healup/paypal/create-order'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'amount': widget.totalPrice.toStringAsFixed(2),
@@ -215,7 +224,7 @@ class _PayPalPaymentState extends State<PayPalPayment> {
   Future<void> capturePayment(String orderId) async {
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/api/healup/paypal/capture-order'),
+        Uri.parse('${getBaseUrl()}/api/healup/paypal/capture-order'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'orderId': orderId}),
       );
@@ -273,7 +282,7 @@ class _PayPalPaymentState extends State<PayPalPayment> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/api/healup/orders/add'),
+        Uri.parse('${getBaseUrl()}/api/healup/orders/add'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'patient_id': widget.patientId,
@@ -316,7 +325,7 @@ class _PayPalPaymentState extends State<PayPalPayment> {
   Future<void> createPayment(String orderId, double totalPrice, String paymentMethod) async {
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/api/healup/payment/add'),
+        Uri.parse('${getBaseUrl()}/api/healup/payment/add'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'orderId': orderId,
@@ -353,7 +362,7 @@ class _PayPalPaymentState extends State<PayPalPayment> {
   Future<void> createBilling(String orderId) async {
     try {
       final billingResponse = await http.post(
-        Uri.parse('http://10.0.2.2:5000/api/healup/billing/add'),
+        Uri.parse('${getBaseUrl()}/api/healup/billing/add'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'orderId': orderId,
@@ -403,7 +412,7 @@ class _PayPalPaymentState extends State<PayPalPayment> {
   Future<void> updatePayment(String paymentId) async {
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:5000/api/healup/payment/update/$paymentId'),
+        Uri.parse('${getBaseUrl()}/api/healup/payment/update/$paymentId'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'status': 'Completed',
@@ -424,7 +433,7 @@ class _PayPalPaymentState extends State<PayPalPayment> {
   Future<void> updateBilling(String billingId) async {
     try {
       final response = await http.put(
-        Uri.parse('http://10.0.2.2:5000/api/healup/billing/update/$billingId'),
+        Uri.parse('${getBaseUrl()}/api/healup/billing/update/$billingId'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'paymentStatus': 'Completed',
