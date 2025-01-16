@@ -46,6 +46,14 @@ class _PatProfileState extends State<PatProfile> {
     _fetchPatientData(widget.patientId); // Fetch patient data on widget load
   }
 
+  String getBaseUrl() {
+    if (kIsWeb) {
+      return "http://localhost:5000"; // For web
+    } else {
+      return "http://10.0.2.2:5000"; // For mobile (Android emulator)
+    }
+  }
+
   @override
   void dispose() {
     _usernameController.dispose();
@@ -90,7 +98,7 @@ class _PatProfileState extends State<PatProfile> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://10.0.2.2:5000/api/healup/patients/getPatientById/$patientId'),
+            '${getBaseUrl()}/api/healup/patients/getPatientById/$patientId'),
       );
 
       if (response.statusCode == 200) {
@@ -162,7 +170,7 @@ class _PatProfileState extends State<PatProfile> {
 
     try {
       final uri = Uri.parse(
-          'http://10.0.2.2:5000/api/healup/patients/updatePatient/${widget
+          '${getBaseUrl()}/api/healup/patients/updatePatient/${widget
               .patientId}');
       final headers = {
         'Content-Type': 'application/json',
@@ -281,25 +289,6 @@ class _PatProfileState extends State<PatProfile> {
                     },
                   ),
                 ),
-
-                ListTile(
-                  leading: const Icon(Icons.notifications),
-                  title: const Text("Notifications"),
-                  trailing: Switch(
-                    value: _notificationsEnabled,
-                    onChanged: (value) {
-                      if (_notificationsEnabled && !value) {
-                        _showTurnOffNotificationsDialog(
-                            context); // Show confirmation to turn off
-                      } else {
-                        setState(() {
-                          _notificationsEnabled =
-                              value; // Directly toggle notifications
-                        });
-                      }
-                    },
-                  ),
-                ),
                 ListTile(
                   leading: const Icon(Icons.info),
                   title: const Text("About"),
@@ -354,11 +343,10 @@ class _PatProfileState extends State<PatProfile> {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
-    return Scaffold(
+    if(kIsWeb){ return Scaffold(
       appBar: AppBar(
         title: const Text("Patient Profile"),
         backgroundColor: const Color(0xff6be4d7),
-
         actions: [
           Stack(
             children: [
@@ -389,111 +377,243 @@ class _PatProfileState extends State<PatProfile> {
           ? const Center(child: CircularProgressIndicator())
           : _patientData == null
           ? const Center(child: Text("Failed to load patient data"))
-          : Stack(
-        children: [
-          // Background Image
-          Image.asset(
-            "images/pat.jpg",
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          // Profile Content
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: GestureDetector(
-                      onTap: _pickImage,
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.grey.shade300,
-                        backgroundImage: _profileImage != null
-                            ? (kIsWeb
-                            ? _profileImageProvider!
-                            : FileImage(_profileImage!))
-                            : AssetImage(_patientData!['pic']) as ImageProvider,
-                        child: _profileImage == null
-                            ? Icon(
-                          Icons.camera_alt,
-                          size: 30,
-                          color: Colors.white.withOpacity(0.8),
-                        )
-                            : null,
-                      ),
+          : Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 800),
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Profile Picture
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 80,
+                    backgroundColor: Colors.grey.shade300,
+                    backgroundImage: _profileImage != null
+                        ? _profileImageProvider!
+                        : AssetImage(_patientData!['pic'])
+                    as ImageProvider,
+                    child: _profileImage == null
+                        ? Icon(
+                      Icons.camera_alt,
+                      size: 40,
+                      color: Colors.white.withOpacity(0.8),
+                    )
+                        : null,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Editable Fields
+                _buildInputField("Username", _usernameController),
+                const SizedBox(height: 15),
+                _buildInputField("Email", _emailController,
+                    readOnly: true),
+                const SizedBox(height: 15),
+                _buildInputField("Address", _addressController),
+                const SizedBox(height: 15),
+                _buildInputField("Date of Birth", _dobController),
+                const SizedBox(height: 15),
+                _buildInputField("Phone", _phoneController),
+                const SizedBox(height: 15),
+                _buildInputField(
+                    "Medical History", _medicalHistoryController),
+                const SizedBox(height: 30),
+
+                // Save Button
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff2f9a8f),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  // Editable Fields
-                  TextField(
-                    controller: _usernameController,
-                    decoration: const InputDecoration(labelText: "Username"),
+                  onPressed: _isUpdating
+                      ? null
+                      : () {
+                    _updatePatientData(_profileImage);
+                  },
+                  child: _isUpdating
+                      ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                      : const Text(
+                    "Save Changes",
+                    style: TextStyle(
+                        fontSize: 18, color: Colors.white),
                   ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _emailController,
-                    readOnly: true, // Email is not editable
-                    decoration: const InputDecoration(labelText: "Email"),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _addressController,
-                    decoration: const InputDecoration(labelText: "Address"),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _dobController,
-                    decoration: const InputDecoration(
-                        labelText: "Date of Birth"),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _phoneController,
-                    decoration: const InputDecoration(labelText: "Phone"),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _medicalHistoryController,
-                    decoration: const InputDecoration(
-                        labelText: "Medical History"),
-                  ),
-                  const SizedBox(height: 20),
-                  // Save Button
-                  // Update the save button callback
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 40, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      onPressed: _isUpdating
-                          ? null
-                          : () {
-                        _updatePatientData(
-                            _profileImage); // Pass the _profileImage to the update method
-                      },
-                      child: _isUpdating
-                          ? const CircularProgressIndicator(
-                          color: Color(0xff2f9a8f))
-                          : const Text(
-                        "Save Changes",
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
+      ),
+    );
+    }else {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Patient Profile"),
+          backgroundColor: const Color(0xff6be4d7),
+
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    _showSettingsMenu(context, themeNotifier);
+                  },
+                ),
+                if (_notificationsEnabled)
+                  Positioned(
+                    top: 6,
+                    right: 6,
+                    child: CircleAvatar(
+                      radius: 8,
+                      backgroundColor: Colors.red,
+                      child: const Text(
+                        '!',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _patientData == null
+            ? const Center(child: Text("Failed to load patient data"))
+            : Stack(
+          children: [
+            // Background Image
+            Image.asset(
+              "images/pat.jpg",
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            // Profile Content
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: GestureDetector(
+                        onTap: _pickImage,
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.grey.shade300,
+                          backgroundImage: _profileImage != null
+                              ? (kIsWeb
+                              ? _profileImageProvider!
+                              : FileImage(_profileImage!))
+                              : AssetImage(
+                              _patientData!['pic']) as ImageProvider,
+                          child: _profileImage == null
+                              ? Icon(
+                            Icons.camera_alt,
+                            size: 30,
+                            color: Colors.white.withOpacity(0.8),
+                          )
+                              : null,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Editable Fields
+                    TextField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(labelText: "Username"),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _emailController,
+                      readOnly: true, // Email is not editable
+                      decoration: const InputDecoration(labelText: "Email"),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _addressController,
+                      decoration: const InputDecoration(labelText: "Address"),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _dobController,
+                      decoration: const InputDecoration(
+                          labelText: "Date of Birth"),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(labelText: "Phone"),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _medicalHistoryController,
+                      decoration: const InputDecoration(
+                          labelText: "Medical History"),
+                    ),
+                    const SizedBox(height: 20),
+                    // Save Button
+                    // Update the save button callback
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff2f9a8f),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        onPressed: _isUpdating
+                            ? null
+                            : () {
+                          _updatePatientData(
+                              _profileImage); // Pass the _profileImage to the update method
+                        },
+                        child: _isUpdating
+                            ? const CircularProgressIndicator(
+                            color: Color(0xff2f9a8f))
+                            : const Text(
+                          "Save Changes",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  // Reusable Input Field Widget
+  Widget _buildInputField(String label, TextEditingController controller,
+      {bool readOnly = false}) {
+    return TextField(
+      controller: controller,
+      readOnly: readOnly,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(fontSize: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.9),
       ),
     );
   }

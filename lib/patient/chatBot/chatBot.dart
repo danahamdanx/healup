@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:uuid/uuid.dart'; // Import uuid package for generating sessionId
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class ChatBot extends StatefulWidget {
   final String patientId; // Accepts patientId as a parameter
@@ -36,8 +37,18 @@ class _ChatBotState extends State<ChatBot> {
     await _fetchUsername(); // Fetch the username after session is initialized
   }
 
+
+
+  String getBaseUrl() {
+    if (kIsWeb) {
+      return "http://localhost:5000"; // For web
+    } else {
+      return "http://10.0.2.2:5000"; // For mobile (Android emulator)
+    }
+  }
+
   Future<void> _fetchUsername() async {
-    final apiUrl = "http://10.0.2.2:5000/api/healup/patients/getPatientById/${widget
+    final apiUrl = "${getBaseUrl()}/api/healup/patients/getPatientById/${widget
         .patientId}";
 
     try {
@@ -152,7 +163,7 @@ class _ChatBotState extends State<ChatBot> {
       });
     });
 
-    const apiUrl = "http://10.0.2.2:5000/api/healup/Symptoms/recommend-doctor";
+    final apiUrl = "${getBaseUrl()}/api/healup/Symptoms/recommend-doctor";
 
     try {
       final response = await http.post(
@@ -215,79 +226,182 @@ class _ChatBotState extends State<ChatBot> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Symptom Chatbot'),
-        backgroundColor: Color(0xff6be4d7), // Set the AppBar background color
-      ),
-      body: Stack(
-        children: [
-          // Background image with opacity
-          Opacity(
-            opacity: 0.5, // Adjust the opacity (0.0 to 1.0)
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("images/back.jpg"), // Path to the background image
-                  fit: BoxFit.cover, // Ensures the image covers the entire screen
+    if (kIsWeb) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Symptom Chatbot'),
+          backgroundColor: const Color(0xff6be4d7), // Set the AppBar background color
+        ),
+        body: Stack(
+          children: [
+            // Background image with reduced opacity
+            Opacity(
+              opacity: 0.5, // Adjust the opacity (0.0 to 1.0)
+              child: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("images/back.jpg"),
+                    fit: BoxFit.cover, // Ensures the image covers the entire screen
+                  ),
                 ),
               ),
             ),
-          ),
-          // Chat content on top
-          Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) {
-                    final message = _messages[index];
-                    final isUserMessage = message["sender"] == "user";
-
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: isUserMessage ? Color(0xff2f9a8f) : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          message["text"] ?? "",
-                          style: TextStyle(color: isUserMessage ? Colors.white : Colors.black),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Divider(height: 1),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                color: Colors.white.withOpacity(0.8), // Slightly transparent background for the input field
-                child: Row(
+            // Chat content on top
+            Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 800),
+                // Limits the width for readability on large screens
+                child: Column(
                   children: [
+                    // Chat messages
                     Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: InputDecoration.collapsed(
-                          hintText: "Type your response here...",
-                        ),
+                      child: ListView.builder(
+                        itemCount: _messages.length,
+                        itemBuilder: (context, index) {
+                          final message = _messages[index];
+                          final isUserMessage = message["sender"] == "user";
+
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
+                            alignment: isUserMessage
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: isUserMessage
+                                    ? const Color(0xff2f9a8f)
+                                    : Colors.grey[300],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                message["text"] ?? "",
+                                style: TextStyle(
+                                  color: isUserMessage
+                                      ? Colors.white
+                                      : Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () => sendMessage(_messageController.text),
+                    const Divider(height: 1),
+                    // Input field container
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      color: Colors.white.withOpacity(0.9),
+                      // Slightly transparent background for the input field
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _messageController,
+                              decoration: const InputDecoration.collapsed(
+                                hintText: "Type your response here...",
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.send),
+                            onPressed: () => sendMessage(_messageController.text),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
-    );
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Symptom Chatbot'),
+          backgroundColor: Color(0xff6be4d7), // Set the AppBar background color
+        ),
+        body: Stack(
+          children: [
+            // Background image with opacity
+            Opacity(
+              opacity: 0.5, // Adjust the opacity (0.0 to 1.0)
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("images/back.jpg"),
+                    // Path to the background image
+                    fit: BoxFit
+                        .cover, // Ensures the image covers the entire screen
+                  ),
+                ),
+              ),
+            ),
+            // Chat content on top
+            Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _messages.length,
+                    itemBuilder: (context, index) {
+                      final message = _messages[index];
+                      final isUserMessage = message["sender"] == "user";
+
+                      return Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 10),
+                        alignment: isUserMessage
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: isUserMessage ? Color(0xff2f9a8f) : Colors
+                                .grey[300],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            message["text"] ?? "",
+                            style: TextStyle(
+                                color: isUserMessage ? Colors.white : Colors
+                                    .black),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Divider(height: 1),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  color: Colors.white.withOpacity(0.8),
+                  // Slightly transparent background for the input field
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          decoration: InputDecoration.collapsed(
+                            hintText: "Type your response here...",
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.send),
+                        onPressed: () => sendMessage(_messageController.text),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
   }
 
 

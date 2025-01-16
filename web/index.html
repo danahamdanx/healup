@@ -1,8 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="$FLUTTER_BASE_HREF">
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    // Wait for the DOM content to be fully loaded before executing Stripe logic
+    document.addEventListener("DOMContentLoaded", function() {
+      // Define the initializeStripe function in the global scope
+      function initializeStripe(clientSecret, publicKey) {
+        console.log("Initializing Stripe with clientSecret:", clientSecret);
+        var stripe = Stripe(publicKey);
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element'); // Mount the card element to the page
 
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+              card: card,
+              billing_details: {
+                name: 'Test User'
+              }
+            }
+          }).then(function(result) {
+            if (result.error) {
+              alert(result.error.message);
+            } else if (result.paymentIntent.status === 'succeeded') {
+              alert('Payment Successful!');
+            }
+          });
+        });
+      }
+
+      // You can call initializeStripe here with the actual clientSecret and publicKey
+      // Example:
+      // initializeStripe('your-client-secret', 'your-public-key');
+    });
+  </script>
+
+  <base href="$FLUTTER_BASE_HREF">
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
@@ -15,7 +52,6 @@
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
-  <script src="https://www.paypal.com/sdk/js?client-id=AWl8BrcC_9CMymu9yJyWKNfvqCEtFZaJ2BVNstPBO75aacWOGx9kkcTZEP66RQXfWkiefPxx9Oe25rPC&components=buttons"></script>
 
   <!-- PayPal SDK -->
   <script src="https://www.paypal.com/sdk/js?client-id=AWl8BrcC_9CMymu9yJyWKNfvqCEtFZaJ2BVNstPBO75aacWOGx9kkcTZEP66RQXfWkiefPxx9Oe25rPC&components=buttons"></script>
@@ -33,7 +69,20 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-<script src="https://js.stripe.com/v3/"></script>
+
+<!-- Stripe JS SDK -->
+
+<!-- The form to handle payment -->
+<form id="payment-form">
+  <div id="card-element">
+    <!-- A Stripe Element will be inserted here. -->
+  </div>
+
+  <!-- Used to display form errors. -->
+  <div id="card-errors" role="alert"></div>
+
+  <button type="submit">Submit Payment</button>
+</form>
 
 <!-- Firebase Configuration -->
 
