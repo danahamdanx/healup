@@ -33,9 +33,10 @@
         });
       }
 
-      // You can call initializeStripe here with the actual clientSecret and publicKey
-      // Example:
-      // initializeStripe('your-client-secret', 'your-public-key');
+      // Example usage: Initialize Stripe with actual values for clientSecret and publicKey
+      const clientSecret = 'your-client-secret';  // Replace with your actual client secret from backend
+      const publicKey = 'your-public-key';  // Replace with your actual public key from Stripe
+      initializeStripe(clientSecret, publicKey);
     });
   </script>
 
@@ -70,6 +71,28 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
 
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-86UTgKSTmSjppYQccJKIbHLjXfc-Q0o&callback=initMap&libraries=places&v=weekly" async></script>
+<script>
+  let map;
+  let marker;
+
+  function initMap() {
+    const initialLocation = { lat: 37.7749, lng: -122.4194 }; // Default location (San Francisco)
+
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: initialLocation,
+      zoom: 12,
+    });
+
+    marker = new google.maps.Marker({
+      position: initialLocation,
+      map: map,
+      title: "San Francisco",
+    });
+  }
+</script>
+
 <!-- Stripe JS SDK -->
 
 <!-- The form to handle payment -->
@@ -85,6 +108,5 @@
 </form>
 
 <!-- Firebase Configuration -->
-
 </body>
 </html>

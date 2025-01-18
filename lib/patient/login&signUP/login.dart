@@ -30,40 +30,9 @@ class _PatLoginPageState extends State<PatLoginPage> {
   @override
   void initState() {
     super.initState();
-    _initUniLinks();
     emailRegExp = RegExp(emailPattern);
   }
 
-  Future<void> _initUniLinks() async {
-    try {
-      String? initialLink = await getInitialLink();
-      if (initialLink != null) {
-        Uri deepLink = Uri.parse(initialLink);
-        _handleResetLink(deepLink);
-      }
-    } catch (e) {
-      print("Error with deep linking: $e");
-    }
-
-    _sub = linkStream.listen((String? link) {
-      if (link != null) {
-        Uri deepLink = Uri.parse(link);
-        _handleResetLink(deepLink);
-      }
-    });
-  }
-
-  void _handleResetLink(Uri deepLink) {
-    String? token = deepLink.queryParameters['token'];
-    if (token != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ResetPasswordPage(token: token),
-        ),
-      );
-    }
-  }
 
 
   Future<void> _login() async {
@@ -131,40 +100,37 @@ class _PatLoginPageState extends State<PatLoginPage> {
       ..show();
   }
 
-  void _forgotPassword() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Enter your email'),
-          content: TextField(
-            controller: _emailController,
-            decoration: InputDecoration(hintText: 'Email'),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                String email = _emailController.text.trim();
-                if (email.isNotEmpty && emailRegExp.hasMatch(email)) {
+  void _forgotPassword(String email) {
+    if (email.isNotEmpty && emailRegExp.hasMatch(email)) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirm Reset Password'),
+            content: Text('Would you like to reset the password for $email?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () async {
                   _sendResetPasswordRequest(email);
                   Navigator.of(context).pop();
-                } else {
-                  _showErrorDialog('Please enter a valid email address.');
-                }
-              },
-              child: Text('Send Reset Link'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
+                },
+                child: Text('Send Reset Link'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      _showErrorDialog('Please enter a valid email address.');
+    }
   }
+
 
   Future<void> _sendResetPasswordRequest(String email) async {
     try {
@@ -181,6 +147,23 @@ class _PatLoginPageState extends State<PatLoginPage> {
 
       if (response.statusCode == 200) {
         _showSuccessDialog('Password reset link has been sent to your email.');
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.info,
+          title: 'Reset Password',
+          desc: 'Password reset link has been sent to your email.',
+          btnOkOnPress: () {
+            final token = json.decode(response.body)['token'];
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ResetPasswordPage(token: token),)
+            );
+
+
+          },
+        ).show();
+
       } else {
         final responseData = json.decode(response.body);
         _showErrorDialog(responseData['message'] ?? 'An error occurred.');
@@ -338,13 +321,17 @@ class _PatLoginPageState extends State<PatLoginPage> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: _forgotPassword,
+                            onPressed: () {
+                              String email = _emailController.text.trim();
+                              _forgotPassword(email);
+                            },
                             child: const Text(
                               'Forgot Password?',
                               style: TextStyle(color: Colors.black, fontSize: 16),
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 20),
                         // Login Button (Centered)
                         ElevatedButton(
@@ -525,14 +512,17 @@ class _PatLoginPageState extends State<PatLoginPage> {
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: TextButton(
-                                    onPressed: _forgotPassword,
+                                    onPressed: () {
+                                      String email = _emailController.text.trim();
+                                      _forgotPassword(email);
+                                    },
                                     child: const Text(
                                       'Forgot Password?',
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 14),
+                                      style: TextStyle(color: Colors.black, fontSize: 16),
                                     ),
                                   ),
                                 ),
+
                                 const SizedBox(height: 15),
                                 ElevatedButton(
                                   onPressed: _login,

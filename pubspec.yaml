@@ -40,7 +40,6 @@ dependencies:
   flutter_secure_storage: ^6.0.0   # Make sure the version is correct (latest stable)
   uuid: ^3.0.4  # Make sure the version is correct (latest stable)
   file_picker: ^5.2.0  # Ensure you're using the latest version
-  flutter_paypal_checkout: ^1.0.1
   geocoding: ^2.0.1 # Check for the latest version
   pdf: ^3.10.6
   path_provider: ^2.0.15
@@ -64,6 +63,8 @@ dependencies:
   firebase_messaging_web: ^3.10.0
   js: ^0.6.3
   html: ^0.15.0
+  webview_flutter: ^4.10.0
+  flutter_inappwebview: ^6.0.0 # Use the latest version
 
 
 
