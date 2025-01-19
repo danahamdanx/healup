@@ -12,7 +12,6 @@ import 'medication/MedicineDetailPage.dart';
 import 'medication/cart.dart';
 import 'medication/medicine.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
-import 'dart:async';  // Add this import to use Timer
 
 class HomeTab extends StatefulWidget {
   final Function(Map<String, dynamic>) onAppointmentBooked;
@@ -36,17 +35,13 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   List<Map<String, dynamic>> doctors = [];
   List<Map<String, dynamic>> medications = []; // To store discounted medications
   static List<Map<String, dynamic>> cart = [];
-  late AnimationController _animationController;
-  late Animation<Offset> _slideAnimation;
+
+  late AnimationController _animationController; // Controller for animation
+  late Animation<Offset> _slideAnimation; // Animation for sliding
+
   String userName = "";
   String patientId = ""; // Add a variable to store the patient ID
   final FlutterSecureStorage _storage = FlutterSecureStorage(); // Declare the storage instance
-
-
-  // Timer for automatic sliding
-  late Timer _timer;
-  int _currentIndex = 0;
-  double _itemWidth = 400.0; // You can dynamically adjust this based on your card size
 
   void onRatingUpdated(double newRating, int newReviews) {
     setState(() {
@@ -58,43 +53,31 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
-
-    // Initialize the animation controller
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),  // Slower transition
-      vsync: this,
-    );
-
-    // Create the sliding animation
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(1.0, 0.0),  // Start off-screen (to the right)
-      end: Offset(-_itemWidth / 5, 0),  // Adjust how far the items move
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-
-    // Start the animation loop
-    _startSlidingTimer();
-
     fetchDoctors();
     fetchDiscountedMedications();  // Fetch discounted medications
+    _setupAnimation();  // Setup the animation
 
     _getUserName();
     _getPatientId(); // Fetch the patient ID when the screen initializes
   }
 
-  void _startSlidingTimer() {
-    // Set a timer to automatically slide the cards every 3 seconds
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % medications.length;
-      });
-      _animationController.forward(from: 0.0);  // Restart the animation
-    });
-  }
+  // Setup the sliding animation
+  void _setupAnimation() {
+    _animationController = AnimationController(
+      vsync: this,  // 'this' refers to the TickerProvider provided by the mixin
+      duration: Duration(seconds: 3),  // Adjusted duration for each slide
+    )..repeat(reverse: true); // Repeat the animation with reverse motion
 
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, 0),  // Starting position (0, 0)
+      end: Offset(-1.0, 0), // Ending position (moving left)
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.linear,
+      ),
+    );
+  }
 
   Future<void> _getUserName() async {
     final storage = FlutterSecureStorage();
@@ -173,8 +156,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();
-    _timer.cancel();
+    _animationController.dispose();  // Dispose the animation controller
     super.dispose();
   }
 
@@ -187,6 +169,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
     // Check if it's Web
     if (kIsWeb) {
       return Scaffold(
+
         body: Row(
           children: [
             // Main Content (no sidebar)
@@ -223,6 +206,13 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                         Row(
                           children: [
                             IconButton(
+                              icon: const Icon(Icons.notifications, size: 33),
+                              color: Colors.black,
+                              onPressed: () {
+                                print("Notifications clicked");
+                              },
+                            ),
+                            IconButton(
                               icon: const Icon(Icons.live_help_sharp, size: 33),
                               color: Colors.black,
                               onPressed: () {
@@ -230,8 +220,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        ChatBot(patientId: patientId),
-                                  ),
+                                        SymptomChatScreen(),                                  ),
                                 );
                               },
                             ),
@@ -243,7 +232,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                     // Discounted Medications Section
                     const Text(
                       'Discounted Medications',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                     const SizedBox(height: 10),
                     medications.isEmpty
@@ -265,14 +254,17 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                               final price = medication['price'] ?? 0.0;
                               final finalPrice = medication['final_price'] ?? price;
 
+                              // Replace 'medicine' with 'medication' and 'widget.patientId' with 'patientId'
                               return Padding(
                                 padding: const EdgeInsets.only(right: 16.0),
                                 child: Transform.translate(
                                   offset: _slideAnimation.value,
                                   child: GestureDetector(
+                                    // داخل الكود الموجود في ListView.builder
                                     onTap: () {
                                       print("++++++++++++++++++++++=");
 
+                                      // Safely handle null values and ensure type consistency for numbers
                                       final medicationName = medication['name'] ?? 'Unknown Medication';
                                       final imageUrl = medication['image'] ?? 'images/default_image.jpg'; // Fallback to a default image
                                       final discount = medication['discount'] ?? 0;
@@ -286,6 +278,16 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                       final type = medication['type'] ?? 'Unknown';
                                       print("Full Medication Data: $medication");
 
+                                      // Print the values to check
+                                      print("Medication Name: $medicationName");
+                                      print("Image URL: $imageUrl");
+                                      print("Discount: $discount%");
+                                      print("Price: $price");
+                                      print("Final Price: $finalPrice");
+                                      print("Description: $description");
+                                      print("Type: $type");
+
+                                      // Create Medicine object for navigation
                                       Medicine selectedMedicine = Medicine(
                                         id: medication['_id'] ?? '',  // Ensure _id is not null
                                         medication_name: medicationName,
@@ -309,12 +311,16 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                         ),
                                       );
                                     },
+
+
+
+
+
                                     child: Container(
-                                      // Adjusted width to make the card smaller
-                                      width: 400, // Set width to 250 instead of using the full screen width
+                                      width: MediaQuery.of(context).size.width * 0.9,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
-                                        color: Color(0xffE0F3F5),  // Custom background color (light greyish-blue)
+                                        color: Colors.white,
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black.withOpacity(0.1),
@@ -379,7 +385,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                             borderRadius: BorderRadius.circular(15),
                                             child: Image.asset(
                                               imageUrl,  // Correctly use the image URL from the map
-                                              width: 120,  // Adjust image width to fit the smaller card
+                                              width: 210,
                                               height: 120,
                                               fit: BoxFit.cover,
                                             ),
@@ -390,6 +396,8 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                   ),
                                 ),
                               );
+
+
                             },
                           );
                         },
@@ -501,9 +509,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       itemBuilder: (context, index) {
                         final doctor = doctors[index];
 
-                        // Print the doctor ID to verify it's being passed
-                        print('Doctor ID: ${doctor['_id']}');
-                        print('Patient ID: $patientId');
+
 
                         return DoctorCard(
                           patientId: patientId,
@@ -589,14 +595,21 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       Row(
                         children: [
                           IconButton(
+                            icon: const Icon(Icons.notifications, size: 33),
+                            color: Colors.black,
+                            onPressed: () {
+                              print("Notifications clicked");
+                            },
+                          ),
+                          IconButton(
                             icon: const Icon(Icons.live_help_sharp, size: 33),
                             color: Colors.black,
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ChatBot(patientId: patientId),
-                                ),
+                                  builder: (context) =>
+                                      SymptomChatScreen(),                                ),
                               );
                             },
                           ),
@@ -608,7 +621,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
 // Discounted Medications Section
                   const Text(
                     'Discounted Medications',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 10),
                   medications.isEmpty
@@ -623,7 +636,6 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           itemCount: medications.length,
                           itemBuilder: (context, index) {
                             final medication = medications[index];
-
 
                             final medicationName = medication['name'] ?? 'Unknown Medication';
                             final imageUrl = medication['image'] ?? 'images/default_image.jpg'; // Fallback to a default image
@@ -690,20 +702,22 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                   },
 
 
-                            child: Container(
-                            // Adjusted width to make the card smaller
-                              width: MediaQuery.of(context).size.width * 0.9,
-                            decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Color(0xffE0F3F5),  // Custom background color (light greyish-blue)
-                            boxShadow: [
-                            BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            ),
-                            ],
-                            ),
+
+
+
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width * 0.9,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          spreadRadius: 2,
+                                          blurRadius: 10,
+                                        ),
+                                      ],
+                                    ),
                                     child: Row(
                                       children: [
                                         Expanded(
@@ -876,8 +890,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       final doctor = doctors[index];
 
                       // Print the doctor ID to verify it's being passed
-                      print('Doctor ID: ${doctor['_id']}');
-                      print('Patent ID: $patientId');
+
 
                       return DoctorCard(
                         patientId: patientId,
