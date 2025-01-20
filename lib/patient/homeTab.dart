@@ -205,13 +205,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                         // Right side: Notification and Help Icons
                         Row(
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.notifications, size: 33),
-                              color: Colors.black,
-                              onPressed: () {
-                                print("Notifications clicked");
-                              },
-                            ),
+
                             IconButton(
                               icon: const Icon(Icons.live_help_sharp, size: 33),
                               color: Colors.black,
@@ -594,13 +588,6 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.notifications, size: 33),
-                            color: Colors.black,
-                            onPressed: () {
-                              print("Notifications clicked");
-                            },
-                          ),
                           IconButton(
                             icon: const Icon(Icons.live_help_sharp, size: 33),
                             color: Colors.black,
