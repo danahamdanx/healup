@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'PrescriptionForm.dart'; // Import the form widget
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class PrescriptionFormPage extends StatelessWidget {
   final String doctorId;
@@ -31,22 +32,47 @@ class PrescriptionFormPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Convert the patientAge to int
 
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: PrescriptionForm(
-          doctorId: doctorId,
-          doctorName: doctorName, // Pass doctorName here
-          doctorSpeclization:doctorSpeclization,
-          doctorPhone:doctorPhone,
-          doctorHospital:doctorHospital,
-          patientId: patientId,
-          patientName: patientName,  // Pass patientName here
-          patientAge: patientAge,  // Pass patientAge here
-          appointmentId: appointmentId,
-          appointmentDate: appDate,  // Pass appDate here
+    if(kIsWeb){
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: PrescriptionForm(
+            doctorId: doctorId,
+            doctorName: doctorName, // Pass doctorName here
+            doctorSpeclization:doctorSpeclization,
+            doctorPhone:doctorPhone,
+            doctorHospital:doctorHospital,
+            patientId: patientId,
+            patientName: patientName,  // Pass patientName here
+            patientAge: patientAge,  // Pass patientAge here
+            appointmentId: appointmentId,
+            appointmentDate: appDate,  // Pass appDate here
+          ),
         ),
-      ),
-    );
+      );
+
+
+    }
+    else{
+      return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: PrescriptionForm(
+            doctorId: doctorId,
+            doctorName: doctorName, // Pass doctorName here
+            doctorSpeclization:doctorSpeclization,
+            doctorPhone:doctorPhone,
+            doctorHospital:doctorHospital,
+            patientId: patientId,
+            patientName: patientName,  // Pass patientName here
+            patientAge: patientAge,  // Pass patientAge here
+            appointmentId: appointmentId,
+            appointmentDate: appDate,  // Pass appDate here
+          ),
+        ),
+      );
+
+    }
+
   }
 }

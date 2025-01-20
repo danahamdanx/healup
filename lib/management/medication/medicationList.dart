@@ -8,6 +8,8 @@ import '../order/orderList.dart';
 import '../managements/managementList.dart';
 import 'EditMedicationPage.dart';
 import 'medicationDetailPage.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+
 
 class MedicationListPage extends StatefulWidget {
   @override
@@ -22,63 +24,23 @@ class _MedicationListPageState extends State<MedicationListPage> {
 
   // Fetch medications from the API
   Future<void> fetchMedications() async {
-    try {
-      final response = await http.get(
-        Uri.parse("http://10.0.2.2:5000/api/healup/medication/"),
-      );
-
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        // Modify this section in the 'fetchMedications' method
-        setState(() {
-          medications = data.map((medication) {
-            return {
-              'id': medication['_id'],
-              'name': medication['scientific_name'] ?? 'No name provided',
-              'medication_name': medication['medication_name'] ?? 'No name provided',
-              'stock_quantity': medication['stock_quantity'].toString(), // Ensure it's a string
-              'type': medication['type'] ?? 'All',
-              'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
-
-              //'pic': medication['photo'] ?? 'images/default_medication.png',
-            };
-          }).toList();
-          filteredMedications = List.from(medications);
-        });
-
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to fetch medications: ${response.reasonPhrase}")),
+    if(kIsWeb){
+      try {
+        final response = await http.get(
+          Uri.parse("http://localhost:5000/api/healup/medication/"),
         );
-      }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred: $error")),
-      );
-    }
-  }
 
-  // Fetch OTC medications
-  Future<void> fetchOTCMedications() async {
-    try {
-      final response = await http.get(
-        Uri.parse("http://10.0.2.2:5000/api/healup/medication/otcmedication"),
-      );
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['medications'] != null) {
-          List<dynamic> medicationsData = data['medications'];
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(response.body);
+          // Modify this section in the 'fetchMedications' method
           setState(() {
-            medications = medicationsData.map((medication) {
+            medications = data.map((medication) {
               return {
                 'id': medication['_id'],
                 'name': medication['scientific_name'] ?? 'No name provided',
                 'medication_name': medication['medication_name'] ?? 'No name provided',
                 'stock_quantity': medication['stock_quantity'].toString(), // Ensure it's a string
-
-                //'stock_quantity': medication['stock_quantity'] ?? 'No quantity provided',
-                'type': 'OTC', // Ensure that all these medications are classified as OTC
+                'type': medication['type'] ?? 'All',
                 'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
 
                 //'pic': medication['photo'] ?? 'images/default_medication.png',
@@ -86,57 +48,226 @@ class _MedicationListPageState extends State<MedicationListPage> {
             }).toList();
             filteredMedications = List.from(medications);
           });
+
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("No OTC medications found.")),
+            SnackBar(content: Text("Failed to fetch medications: ${response.reasonPhrase}")),
           );
         }
-      } else {
+      } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to fetch OTC medications: ${response.reasonPhrase}")),
+          SnackBar(content: Text("An error occurred: $error")),
         );
       }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred while fetching OTC medications: $error")),
-      );
+
     }
+    else{
+      try {
+        final response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/healup/medication/"),
+        );
+
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(response.body);
+          // Modify this section in the 'fetchMedications' method
+          setState(() {
+            medications = data.map((medication) {
+              return {
+                'id': medication['_id'],
+                'name': medication['scientific_name'] ?? 'No name provided',
+                'medication_name': medication['medication_name'] ?? 'No name provided',
+                'stock_quantity': medication['stock_quantity'].toString(), // Ensure it's a string
+                'type': medication['type'] ?? 'All',
+                'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
+
+                //'pic': medication['photo'] ?? 'images/default_medication.png',
+              };
+            }).toList();
+            filteredMedications = List.from(medications);
+          });
+
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch medications: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An error occurred: $error")),
+        );
+      }
+
+    }
+
+  }
+
+  // Fetch OTC medications
+  Future<void> fetchOTCMedications() async {
+    if(kIsWeb){
+      try {
+        final response = await http.get(
+          Uri.parse("http://localhost:5000/api/healup/medication/otcmedication"),
+        );
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> data = jsonDecode(response.body);
+          if (data['medications'] != null) {
+            List<dynamic> medicationsData = data['medications'];
+            setState(() {
+              medications = medicationsData.map((medication) {
+                return {
+                  'id': medication['_id'],
+                  'name': medication['scientific_name'] ?? 'No name provided',
+                  'medication_name': medication['medication_name'] ?? 'No name provided',
+                  'stock_quantity': medication['stock_quantity'].toString(), // Ensure it's a string
+
+                  //'stock_quantity': medication['stock_quantity'] ?? 'No quantity provided',
+                  'type': 'OTC', // Ensure that all these medications are classified as OTC
+                  'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
+
+                  //'pic': medication['photo'] ?? 'images/default_medication.png',
+                };
+              }).toList();
+              filteredMedications = List.from(medications);
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("No OTC medications found.")),
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch OTC medications: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An error occurred while fetching OTC medications: $error")),
+        );
+      }
+
+    }
+    else{
+      try {
+        final response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/healup/medication/otcmedication"),
+        );
+
+        if (response.statusCode == 200) {
+          Map<String, dynamic> data = jsonDecode(response.body);
+          if (data['medications'] != null) {
+            List<dynamic> medicationsData = data['medications'];
+            setState(() {
+              medications = medicationsData.map((medication) {
+                return {
+                  'id': medication['_id'],
+                  'name': medication['scientific_name'] ?? 'No name provided',
+                  'medication_name': medication['medication_name'] ?? 'No name provided',
+                  'stock_quantity': medication['stock_quantity'].toString(), // Ensure it's a string
+
+                  //'stock_quantity': medication['stock_quantity'] ?? 'No quantity provided',
+                  'type': 'OTC', // Ensure that all these medications are classified as OTC
+                  'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
+
+                  //'pic': medication['photo'] ?? 'images/default_medication.png',
+                };
+              }).toList();
+              filteredMedications = List.from(medications);
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("No OTC medications found.")),
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch OTC medications: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An error occurred while fetching OTC medications: $error")),
+        );
+      }
+
+    }
+
   }
   // Fetch discounted medications from the API
   Future<void> fetchDiscountedMedications() async {
-    try {
-      final response = await http.get(
-        Uri.parse("http://10.0.2.2:5000/api/healup/medication/discounted"),
-      );
+    if(kIsWeb){
+      try {
+        final response = await http.get(
+          Uri.parse("http://localhost:5000/api/healup/medication/discounted"),
+        );
 
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        // Modify this section to handle discounted medications
-        setState(() {
-          medications = data.map((medication) {
-            return {
-              'id': medication['_id'],
-              'name': medication['scientific_name'] ?? 'No name provided',
-              'medication_name': medication['medication_name'] ?? 'No name provided',
-              'stock_quantity': medication['stock_quantity'].toString(),
-              'type': medication['type'] ?? 'All',
-              'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
-              'discount_percentage': medication['discount_percentage'] ?? 0, // Discount information
-            };
-          }).toList();
-          filteredMedications = List.from(medications);
-        });
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(response.body);
+          // Modify this section to handle discounted medications
+          setState(() {
+            medications = data.map((medication) {
+              return {
+                'id': medication['_id'],
+                'name': medication['scientific_name'] ?? 'No name provided',
+                'medication_name': medication['medication_name'] ?? 'No name provided',
+                'stock_quantity': medication['stock_quantity'].toString(),
+                'type': medication['type'] ?? 'All',
+                'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
+                'discount_percentage': medication['discount_percentage'] ?? 0, // Discount information
+              };
+            }).toList();
+            filteredMedications = List.from(medications);
+          });
 
-      } else {
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch discounted medications: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to fetch discounted medications: ${response.reasonPhrase}")),
+          SnackBar(content: Text("An error occurred: $error")),
         );
       }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred: $error")),
-      );
+
     }
+    else{
+      try {
+        final response = await http.get(
+          Uri.parse("http://10.0.2.2:5000/api/healup/medication/discounted"),
+        );
+
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(response.body);
+          // Modify this section to handle discounted medications
+          setState(() {
+            medications = data.map((medication) {
+              return {
+                'id': medication['_id'],
+                'name': medication['scientific_name'] ?? 'No name provided',
+                'medication_name': medication['medication_name'] ?? 'No name provided',
+                'stock_quantity': medication['stock_quantity'].toString(),
+                'type': medication['type'] ?? 'All',
+                'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
+                'discount_percentage': medication['discount_percentage'] ?? 0, // Discount information
+              };
+            }).toList();
+            filteredMedications = List.from(medications);
+          });
+
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch discounted medications: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An error occurred: $error")),
+        );
+      }
+
+    }
+
   }
 
 
@@ -151,19 +282,26 @@ class _MedicationListPageState extends State<MedicationListPage> {
     setState(() {
       _currentIndex = index;
     });
-
-    // Navigate based on index
     if (index == 0) {
-      Navigator.pushReplacement(
+      // Navigate to Doctor List page
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ManagementMainPage()),
+        MaterialPageRoute(
+          builder: (context) => ManagementMainPage(),
+        ),
       );
-    } else if (index == 1) {
-      Navigator.pushReplacement(
+    }
+    // Handle navigation here based on the selected index
+    else if (index == 1) {
+      // Navigate to Doctor List page
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => DoctorListPage()),
+        MaterialPageRoute(
+          builder: (context) => DoctorListPage(),
+        ),
       );
     } else if (index == 2) {
+      //Navigate to Medication page (assuming you have one)
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -171,6 +309,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
         ),
       );
     } else if (index == 3) {
+      //Navigate to Order page (assuming you have one)
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -178,6 +317,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
         ),
       );
     } else if (index == 4) {
+      // Navigate to Management page (if necessary)
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -186,6 +326,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
       );
     }
   }
+
   void _filterMedications() {
     setState(() {
       if (_searchText.isEmpty && selectedCategory == 'All') {
@@ -207,29 +348,59 @@ class _MedicationListPageState extends State<MedicationListPage> {
   }
 
   void _deleteMedication(String medicationId) async {
-    try {
-      final response = await http.delete(
-        Uri.parse("http://10.0.2.2:5000/api/healup/medication/delete/$medicationId"),
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          filteredMedications.removeWhere((medication) => medication['id'] == medicationId);
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Medication deleted successfully.")),
+    if(kIsWeb){
+      try {
+        final response = await http.delete(
+          Uri.parse("http://localhost:5000/api/healup/medication/delete/$medicationId"),
         );
-      } else {
+
+        if (response.statusCode == 200) {
+          setState(() {
+            filteredMedications.removeWhere((medication) => medication['id'] == medicationId);
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Medication deleted successfully.")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to delete medication: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to delete medication: ${response.reasonPhrase}")),
+          SnackBar(content: Text("An error occurred: $error")),
         );
       }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred: $error")),
-      );
+
     }
+    else{
+      try {
+        final response = await http.delete(
+          Uri.parse("http://10.0.2.2:5000/api/healup/medication/delete/$medicationId"),
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            filteredMedications.removeWhere((medication) => medication['id'] == medicationId);
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Medication deleted successfully.")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to delete medication: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An error occurred: $error")),
+        );
+      }
+
+    }
+
   }
 
   void _showDeleteDialog(String medicationId, String medicationName) {
@@ -265,59 +436,6 @@ class _MedicationListPageState extends State<MedicationListPage> {
     );
   }
 
-  // void _showDiscountDialog(String medicationId, String medicationName) {
-  //   TextEditingController discountController = TextEditingController();
-  //
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text("Change Discount for Medication"),
-  //         content: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             Text("Enter the discount percentage for $medicationName:"),
-  //             TextField(
-  //               controller: discountController,
-  //               keyboardType: TextInputType.number,
-  //               decoration: InputDecoration(hintText: "Discount percentage (0 to 100)"),
-  //             ),
-  //           ],
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop(); // Close the dialog
-  //             },
-  //             style: TextButton.styleFrom(
-  //               backgroundColor: const Color(0xff2f9a8f),
-  //             ),
-  //             child: const Text("Cancel"),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () async {
-  //               Navigator.of(context).pop(); // Close the dialog
-  //               String discountStr = discountController.text;
-  //               double discountPercentage = double.tryParse(discountStr) ?? 0;
-  //
-  //               // Ensure the discount percentage is within a valid range
-  //               if (discountPercentage < 0 || discountPercentage > 100) {
-  //                 //_showErrorDialog("Discount percentage must be between 0 and 100.");
-  //               } else {
-  //                 // Call the function to update the discount
-  //                 _updateDiscount(medicationId, discountPercentage);
-  //               }
-  //             },
-  //             style: ElevatedButton.styleFrom(
-  //               backgroundColor: const Color(0xff2f9a8f),
-  //             ),
-  //             child: const Text("Confirm"),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showDiscountDialog(String medicationId, String medicationName) {
     TextEditingController discountController = TextEditingController();
@@ -384,55 +502,114 @@ class _MedicationListPageState extends State<MedicationListPage> {
   }
 
   Future<Map<String, dynamic>?> _fetchMedicationDetails(String medicationId) async {
-    final url = Uri.parse("http://10.0.2.2:5000/api/healup/medication/$medicationId");
+    if(kIsWeb){
+      final url = Uri.parse("http://localhost:5000/api/healup/medication/$medicationId");
 
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        // If the request was successful, parse the response and return the medication details
-        return json.decode(response.body);
-      } else {
-        throw Exception("Failed to load medication details");
+      try {
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          // If the request was successful, parse the response and return the medication details
+          return json.decode(response.body);
+        } else {
+          throw Exception("Failed to load medication details");
+        }
+      } catch (e) {
+        _showErrorDialog("An error occurred while fetching medication details: $e");
+        return null;
       }
-    } catch (e) {
-      _showErrorDialog("An error occurred while fetching medication details: $e");
-      return null;
+
     }
+    else{
+      final url = Uri.parse("http://10.0.2.2:5000/api/healup/medication/$medicationId");
+
+      try {
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          // If the request was successful, parse the response and return the medication details
+          return json.decode(response.body);
+        } else {
+          throw Exception("Failed to load medication details");
+        }
+      } catch (e) {
+        _showErrorDialog("An error occurred while fetching medication details: $e");
+        return null;
+      }
+
+    }
+
   }
 
 
   void _updateDiscount(String medicationId, double discountPercentage) async {
-    final url = Uri.parse("http://10.0.2.2:5000/api/healup/medication/discount/$medicationId");
+    if(kIsWeb){
+      final url = Uri.parse("http://localhost:5000/api/healup/medication/discount/$medicationId");
 
-    try {
-      final response = await http.put(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          'discount_percentage': discountPercentage,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        // Successfully updated the discount
-        final updatedMedication = json.decode(response.body);
-        // You can update the UI based on the updated medication
-        print("Discount updated successfully: $updatedMedication");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Discount updated successfully.")),
+      try {
+        final response = await http.put(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({
+            'discount_percentage': discountPercentage,
+          }),
         );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to update discount")),
-        );
-        throw Exception("Failed to update discount");
 
+        if (response.statusCode == 200) {
+          // Successfully updated the discount
+          final updatedMedication = json.decode(response.body);
+          // You can update the UI based on the updated medication
+          print("Discount updated successfully: $updatedMedication");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Discount updated successfully.")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to update discount")),
+          );
+          throw Exception("Failed to update discount");
+
+        }
+      } catch (e) {
+        //_showErrorDialog("An error occurred while updating the discount: $e");
       }
-    } catch (e) {
-      //_showErrorDialog("An error occurred while updating the discount: $e");
+
     }
+    else{
+      final url = Uri.parse("http://10.0.2.2:5000/api/healup/medication/discount/$medicationId");
+
+      try {
+        final response = await http.put(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: json.encode({
+            'discount_percentage': discountPercentage,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          // Successfully updated the discount
+          final updatedMedication = json.decode(response.body);
+          // You can update the UI based on the updated medication
+          print("Discount updated successfully: $updatedMedication");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Discount updated successfully.")),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to update discount")),
+          );
+          throw Exception("Failed to update discount");
+
+        }
+      } catch (e) {
+        //_showErrorDialog("An error occurred while updating the discount: $e");
+      }
+
+    }
+
   }
 
   void _showErrorDialog(String message) {
@@ -458,329 +635,668 @@ class _MedicationListPageState extends State<MedicationListPage> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,  // لإزالة سهم التراجع
-        title: const Text(
-          "Medication List",
-          style: TextStyle(
-            fontSize: 24,  // زيادة حجم الخط
-            fontWeight: FontWeight.bold,  // جعل الخط عريض
-          ),
-        ),
-        backgroundColor: const Color(0xff2f9a8f),
+    if (kIsWeb) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false, // لإزالة سهم التراجع
 
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddMedicationPage(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/back.jpg'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.3),
-              BlendMode.darken,
+          title: const Text(
+            "Medication List",
+            style: TextStyle(
+              fontSize: 24,  // Increased font size for better readability on larger screens
+              fontWeight: FontWeight.bold,  // Make the title bold
             ),
           ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchText = value;
-                  });
-                  _filterMedications();
-                },
-                decoration: InputDecoration(
-                  hintText: "Search for medication",
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
+          backgroundColor: const Color(0xff2f9a8f),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddMedicationPage(),
                   ),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.7),
-                ),
-              ),
+                );
+              },
             ),
-            // Category Buttons
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,  // Enable horizontal scrolling
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,  // Align buttons to the start
+          ],
+        ),
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+                onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
+              },
+              backgroundColor: const Color(0xff2f9a8f),
+              selectedIconTheme: const IconThemeData(color: Colors.white),
+              unselectedIconTheme: const IconThemeData(color: Colors.black54),
+              selectedLabelTextStyle: const TextStyle(color: Colors.white),
+              unselectedLabelTextStyle: const TextStyle(color: Colors.black54),
+              extended: true, // لتوسيع القائمة وعرض النص بجانب الأيقونة
+              destinations: const [
+                NavigationRailDestination(
+                  icon: Icon(Icons.person),
+                  label: Text("Patient List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.medical_services),
+                  label: Text("Doctor List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.local_pharmacy),
+                  label: Text("Medication List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.shopping_cart),
+                  label: Text("Order List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.admin_panel_settings),
+                  label: Text("Management List"),
+                ),
+              ],
+            ),
+            const VerticalDivider(thickness: 1, width: 1), // Divider line
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('images/back.jpg'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.3),
+                      BlendMode.darken,
+                    ),
+                  ),
+                ),
+                child: Column(
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedCategory = 'All';
-                        });
-                        fetchMedications(); // Fetch medications based on the category
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedCategory == 'All'
-                            ? Colors.white
-                            : const Color(0xff2f9a8f),
-                        foregroundColor: selectedCategory == 'All'
-                            ? Colors.black
-                            : Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          side: BorderSide(
-                            color: selectedCategory == 'All'
-                                ? const Color(0xff2f9a8f)
-                                : Colors.transparent,
-                            width: 4.0,
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            _searchText = value;
+                          });
+                          _filterMedications();
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Search for medication",
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
                           ),
-                        ),
-                        minimumSize: Size(150, 60),
-                      ),
-                      child: const Text(
-                        'All',
-                        style: TextStyle(
-                          fontSize: 22,
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.7),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4), // Small space between buttons
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedCategory = 'OTC Medication';
-                        });
-                        fetchOTCMedications(); // Fetch OTC medications
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedCategory == 'OTC Medication'
-                            ? Colors.white
-                            : const Color(0xff2f9a8f),
-                        foregroundColor: selectedCategory == 'OTC Medication'
-                            ? Colors.black
-                            : Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          side: BorderSide(
-                            color: selectedCategory == 'OTC Medication'
-                                ? const Color(0xff2f9a8f)
-                                : Colors.transparent,
-                            width: 4.0,
-                          ),
-                        ),
-                        minimumSize: Size(150, 60),
-                      ),
-                      child: const Text(
-                        'OTC Medication',
-                        style: TextStyle(
-                          fontSize: 22,
+                    // Category Buttons
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedCategory = 'All';
+                                });
+                                fetchMedications();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: selectedCategory == 'All'
+                                    ? Colors.white
+                                    : const Color(0xff2f9a8f),
+                                foregroundColor: selectedCategory == 'All'
+                                    ? Colors.black
+                                    : Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  side: BorderSide(
+                                    color: selectedCategory == 'All'
+                                        ? const Color(0xff2f9a8f)
+                                        : Colors.transparent,
+                                    width: 4.0,
+                                  ),
+                                ),
+                                minimumSize: Size(150, 60),
+                              ),
+                              child: const Text(
+                                'All',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedCategory = 'OTC Medication';
+                                });
+                                fetchOTCMedications();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: selectedCategory == 'OTC Medication'
+                                    ? Colors.white
+                                    : const Color(0xff2f9a8f),
+                                foregroundColor: selectedCategory == 'OTC Medication'
+                                    ? Colors.black
+                                    : Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  side: BorderSide(
+                                    color: selectedCategory == 'OTC Medication'
+                                        ? const Color(0xff2f9a8f)
+                                        : Colors.transparent,
+                                    width: 4.0,
+                                  ),
+                                ),
+                                minimumSize: Size(150, 60),
+                              ),
+                              child: const Text(
+                                'OTC Medication',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedCategory = 'Discount List';
+                                });
+                                fetchDiscountedMedications();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: selectedCategory == 'Discount List'
+                                    ? Colors.white
+                                    : const Color(0xff2f9a8f),
+                                foregroundColor: selectedCategory == 'Discount List'
+                                    ? Colors.black
+                                    : Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  side: BorderSide(
+                                    color: selectedCategory == 'Discount List'
+                                        ? const Color(0xff2f9a8f)
+                                        : Colors.transparent,
+                                    width: 4.0,
+                                  ),
+                                ),
+                                minimumSize: Size(150, 60),
+                              ),
+                              child: const Text(
+                                'Discount List',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4), // Small space between buttons
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedCategory = 'Discount List';
-                        });
-                        fetchDiscountedMedications();
-                        //fetchMedications(); // Fetch medications based on the category
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: selectedCategory == 'Discount List'
-                            ? Colors.white
-                            : const Color(0xff2f9a8f),
-                        foregroundColor: selectedCategory == 'Discount List'
-                            ? Colors.black
-                            : Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          side: BorderSide(
-                            color: selectedCategory == 'Discount List'
-                                ? const Color(0xff2f9a8f)
-                                : Colors.transparent,
-                            width: 4.0,
-                          ),
-                        ),
-                        minimumSize: Size(150, 60),
-                      ),
-                      child: const Text(
-                        'Discount List',
+                    medications.isEmpty
+                        ? const Center(
+                      child: Text(
+                        "No medications found.",
                         style: TextStyle(
-                          fontSize: 22,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
+                      ),
+                    )
+                        : Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredMedications.length,
+                        itemBuilder: (context, index) {
+                          final medication = filteredMedications[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      MedicationDetailsPage(
+                                          medicationId: medication['id']),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 16.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 35,
+                                      backgroundImage:
+                                      AssetImage(medication['pic']),
+                                    ),
+                                    const SizedBox(width: 16.0),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            medication['name'],
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            "name: ${medication['medication_name']}",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            "stock_quantity: ${medication['stock_quantity'].toString()}",
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit,
+                                              color: Colors.yellowAccent),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditMedicationPage(
+                                                      medicationId:
+                                                      medication['id'],
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              color: Colors.red),
+                                          onPressed: () {
+                                            _showDeleteDialog(
+                                                medication['id'],
+                                                medication['name']);
+                                          },
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.discount,
+                                              color: Colors.green),
+                                          onPressed: () {
+                                            _showDiscountDialog(
+                                                medication['id'],
+                                                medication['name']);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
                 ),
               ),
             ),
+          ],
+        ),
+      );
+    }
+    else{
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
+          title: const Text(
+            "Medication List",
+            style: TextStyle(
+              fontSize: 24,  // زيادة حجم الخط
+              fontWeight: FontWeight.bold,  // جعل الخط عريض
+            ),
+          ),
+          backgroundColor: const Color(0xff2f9a8f),
 
-            medications.isEmpty
-                ? const Center(
-              child: Text(
-                "No medications found.",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            )
-            :Expanded(
-              child: ListView.builder(
-                itemCount: filteredMedications.length,
-                itemBuilder: (context, index) {
-                  final medication = filteredMedications[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MedicationDetailsPage(medicationId: medication['id']),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 16.0,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 35,
-                              backgroundImage: AssetImage(medication['pic']),
-                            ),
-                            const SizedBox(width: 16.0),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    medication['name'],
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "name: ${medication['medication_name']}",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    "stock_quantity: ${medication['stock_quantity'].toString()}",
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                // Edit Icon
-                                IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.yellowAccent),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditMedicationPage(
-                                          medicationId: medication['id'],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-
-                                // Delete Icon
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () {
-                                    _showDeleteDialog(medication['id'], medication['name']);
-                                  },
-                                ),
-
-                                // Discount Icon
-                                IconButton(
-                                  icon: const Icon(Icons.discount, color: Colors.green),
-                                  onPressed: () {
-                                    _showDiscountDialog(medication['id'], medication['name']);
-                                    // Implement the discount action here
-                                    //_applyDiscount(medication['id']);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddMedicationPage(),
+                  ),
+                );
+              },
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: onTabTapped,
-        backgroundColor: const Color(0xff2f9a8f),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black54,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Patient",
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/back.jpg'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.3),
+                BlendMode.darken,
+              ),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.medical_services),
-            label: "Doctor",
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _searchText = value;
+                    });
+                    _filterMedications();
+                  },
+                  decoration: InputDecoration(
+                    hintText: "Search for medication",
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+              ),
+              // Category Buttons
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,  // Enable horizontal scrolling
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,  // Align buttons to the start
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedCategory = 'All';
+                          });
+                          fetchMedications(); // Fetch medications based on the category
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: selectedCategory == 'All'
+                              ? Colors.white
+                              : const Color(0xff2f9a8f),
+                          foregroundColor: selectedCategory == 'All'
+                              ? Colors.black
+                              : Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            side: BorderSide(
+                              color: selectedCategory == 'All'
+                                  ? const Color(0xff2f9a8f)
+                                  : Colors.transparent,
+                              width: 4.0,
+                            ),
+                          ),
+                          minimumSize: Size(150, 60),
+                        ),
+                        child: const Text(
+                          'All',
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4), // Small space between buttons
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedCategory = 'OTC Medication';
+                          });
+                          fetchOTCMedications(); // Fetch OTC medications
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: selectedCategory == 'OTC Medication'
+                              ? Colors.white
+                              : const Color(0xff2f9a8f),
+                          foregroundColor: selectedCategory == 'OTC Medication'
+                              ? Colors.black
+                              : Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            side: BorderSide(
+                              color: selectedCategory == 'OTC Medication'
+                                  ? const Color(0xff2f9a8f)
+                                  : Colors.transparent,
+                              width: 4.0,
+                            ),
+                          ),
+                          minimumSize: Size(150, 60),
+                        ),
+                        child: const Text(
+                          'OTC Medication',
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4), // Small space between buttons
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedCategory = 'Discount List';
+                          });
+                          fetchDiscountedMedications();
+                          //fetchMedications(); // Fetch medications based on the category
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: selectedCategory == 'Discount List'
+                              ? Colors.white
+                              : const Color(0xff2f9a8f),
+                          foregroundColor: selectedCategory == 'Discount List'
+                              ? Colors.black
+                              : Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            side: BorderSide(
+                              color: selectedCategory == 'Discount List'
+                                  ? const Color(0xff2f9a8f)
+                                  : Colors.transparent,
+                              width: 4.0,
+                            ),
+                          ),
+                          minimumSize: Size(150, 60),
+                        ),
+                        child: const Text(
+                          'Discount List',
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              medications.isEmpty
+                  ? const Center(
+                child: Text(
+                  "No medications found.",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              )
+                  :Expanded(
+                child: ListView.builder(
+                  itemCount: filteredMedications.length,
+                  itemBuilder: (context, index) {
+                    final medication = filteredMedications[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MedicationDetailsPage(medicationId: medication['id']),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 35,
+                                backgroundImage: AssetImage(medication['pic']),
+                              ),
+                              const SizedBox(width: 16.0),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      medication['name'],
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      "name: ${medication['medication_name']}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      "stock_quantity: ${medication['stock_quantity'].toString()}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  // Edit Icon
+                                  IconButton(
+                                    icon: const Icon(Icons.edit, color: Colors.yellowAccent),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditMedicationPage(
+                                            medicationId: medication['id'],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+
+                                  // Delete Icon
+                                  IconButton(
+                                    icon: const Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () {
+                                      _showDeleteDialog(medication['id'], medication['name']);
+                                    },
+                                  ),
+
+                                  // Discount Icon
+                                  IconButton(
+                                    icon: const Icon(Icons.discount, color: Colors.green),
+                                    onPressed: () {
+                                      _showDiscountDialog(medication['id'], medication['name']);
+                                      // Implement the discount action here
+                                      //_applyDiscount(medication['id']);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_pharmacy),
-            label: "Medication",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: "Order",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings),
-            label: "Management",
-          ),
-        ],
-      ),
-    );
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          onTap: onTabTapped,
+          backgroundColor: const Color(0xff2f9a8f),
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.black54,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Patient",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.medical_services),
+              label: "Doctor",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.local_pharmacy),
+              label: "Medication",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: "Order",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.admin_panel_settings),
+              label: "Management",
+            ),
+          ],
+        ),
+      );
+    }
+
   }
 }
 

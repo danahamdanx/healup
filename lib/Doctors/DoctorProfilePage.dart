@@ -6,6 +6,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:first/patient/profile/ThemeNotifier.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 
 class DoctorProfilePage extends StatefulWidget {
@@ -51,71 +52,147 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
   }
 
   Future<void> _fetchDoctorDetails() async {
-    try {
-      String? doctorId = await _storage.read(key: 'doctor_id');
-      if (doctorId == null) {
-        throw Exception("Doctor ID not found in storage.");
-      }
-
-      final response = await http.get(
-        Uri.parse('http://10.0.2.2:5000/api/healup/doctors/doctor/$doctorId'),
-        headers: {'Content-Type': 'application/json'},
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          doctorData = json.decode(response.body);
-          isLoading = false;
-        });
-
-        // Debugging photo URL
-        print('Photo URL: ${doctorData!['photo']}'); // Add this line here
-
-        _populateFields();
-      } else {
-        throw Exception("Failed to load doctor details.");
-      }
-    } catch (error) {
-      setState(() {
-        isLoading = false;
-      });
-      _showErrorDialog("An error occurred while loading doctor details.");
-    }
-  }
-
-  Future<void> _updateDoctorProfile() async {
-    if (_formKey.currentState!.validate()) {
+    if(kIsWeb){
       try {
         String? doctorId = await _storage.read(key: 'doctor_id');
-        final response = await http.put(
-          Uri.parse('http://10.0.2.2:5000/api/healup/doctors/$doctorId'),
+        if (doctorId == null) {
+          throw Exception("Doctor ID not found in storage.");
+        }
+
+        final response = await http.get(
+          Uri.parse('http://localhost:5000/api/healup/doctors/doctor/$doctorId'),
           headers: {'Content-Type': 'application/json'},
-          body: json.encode({
-            'name': _nameController.text,
-            'username': _usernameController.text,
-            'specialization': _specializationController.text,
-            'phone': _phoneController.text,
-            'email': _emailController.text,
-            'address': _addressController.text,
-            'hospital': _hospitalController.text,
-            'pricePerHour': _priceController.text,
-            'yearExperience': _yearExperienceController.text,
-          }),
         );
 
         if (response.statusCode == 200) {
-          final updatedDoctor = json.decode(response.body);
           setState(() {
-            doctorData = updatedDoctor; // Update the doctor data
+            doctorData = json.decode(response.body);
+            isLoading = false;
           });
-          _showSuccessDialog("Profile updated successfully.");
+
+          // Debugging photo URL
+          print('Photo URL: ${doctorData!['photo']}'); // Add this line here
+
+          _populateFields();
         } else {
-          throw Exception("Failed to update doctor details.");
+          throw Exception("Failed to load doctor details.");
         }
       } catch (error) {
-        _showErrorDialog("An error occurred while updating the profile.");
+        setState(() {
+          isLoading = false;
+        });
+        _showErrorDialog("An error occurred while loading doctor details.");
       }
+
     }
+    else{
+      try {
+        String? doctorId = await _storage.read(key: 'doctor_id');
+        if (doctorId == null) {
+          throw Exception("Doctor ID not found in storage.");
+        }
+
+        final response = await http.get(
+          Uri.parse('http://10.0.2.2:5000/api/healup/doctors/doctor/$doctorId'),
+          headers: {'Content-Type': 'application/json'},
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            doctorData = json.decode(response.body);
+            isLoading = false;
+          });
+
+          // Debugging photo URL
+          print('Photo URL: ${doctorData!['photo']}'); // Add this line here
+
+          _populateFields();
+        } else {
+          throw Exception("Failed to load doctor details.");
+        }
+      } catch (error) {
+        setState(() {
+          isLoading = false;
+        });
+        _showErrorDialog("An error occurred while loading doctor details.");
+      }
+
+    }
+
+  }
+
+  Future<void> _updateDoctorProfile() async {
+    if(kIsWeb){
+      if (_formKey.currentState!.validate()) {
+        try {
+          String? doctorId = await _storage.read(key: 'doctor_id');
+          final response = await http.put(
+            Uri.parse('http://localhost:5000/api/healup/doctors/$doctorId'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'name': _nameController.text,
+              'username': _usernameController.text,
+              'specialization': _specializationController.text,
+              'phone': _phoneController.text,
+              'email': _emailController.text,
+              'address': _addressController.text,
+              'hospital': _hospitalController.text,
+              'pricePerHour': _priceController.text,
+              'yearExperience': _yearExperienceController.text,
+            }),
+          );
+
+          if (response.statusCode == 200) {
+            final updatedDoctor = json.decode(response.body);
+            setState(() {
+              doctorData = updatedDoctor; // Update the doctor data
+            });
+            _showSuccessDialog("Profile updated successfully.");
+          } else {
+            throw Exception("Failed to update doctor details.");
+          }
+        } catch (error) {
+          _showErrorDialog("An error occurred while updating the profile.");
+        }
+      }
+
+    }
+    else{
+      if (_formKey.currentState!.validate()) {
+        try {
+          String? doctorId = await _storage.read(key: 'doctor_id');
+          final response = await http.put(
+            Uri.parse('http://10.0.2.2:5000/api/healup/doctors/$doctorId'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({
+              'name': _nameController.text,
+              'username': _usernameController.text,
+              'specialization': _specializationController.text,
+              'phone': _phoneController.text,
+              'email': _emailController.text,
+              'address': _addressController.text,
+              'hospital': _hospitalController.text,
+              'pricePerHour': _priceController.text,
+              'yearExperience': _yearExperienceController.text,
+            }),
+          );
+
+          if (response.statusCode == 200) {
+            final updatedDoctor = json.decode(response.body);
+            setState(() {
+              doctorData = updatedDoctor; // Update the doctor data
+            });
+            _showSuccessDialog("Profile updated successfully.");
+          } else {
+            throw Exception("Failed to update doctor details.");
+          }
+        } catch (error) {
+          _showErrorDialog("An error occurred while updating the profile.");
+        }
+      }
+
+    }
+
   }
 
   void _showErrorDialog(String message) {
@@ -253,93 +330,190 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    if(kIsWeb){
+      final themeNotifier = Provider.of<ThemeNotifier>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Doctor Profile",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xff6be4d7),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.white),
-            onPressed: () => _showSettingsMenu(context, themeNotifier),
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
+
+          title: Text(
+            "Doctor Profile",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('images/back.jpg'),
-                fit: BoxFit.cover,
+          backgroundColor: const Color(0xff6be4d7),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () => _showSettingsMenu(context, themeNotifier),
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/back.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.3),
               ),
             ),
-            child: Container(
-              color: Colors.black.withOpacity(0.3),
-            ),
-          ),
-          isLoading
-              ? Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundImage: doctorData!['photo'] != null
-                            ? doctorData!['photo'].startsWith('http')
-                            ? NetworkImage(
-                            doctorData!['photo']) // Load from network
-                            : AssetImage(
-                            doctorData!['photo']) as ImageProvider // Load from assets
-                            : AssetImage('assets/doctor.jpg') // Default image
-
-                        as ImageProvider,
+            isLoading
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: doctorData!['photo'] != null
+                              ? doctorData!['photo'].startsWith('http')
+                              ? NetworkImage(
+                              doctorData!['photo']) // Load from network
+                              : AssetImage(
+                              doctorData!['photo']) as ImageProvider // Load from assets
+                              : AssetImage('assets/doctor.jpg') // Default image
+                          as ImageProvider,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    _buildSectionDivider(),
-                    SizedBox(height: 20),
-                    ..._buildFields(),
-                    SizedBox(height: 20),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: _updateDoctorProfile,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff2f9a8f),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                      SizedBox(height: 10),
+                      _buildSectionDivider(),
+                      SizedBox(height: 20),
+                      ..._buildFields(),
+                      SizedBox(height: 20),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _updateDoctorProfile,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff2f9a8f),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text(
+                            'Update Profile',
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
-                        child: const Text(
-                          'Update Profile',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
+          ],
+        ),
+      );
+
+    }
+    else{
+      final themeNotifier = Provider.of<ThemeNotifier>(context);
+
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
+
+          title: Text(
+            "Doctor Profile",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-    );
+          backgroundColor: const Color(0xff6be4d7),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.white),
+              onPressed: () => _showSettingsMenu(context, themeNotifier),
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/back.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.3),
+              ),
+            ),
+            isLoading
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage: doctorData!['photo'] != null
+                              ? doctorData!['photo'].startsWith('http')
+                              ? NetworkImage(
+                              doctorData!['photo']) // Load from network
+                              : AssetImage(
+                              doctorData!['photo']) as ImageProvider // Load from assets
+                              : AssetImage('assets/doctor.jpg') // Default image
+
+                          as ImageProvider,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      _buildSectionDivider(),
+                      SizedBox(height: 20),
+                      ..._buildFields(),
+                      SizedBox(height: 20),
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _updateDoctorProfile,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff2f9a8f),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: const Text(
+                            'Update Profile',
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+    }
+
   }
 
   List<Widget> _buildFields() {

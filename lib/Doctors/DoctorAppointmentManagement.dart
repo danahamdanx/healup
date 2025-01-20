@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart'; // For parsing custom date format
 import 'PrescriptionFormPage.dart';
 import 'reportForm.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class AppointmentManagementPage extends StatefulWidget {
   const AppointmentManagementPage({Key? key}) : super(key: key);
@@ -15,7 +16,8 @@ class AppointmentManagementPage extends StatefulWidget {
 }
 
 class _AppointmentManagementPageState extends State<AppointmentManagementPage>
-    with TickerProviderStateMixin { // Add this mixin
+    with TickerProviderStateMixin {
+  // Add this mixin
   final _storage = FlutterSecureStorage();
   List<Map<String, dynamic>> pendingRequests = [];
   List<Map<String, dynamic>> confirmedAppointments = [];
@@ -42,24 +44,30 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
   void initState() {
     super.initState();
     _pendingAnimationController = AnimationController(
-      vsync: this, // This now works because TickerProviderStateMixin provides vsync
+      vsync: this,
+      // This now works because TickerProviderStateMixin provides vsync
       duration: const Duration(milliseconds: 400),
     );
     _confirmedAnimationController = AnimationController(
-      vsync: this, // This now works because TickerProviderStateMixin provides vsync
+      vsync: this,
+      // This now works because TickerProviderStateMixin provides vsync
       duration: const Duration(milliseconds: 400),
     );
     _pastAnimationController = AnimationController(
-      vsync: this, // This now works because TickerProviderStateMixin provides vsync
+      vsync: this,
+      // This now works because TickerProviderStateMixin provides vsync
       duration: const Duration(milliseconds: 400),
     );
 
     _pendingFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _pendingAnimationController, curve: Curves.easeIn));
+        CurvedAnimation(
+            parent: _pendingAnimationController, curve: Curves.easeIn));
     _confirmedFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _confirmedAnimationController, curve: Curves.easeIn));
+        CurvedAnimation(
+            parent: _confirmedAnimationController, curve: Curves.easeIn));
     _pastFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _pastAnimationController, curve: Curves.easeIn));
+        CurvedAnimation(
+            parent: _pastAnimationController, curve: Curves.easeIn));
 
     _fetchAppointments();
   }
@@ -83,98 +91,195 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
 
   // Fetch appointments and categorize them into pending, confirmed, and past
   Future<void> _fetchAppointments() async {
-    String? doctorId = await _storage.read(key: 'doctor_id');
-    if (doctorId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Doctor ID not found in secure storage.')),
+    if (kIsWeb) {
+      String? doctorId = await _storage.read(key: 'doctor_id');
+      if (doctorId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Doctor ID not found in secure storage.')),
+        );
+        return;
+      }
+
+      final response = await http.get(
+        Uri.parse(
+            'http://localhost:5000/api/healup/appointments/doctor/$doctorId'),
       );
-      return;
-    }
 
-    final response = await http.get(
-      Uri.parse('http://10.0.2.2:5000/api/healup/appointments/doctor/$doctorId'),
-    );
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        pendingRequests.clear();
+        confirmedAppointments.clear();
+        pastAppointments.clear();
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      pendingRequests.clear();
-      confirmedAppointments.clear();
-      pastAppointments.clear();
-
-      for (var appointment in data) {
-        final String status = appointment['status'] ?? 'Unknown';
-        final String? appDateStr = appointment['app_date'];
-        print("Status: $status, Date String: $appDateStr");
+        for (var appointment in data) {
+          final String status = appointment['status'] ?? 'Unknown';
+          final String? appDateStr = appointment['app_date'];
+          print("Status: $status, Date String: $appDateStr");
 
 
-        // Check for null or invalid date strings
-        if (appDateStr == null) {
-          print("Appointment date is null for this appointment: $appointment");
-          continue;
-        }
+          // Check for null or invalid date strings
+          if (appDateStr == null) {
+            print(
+                "Appointment date is null for this appointment: $appointment");
+            continue;
+          }
 
-        // Try parsing the date
-        DateTime? appDate = _parseCustomDate(appDateStr);
-        if (appDate == null) {
-          print("Failed to parse date for appointment: $appointment");
-          continue;
-        }
+          // Try parsing the date
+          DateTime? appDate = _parseCustomDate(appDateStr);
+          if (appDate == null) {
+            print("Failed to parse date for appointment: $appointment");
+            continue;
+          }
 
-        if (appDate != null) {
-          final DateTime now = DateTime.now();
-          if (appDate.isBefore(now)) {
-            pastAppointments.add(appointment); // Move to past if the date is in the past
-            _updateAppointmentStatus(appointment['_id'], 'Completed');
+          if (appDate != null) {
+            final DateTime now = DateTime.now();
+            if (appDate.isBefore(now)) {
+              pastAppointments.add(
+                  appointment); // Move to past if the date is in the past
+              _updateAppointmentStatus(appointment['_id'], 'Completed');
 
-            // Initialize prescription state for past appointments
-            _prescriptionSubmitted[appointment['_id']] = false;
-          } else if (status == 'Confirmed') {
-            confirmedAppointments.add(appointment);
-          } else if (status == 'Pending') {
-            pendingRequests.add(appointment);
+              // Initialize prescription state for past appointments
+              _prescriptionSubmitted[appointment['_id']] = false;
+            } else if (status == 'Confirmed') {
+              confirmedAppointments.add(appointment);
+            } else if (status == 'Pending') {
+              pendingRequests.add(appointment);
+            }
           }
         }
 
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load appointments')),
+        );
+      }
+    }
+    else {
+      String? doctorId = await _storage.read(key: 'doctor_id');
+      if (doctorId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Doctor ID not found in secure storage.')),
+        );
+        return;
       }
 
-      setState(() {});
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load appointments')),
+      final response = await http.get(
+        Uri.parse(
+            'http://10.0.2.2:5000/api/healup/appointments/doctor/$doctorId'),
       );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        pendingRequests.clear();
+        confirmedAppointments.clear();
+        pastAppointments.clear();
+
+        for (var appointment in data) {
+          final String status = appointment['status'] ?? 'Unknown';
+          final String? appDateStr = appointment['app_date'];
+          print("Status: $status, Date String: $appDateStr");
+
+
+          // Check for null or invalid date strings
+          if (appDateStr == null) {
+            print(
+                "Appointment date is null for this appointment: $appointment");
+            continue;
+          }
+
+          // Try parsing the date
+          DateTime? appDate = _parseCustomDate(appDateStr);
+          if (appDate == null) {
+            print("Failed to parse date for appointment: $appointment");
+            continue;
+          }
+
+          if (appDate != null) {
+            final DateTime now = DateTime.now();
+            if (appDate.isBefore(now)) {
+              pastAppointments.add(
+                  appointment); // Move to past if the date is in the past
+              _updateAppointmentStatus(appointment['_id'], 'Completed');
+
+              // Initialize prescription state for past appointments
+              _prescriptionSubmitted[appointment['_id']] = false;
+            } else if (status == 'Confirmed') {
+              confirmedAppointments.add(appointment);
+            } else if (status == 'Pending') {
+              pendingRequests.add(appointment);
+            }
+          }
+        }
+
+        setState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load appointments')),
+        );
+      }
     }
   }
 
 
   // Update appointment status
-  Future<void> _updateAppointmentStatus(String appointmentId, String newStatus) async {
-    final Map<String, dynamic> body = {'status': newStatus};
-    final response = await http.patch(
-      Uri.parse(
-          'http://10.0.2.2:5000/api/healup/appointments/update-status/$appointmentId'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(body),
-    );
-
-    if (response.statusCode == 200) {
-      setState(() {
-        if (newStatus == 'Confirmed') {
-          final updatedAppointment = pendingRequests.firstWhere(
-                  (appointment) => appointment['_id'] == appointmentId);
-          pendingRequests.removeWhere(
-                  (appointment) => appointment['_id'] == appointmentId);
-          confirmedAppointments.add(updatedAppointment);
-        } else if (newStatus == 'Canceled') {
-          pendingRequests.removeWhere(
-                  (appointment) => appointment['_id'] == appointmentId);
-        }
-
-      });
-
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update appointment status')),
+  Future<void> _updateAppointmentStatus(String appointmentId,
+      String newStatus) async {
+    if (kIsWeb) {
+      final Map<String, dynamic> body = {'status': newStatus};
+      final response = await http.patch(
+        Uri.parse(
+            'http://localhost:5000/api/healup/appointments/update-status/$appointmentId'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
       );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          if (newStatus == 'Confirmed') {
+            final updatedAppointment = pendingRequests.firstWhere(
+                    (appointment) => appointment['_id'] == appointmentId);
+            pendingRequests.removeWhere(
+                    (appointment) => appointment['_id'] == appointmentId);
+            confirmedAppointments.add(updatedAppointment);
+          } else if (newStatus == 'Canceled') {
+            pendingRequests.removeWhere(
+                    (appointment) => appointment['_id'] == appointmentId);
+          }
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update appointment status')),
+        );
+      }
+    }
+    else {
+      final Map<String, dynamic> body = {'status': newStatus};
+      final response = await http.patch(
+        Uri.parse(
+            'http://10.0.2.2:5000/api/healup/appointments/update-status/$appointmentId'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          if (newStatus == 'Confirmed') {
+            final updatedAppointment = pendingRequests.firstWhere(
+                    (appointment) => appointment['_id'] == appointmentId);
+            pendingRequests.removeWhere(
+                    (appointment) => appointment['_id'] == appointmentId);
+            confirmedAppointments.add(updatedAppointment);
+          } else if (newStatus == 'Canceled') {
+            pendingRequests.removeWhere(
+                    (appointment) => appointment['_id'] == appointmentId);
+          }
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update appointment status')),
+        );
+      }
     }
   }
 
@@ -188,99 +293,196 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          // Background with a gradient overlay
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('images/back.jpg'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Container(
-              color: Colors.black.withOpacity(0.3), // Semi-transparent overlay
+    if (kIsWeb) {
+      // تصميم واجهة المستخدم لمستخدمي الويب
+      return Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/back.jpg'),
+              fit: BoxFit.cover,
             ),
           ),
-          // Appointment Management UI
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
+            children: [
+              // Overlay الشفاف فوق الخلفية
+              Container(
+                color: Colors.black.withOpacity(0.3),
+              ),
+              Row(
                 children: [
-                  _buildCollapsibleSection(
-                    "Appointment Requests",
-                    showPending,
-                        () {
-                      setState(() {
-                        showPending = !showPending;
-                        if (showPending) {
-                          _pendingAnimationController.forward();
-                        } else {
-                          _pendingAnimationController.reverse();
-                        }
-                      });
-                    },
-                    pendingRequests,
-                    "Pending Approval",
-                    true,
-                  ),
-                  Divider(height: 32, color: Colors.white.withOpacity(0.5)),
-                  _buildCollapsibleSection(
-                    "Confirmed Appointments",
-                    showConfirmed,
-                        () {
-                      setState(() {
-                        showConfirmed = !showConfirmed;
-                        if (showConfirmed) {
-                          _confirmedAnimationController.forward();
-                        } else {
-                          _confirmedAnimationController.reverse();
-                        }
-                      });
-                    },
-                    confirmedAppointments,
-                    "Confirmed",
-                    false,
-                  ),
-                  Divider(height: 32, color: Colors.white.withOpacity(0.5)),
-                  _buildCollapsibleSection(
-                    "Past Appointments",
-                    showPast,
-                        () {
-                      setState(() {
-                        showPast = !showPast;
-                        if (showPast) {
-                          _pastAnimationController.forward();
-                        } else {
-                          _pastAnimationController.reverse();
-                        }
-                      });
-                    },
-                    pastAppointments,
-                    "Completed",
-                    false,
+                  // الشريط الجانبي الذي يعرض المواعيد
+                  // Expanded(
+                  //   flex: 3,
+                  //   child: Container(),
+                  // ),
+                  // الجزء الذي يحتوي على المواعيد
+                  Expanded(
+                    flex: 7,
+                    child: SafeArea(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCollapsibleSection(
+                              "Appointment Requests",
+                              showPending,
+                                  () {
+                                setState(() {
+                                  showPending = !showPending;
+                                  if (showPending) {
+                                    _pendingAnimationController.forward();
+                                  } else {
+                                    _pendingAnimationController.reverse();
+                                  }
+                                });
+                              },
+                              pendingRequests,
+                              "Pending Approval",
+                              true,
+                            ),
+                            Divider(height: 32, color: Colors.white.withOpacity(0.5)),
+                            _buildCollapsibleSection(
+                              "Confirmed Appointments",
+                              showConfirmed,
+                                  () {
+                                setState(() {
+                                  showConfirmed = !showConfirmed;
+                                  if (showConfirmed) {
+                                    _confirmedAnimationController.forward();
+                                  } else {
+                                    _confirmedAnimationController.reverse();
+                                  }
+                                });
+                              },
+                              confirmedAppointments,
+                              "Confirmed",
+                              false,
+                            ),
+                            Divider(height: 32, color: Colors.white.withOpacity(0.5)),
+                            _buildCollapsibleSection(
+                              "Past Appointments",
+                              showPast,
+                                  () {
+                                setState(() {
+                                  showPast = !showPast;
+                                  if (showPast) {
+                                    _pastAnimationController.forward();
+                                  } else {
+                                    _pastAnimationController.reverse();
+                                  }
+                                });
+                              },
+                              pastAppointments,
+                              "Completed",
+                              false,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    } else {
+      // واجهة المستخدم الخاصة بالتطبيق على الأجهزة المحمولة
+      return Scaffold(
+        body: Stack(
+          children: [
+            // الخلفية مع الطبقة الشفافة
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('images/back.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Container(
+                color: Colors.black.withOpacity(0.3), // التغطية الشفافة
+              ),
+            ),
+            // واجهة إدارة المواعيد
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildCollapsibleSection(
+                      "Appointment Requests",
+                      showPending,
+                          () {
+                        setState(() {
+                          showPending = !showPending;
+                          if (showPending) {
+                            _pendingAnimationController.forward();
+                          } else {
+                            _pendingAnimationController.reverse();
+                          }
+                        });
+                      },
+                      pendingRequests,
+                      "Pending Approval",
+                      true,
+                    ),
+                    Divider(height: 32, color: Colors.white.withOpacity(0.5)),
+                    _buildCollapsibleSection(
+                      "Confirmed Appointments",
+                      showConfirmed,
+                          () {
+                        setState(() {
+                          showConfirmed = !showConfirmed;
+                          if (showConfirmed) {
+                            _confirmedAnimationController.forward();
+                          } else {
+                            _confirmedAnimationController.reverse();
+                          }
+                        });
+                      },
+                      confirmedAppointments,
+                      "Confirmed",
+                      false,
+                    ),
+                    Divider(height: 32, color: Colors.white.withOpacity(0.5)),
+                    _buildCollapsibleSection(
+                      "Past Appointments",
+                      showPast,
+                          () {
+                        setState(() {
+                          showPast = !showPast;
+                          if (showPast) {
+                            _pastAnimationController.forward();
+                          } else {
+                            _pastAnimationController.reverse();
+                          }
+                        });
+                      },
+                      pastAppointments,
+                      "Completed",
+                      false,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
-  // Collapsible Section with Animation
-  Widget _buildCollapsibleSection(
-      String title,
+// وظيفة إنشاء الأقسام القابلة للطي مع التحريك
+  Widget _buildCollapsibleSection(String title,
       bool isVisible,
       VoidCallback toggleVisibility,
       List<Map<String, dynamic>> appointments,
       String status,
-      bool showActions,
-      ) {
+      bool showActions,) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -311,22 +513,26 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                   ),
                 ),
                 Icon(
-                  isVisible
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
+                  isVisible ? Icons.keyboard_arrow_up : Icons
+                      .keyboard_arrow_down,
                   color: const Color(0xff2f9a8f),
                 ),
               ],
             ),
           ),
         ),
-        if (isVisible) FadeTransition(opacity: _pendingFadeAnimation, child: _buildAppointmentCards(appointments, status, showActions)),
+        if (isVisible)
+          FadeTransition(
+            opacity: _pendingFadeAnimation,
+            child: _buildAppointmentCards(appointments, status, showActions),
+          ),
       ],
     );
   }
 
-  Widget _buildAppointmentCards(
-      List<Map<String, dynamic>> appointments, String status, bool showActions) {
+// دالة بناء بطاقات المواعيد
+  Widget _buildAppointmentCards(List<Map<String, dynamic>> appointments,
+      String status, bool showActions) {
     if (appointments.isEmpty) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
@@ -365,7 +571,6 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Show check and cancel buttons only for "Pending Approval" appointments
                 if (status == "Pending Approval") ...[
                   IconButton(
                     icon: const Icon(Icons.check, color: Colors.green),
@@ -380,31 +585,27 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                     },
                   ),
                 ],
-
-                // Show Prescription Icon for "Completed" appointments
                 if (status == "Completed") ...[
                   IconButton(
                     icon: Icon(
                       Icons.medical_services,
                       color: _prescriptionSubmitted[appointment['_id']] == true
-                          ? Colors.grey // Disabled if prescription submitted
-                          : Colors.blue, // Active if prescription not submitted
+                          ? Colors.grey
+                          : Colors.blue,
                     ),
-                    onPressed: _prescriptionSubmitted[appointment['_id']] == true
-                        ? null // Disable the button if prescription is already submitted
+                    onPressed: _prescriptionSubmitted[appointment['_id']] ==
+                        true
+                        ? null
                         : () async {
-                      // Navigate to the PrescriptionFormPage
                       final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            // Calculate patient's age from DOB
                             String dob = appointment['patient_id']['DOB'];
                             DateTime birthDate = DateTime.parse(dob);
                             DateTime today = DateTime.now();
                             int age = today.year - birthDate.year;
 
-                            // Adjust if the birthday hasn't occurred yet this year
                             if (today.month < birthDate.month ||
                                 (today.month == birthDate.month &&
                                     today.day < birthDate.day)) {
@@ -414,7 +615,8 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                             return PrescriptionFormPage(
                               doctorId: appointment['doctor_id']['_id'],
                               doctorName: appointment['doctor_id']['name'],
-                              doctorSpeclization: appointment['doctor_id']['specialization'],
+                              doctorSpeclization:
+                              appointment['doctor_id']['specialization'],
                               doctorPhone: appointment['doctor_id']['phone'],
                               doctorHospital: appointment['doctor_id']['hospital'],
                               patientId: appointment['patient_id']['_id'],
@@ -427,7 +629,6 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                         ),
                       );
 
-                      // If the prescription was submitted, update the state
                       if (result == true) {
                         setState(() {
                           _prescriptionSubmitted[appointment['_id']] = true;
@@ -435,8 +636,6 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                       }
                     },
                   ),
-
-                  // Show Report Icon for "Completed" appointments
                   IconButton(
                     icon: Icon(
                       Icons.article,
@@ -457,7 +656,8 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                             int age = today.year - birthDate.year;
 
                             if (today.month < birthDate.month ||
-                                (today.month == birthDate.month && today.day < birthDate.day)) {
+                                (today.month == birthDate.month &&
+                                    today.day < birthDate.day)) {
                               age--;
                             }
 
@@ -465,38 +665,32 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                               appointmentId: appointment['_id'],
                               appointmentDate: appointment['app_date'],
                               doctorName: appointment['doctor_id']['name'],
-                              doctorSpeclization: appointment['doctor_id']['specialization'],
+                              doctorSpeclization:
+                              appointment['doctor_id']['specialization'],
                               doctorPhone: appointment['doctor_id']['phone'],
                               doctorHospital: appointment['doctor_id']['hospital'],
                               doctorSeal: appointment['doctor_id']['seal'],
                               patientName: appointment['patient_id']['username'],
                               patientAge: age,
-                              medicalHistory: appointment['patient_id']['medical_history'],
+                              medicalHistory:
+                              appointment['patient_id']['medical_history'],
                               onReportSubmitted: (appointmentId) {
                                 setState(() {
-                                  submittedReports.add(appointmentId);  // Update the state after report submission
+                                  submittedReports.add(appointmentId);
                                 });
                               },
                             );
                           },
                         ),
                       );
-
-                      if (result == true) {
-                        // Handle any other state changes after returning from the ReportFormPage
-                      }
                     },
                   ),
                 ],
               ],
             ),
           ),
-
-
         );
       }).toList(),
     );
   }
-
-
 }

@@ -4,6 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'medicationList.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+import 'dart:html' as html; // استيراد مكتبة html
+import 'dart:typed_data'; // لاستيراد Uint8List
+import 'package:http_parser/http_parser.dart';
+
 
 class AddMedicationPage extends StatefulWidget {
   @override
@@ -27,132 +32,293 @@ class _AddMedicationPageState extends State<AddMedicationPage> {
   File? _imageFile;
   String? _imageName;
   final ImagePicker _picker = ImagePicker();
+  Uint8List? _imageBytes;  // لتخزين البيانات الثنائية للصورة (للود)
 
   Future<void> _addMedication() async {
-    // التأكد من أن جميع الحقول المطلوبة مملوءة
-    if (_medicationNameController.text.isEmpty ||
-        _scientificNameController.text.isEmpty ||
-        _stockQuantityController.text.isEmpty ||
-        _expirationDateController.text.isEmpty ||
-        _typeController.text.isEmpty ||
-        _priceController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill all the required fields')),
-      );
-      return;
-    }
-
-    // إزالة المسافات غير المرئية من الحقول
-    String medicationName = _medicationNameController.text.trim();
-    String scientificName = _scientificNameController.text.trim();
-    String stockQuantity = _stockQuantityController.text.trim();
-    String expirationDate = _expirationDateController.text.trim();
-    String type = _typeController.text.trim();
-    String price = _priceController.text.trim();
-
-    // التحقق من تنسيق تاريخ الانتهاء (YYYY-MM-DD)
-    if (expirationDate.isEmpty || expirationDate.length != 10) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a valid expiration date (YYYY-MM-DD)')),
-      );
-      return;
-    }
-
-    // التحقق من أن السعر وكمية المخزون أرقام صحيحة
-    if (int.tryParse(stockQuantity) == null || double.tryParse(price) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please provide valid numeric values for stock quantity and price')),
-      );
-      return;
-    }
-
-    // إضافة نسبة الخصم إذا كانت موجودة
-    String discountPercentage = _discountPercentageController.text.trim();
-    if (discountPercentage.isNotEmpty && double.tryParse(discountPercentage) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please provide a valid numeric value for discount percentage')),
-      );
-      return;
-    }
-
-    // عرض الحقول المرسلة (سجلات)
-    print('Medication Name: $medicationName');
-    print('Scientific Name: $scientificName');
-    print('Stock Quantity: $stockQuantity');
-    print('Expiration Date: $expirationDate');
-    print('Type: $type');
-    print('Price: $price');
-    print('Discount Percentage: $discountPercentage');
-
-    final url = 'http://10.0.2.2:5000/api/healup/medication/add';
-    final request = http.MultipartRequest('POST', Uri.parse(url));
-
-    request.fields['medication_name'] = medicationName;
-    request.fields['scientific_name'] = scientificName;
-    request.fields['stock_quantity'] = stockQuantity;
-    request.fields['expiration_date'] = expirationDate;
-    request.fields['type'] = type;
-    request.fields['price'] = price;
-
-    if (discountPercentage.isNotEmpty) {
-      request.fields['discount_percentage'] = discountPercentage;
-    }
-
-// أضف الصورة بشكل صحيح إذا كانت موجودة
-    if (_imageFile != null) {
-      List<int> imageBytes = await _imageFile!.readAsBytes();
-      String base64Image = base64Encode(imageBytes);
-      request.fields['image'] = "data:image/png;base64,$base64Image";  // إضافة الصورة المحولة إلى Base64
-      request.fields['image_name'] = _imageName ?? 'image.png';  // اسم الصورة
-    }
-
-
-    try {
-      final sendResponse = await request.send();
-
-      if (sendResponse.statusCode == 201) {
+    if (kIsWeb) {
+      // For web, handle form inputs
+      if (_medicationNameController.text.isEmpty ||
+          _scientificNameController.text.isEmpty ||
+          _stockQuantityController.text.isEmpty ||
+          _expirationDateController.text.isEmpty ||
+          _typeController.text.isEmpty ||
+          _priceController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Medication added successfully')),
+          SnackBar(content: Text('Please fill all the required fields')),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MedicationListPage()),
-        );
-      } else {
-        // التعامل مع الاستجابة في حالة الفشل
-        final responseBody = await sendResponse.stream.bytesToString();
-        print("Failed to add medication: $responseBody");
+        return;
+      }
 
+      String medicationName = _medicationNameController.text.trim();
+      String scientificName = _scientificNameController.text.trim();
+      String stockQuantity = _stockQuantityController.text.trim();
+      String expirationDate = _expirationDateController.text.trim();
+      String type = _typeController.text.trim();
+      String price = _priceController.text.trim();
+      String discountPercentage = _discountPercentageController.text.trim();
+
+
+
+      // عرض الحقول المرسلة (سجلات)
+      print('Medication Name: $medicationName');
+      print('Scientific Name: $scientificName');
+      print('Stock Quantity: $stockQuantity');
+      print('Expiration Date: $expirationDate');
+      print('Type: $type');
+      print('Price: $price');
+      print('Discount Percentage: $discountPercentage');
+
+      // Prepare the request
+      final url = 'http://localhost:5000/api/healup/medication/add';
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['medication_name'] = medicationName;
+      request.fields['scientific_name'] = scientificName;
+      request.fields['stock_quantity'] = stockQuantity;
+      request.fields['expiration_date'] = expirationDate;
+      request.fields['type'] = type;
+      request.fields['price'] = price;
+      if (discountPercentage.isNotEmpty) {
+        request.fields['discount_percentage'] = discountPercentage;
+      }
+
+      // Handle image upload for web: Convert image to Base64
+      if (_imageBytes != null) {
+        String base64Image = base64Encode(_imageBytes!);
+        request.fields['image'] = "data:image/png;base64,$base64Image";
+        request.fields['image_name'] = _imageName ?? 'image.png'; // Provide image name
+      }
+
+      try {
+        final sendResponse = await request.send();
+
+        if (sendResponse.statusCode == 201) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Medication added successfully')),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MedicationListPage()),
+          );
+        } else {
+          final responseBody = await sendResponse.stream.bytesToString();
+          print("Failed to add medication: $responseBody");
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to add medication: $responseBody')),
+          );
+        }
+      } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add medication: $responseBody')),
+          SnackBar(content: Text('Error occurred: $error')),
         );
       }
-    } catch (error) {
-      // التعامل مع الأخطاء
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error occurred: $error')),
-      );
     }
+    else{
+      // التأكد من أن جميع الحقول المطلوبة مملوءة
+      if (_medicationNameController.text.isEmpty ||
+          _scientificNameController.text.isEmpty ||
+          _stockQuantityController.text.isEmpty ||
+          _expirationDateController.text.isEmpty ||
+          _typeController.text.isEmpty ||
+          _priceController.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please fill all the required fields')),
+        );
+        return;
+      }
+
+      // إزالة المسافات غير المرئية من الحقول
+      String medicationName = _medicationNameController.text.trim();
+      String scientificName = _scientificNameController.text.trim();
+      String stockQuantity = _stockQuantityController.text.trim();
+      String expirationDate = _expirationDateController.text.trim();
+      String type = _typeController.text.trim();
+      String price = _priceController.text.trim();
+
+      // التحقق من تنسيق تاريخ الانتهاء (YYYY-MM-DD)
+      if (expirationDate.isEmpty || expirationDate.length != 10) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please enter a valid expiration date (YYYY-MM-DD)')),
+        );
+        return;
+      }
+
+      // التحقق من أن السعر وكمية المخزون أرقام صحيحة
+      if (int.tryParse(stockQuantity) == null || double.tryParse(price) == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please provide valid numeric values for stock quantity and price')),
+        );
+        return;
+      }
+
+      // إضافة نسبة الخصم إذا كانت موجودة
+      String discountPercentage = _discountPercentageController.text.trim();
+      if (discountPercentage.isNotEmpty && double.tryParse(discountPercentage) == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please provide a valid numeric value for discount percentage')),
+        );
+        return;
+      }
+
+      // عرض الحقول المرسلة (سجلات)
+      print('Medication Name: $medicationName');
+      print('Scientific Name: $scientificName');
+      print('Stock Quantity: $stockQuantity');
+      print('Expiration Date: $expirationDate');
+      print('Type: $type');
+      print('Price: $price');
+      print('Discount Percentage: $discountPercentage');
+
+      final url = 'http://10.0.2.2:5000/api/healup/medication/add';
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields['medication_name'] = medicationName;
+      request.fields['scientific_name'] = scientificName;
+      request.fields['stock_quantity'] = stockQuantity;
+      request.fields['expiration_date'] = expirationDate;
+      request.fields['type'] = type;
+      request.fields['price'] = price;
+
+      if (discountPercentage.isNotEmpty) {
+        request.fields['discount_percentage'] = discountPercentage;
+      }
+
+// أضف الصورة بشكل صحيح إذا كانت موجودة
+      if (_imageFile != null) {
+        List<int> imageBytes = await _imageFile!.readAsBytes();
+        String base64Image = base64Encode(imageBytes);
+        request.fields['image'] = "data:image/png;base64,$base64Image";  // إضافة الصورة المحولة إلى Base64
+        request.fields['image_name'] = _imageName ?? 'image.png';  // اسم الصورة
+      }
+
+
+      try {
+        final sendResponse = await request.send();
+
+        if (sendResponse.statusCode == 201) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Medication added successfully')),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MedicationListPage()),
+          );
+        } else {
+          // التعامل مع الاستجابة في حالة الفشل
+          final responseBody = await sendResponse.stream.bytesToString();
+          print("Failed to add medication: $responseBody");
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to add medication: $responseBody')),
+          );
+        }
+      } catch (error) {
+        // التعامل مع الأخطاء
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error occurred: $error')),
+        );
+      }
+
+    }
+
   }
 
 
 
 
-  // Function to pick an image from the gallery
+
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (kIsWeb) {
+      // Handle Web Image Picking
+      final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+      uploadInput.accept = 'image/*'; // Set accepted file types
+      uploadInput.click(); // Simulate the file upload dialog
 
-    // Check if the widget is still mounted before calling setState
-    if (pickedFile != null && mounted) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-        _imageName = pickedFile.name;
+      uploadInput.onChange.listen((e) async {
+        final files = uploadInput.files;
+        if (files!.isEmpty) return;
+
+        final reader = html.FileReader();
+        reader.readAsDataUrl(files[0]!); // Read file as Data URL
+        reader.onLoadEnd.listen((e) {
+          // After loading the image as Data URL
+          setState(() {
+            _imageName = files[0]!.name; // Store the image name
+            _imageFile = File(files[0]!.name); // Store the image file
+          });
+
+          // Print the image name in the console
+          print(_imageName);
+
+          // Convert the Data URL to Uint8List
+          final String dataUrl = reader.result as String;
+          final data = dataUrl.split(',').last; // Extract data from Data URL
+          final bytes = Uint8List.fromList(List<int>.from(data.codeUnits));
+
+          // Store the byte data of the image
+          setState(() {
+            _imageBytes = bytes;
+          });
+        });
       });
-      // Print the image name
-      print(_imageName);
     }
+    else{
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+      // Check if the widget is still mounted before calling setState
+      if (pickedFile != null && mounted) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+          _imageName = pickedFile.name;
+        });
+        // Print the image name
+        print(_imageName);
+      }
+
+    }
+
   }
 
+
+// Inside the build method, for displaying the image:
+  Widget _buildImagePreview() {
+    if (kIsWeb) {
+      // For web, display the image using Image.memory (as we're using Uint8List)
+      if (_imageBytes != null) {
+        return Image.memory(
+          _imageBytes!,
+          fit: BoxFit.cover,
+          height: 120, // You can adjust the height as per requirement
+          width: 120,
+        );
+      } else {
+        return Icon(
+          Icons.camera_alt,
+          size: 40,
+          color: Colors.black,
+        );
+      }
+    } else {
+      // For mobile, display the image using Image.file
+      if (_imageFile != null) {
+        return ClipOval(
+          child: Image.file(
+            _imageFile!,
+            fit: BoxFit.cover,
+            height: 120, // You can adjust the height as per requirement
+            width: 120,
+          ),
+        );
+      } else {
+        return Icon(
+          Icons.camera_alt,
+          size: 40,
+          color: Colors.black,
+        );
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -169,129 +335,289 @@ class _AddMedicationPageState extends State<AddMedicationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Add New Medication",
-          style: TextStyle(fontSize: 24),
+    if (kIsWeb) {
+      // تخصيص واجهة الويب هنا
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Add New Medication",
+            style: TextStyle(fontSize: 24),
+          ),
+          backgroundColor: const Color(0xff2f9a8f),
         ),
-        backgroundColor: const Color(0xff2f9a8f),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              // Image Selection (Circle Avatar with Camera Icon)
-              GestureDetector(
-                onTap: _pickImage,
-                child: Column(
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/pat.jpg'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.3),
+                BlendMode.darken,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Container(
+              width: 600, // يمكن تعديل العرض كما يناسبك
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  shrinkWrap: true, // لضمان تصغير حجم ListView
                   children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey[200],
-                      child: _imageFile == null
-                          ? Icon(Icons.camera_alt, size: 40, color: Colors.black)
-                          : ClipOval(child: Image.file(_imageFile!, fit: BoxFit.cover)),
+                    // Image Selection (Circle Avatar with Camera Icon)
+                    GestureDetector(
+                      onTap: _pickImage,
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.grey[200],
+                            child: _buildImagePreview(),
+                          ),
+                          SizedBox(height: 8),
+                          if (_imageName != null) Text(_imageName!, style: TextStyle(fontSize: 16, color: Colors.black)),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 8),
-                    if (_imageName != null) Text(_imageName!, style: TextStyle(fontSize: 16, color: Colors.black)),
+                    // GestureDetector(
+                    //   onTap: _pickImage,
+                    //   child: Column(
+                    //     children: [
+                    //       CircleAvatar(
+                    //         radius: 60,
+                    //         backgroundColor: Colors.grey[200],
+                    //         child: _imageFile == null
+                    //             ? Icon(Icons.camera_alt, size: 40, color: Colors.black)
+                    //             : ClipOval(child: Image.file(_imageFile!, fit: BoxFit.cover)),
+                    //       ),
+                    //       SizedBox(height: 8),
+                    //       if (_imageName != null) Text(_imageName!, style: TextStyle(fontSize: 16, color: Colors.black)),
+                    //     ],
+                    //   ),
+                    // ),
+                    SizedBox(height: 20),
+
+                    // Medication Name
+                    _buildTextField(
+                      controller: _medicationNameController,
+                      label: 'Medication Name',
+                      icon: Icons.medication,
+                      validator: (value) => value!.isEmpty ? 'Please enter medication name' : null,
+                    ),
+                    // Scientific Name
+                    _buildTextField(
+                      controller: _scientificNameController,
+                      label: 'Scientific Name',
+                      icon: Icons.science,
+                      validator: (value) => value!.isEmpty ? 'Please enter scientific name' : null,
+                    ),
+                    // Stock Quantity
+                    _buildTextField(
+                      controller: _stockQuantityController,
+                      label: 'Stock Quantity',
+                      icon: Icons.numbers,
+                      validator: (value) => value!.isEmpty ? 'Please enter stock quantity' : null,
+                      keyboardType: TextInputType.number,
+                    ),
+                    // Expiration Date
+                    _buildTextField(
+                      controller: _expirationDateController,
+                      label: 'Expiration Date',
+                      icon: Icons.calendar_today,
+                      validator: (value) => value!.isEmpty ? 'Please enter expiration date' : null,
+                    ),
+                    // Description
+                    _buildTextField(
+                      controller: _descriptionController,
+                      label: 'Description',
+                      icon: Icons.description,
+                      validator: (value) => value!.isEmpty ? 'Please enter description' : null,
+                    ),
+                    // Type
+                    _buildTextField(
+                      controller: _typeController,
+                      label: 'Type',
+                      icon: Icons.category,
+                      validator: (value) => value!.isEmpty ? 'Please enter type' : null,
+                    ),
+                    // Price
+                    _buildTextField(
+                      controller: _priceController,
+                      label: 'Price',
+                      icon: Icons.monetization_on,
+                      validator: (value) => value!.isEmpty ? 'Please enter price' : null,
+                      keyboardType: TextInputType.number,
+                    ),
+                    // Discount Percentage (Optional)
+                    _buildTextField(
+                      controller: _discountPercentageController,
+                      label: 'Discount Percentage (Optional)',
+                      icon: Icons.percent,
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          final double? percentage = double.tryParse(value);
+                          if (percentage == null || percentage < 0 || percentage > 100) {
+                            return 'Please enter a valid percentage between 0 and 100';
+                          }
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.number,
+                    ),
+                    SizedBox(height: 20),
+
+                    // Add Medication Button
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _addMedication();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff2f9a8f),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      child: Text(
+                        'Add Medication',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
-
-              // Medication Name
-              _buildTextField(
-                controller: _medicationNameController,
-                label: 'Medication Name',
-                icon: Icons.medication,
-                validator: (value) => value!.isEmpty ? 'Please enter medication name' : null,
-              ),
-              // Scientific Name
-              _buildTextField(
-                controller: _scientificNameController,
-                label: 'Scientific Name',
-                icon: Icons.science,
-                validator: (value) => value!.isEmpty ? 'Please enter scientific name' : null,
-              ),
-              // Stock Quantity
-              _buildTextField(
-                controller: _stockQuantityController,
-                label: 'Stock Quantity',
-                icon: Icons.numbers,
-                validator: (value) => value!.isEmpty ? 'Please enter stock quantity' : null,
-                keyboardType: TextInputType.number,
-              ),
-              // Expiration Date
-              _buildTextField(
-                controller: _expirationDateController,
-                label: 'Expiration Date',
-                icon: Icons.calendar_today,
-                validator: (value) => value!.isEmpty ? 'Please enter expiration date' : null,
-              ),
-              // Description
-              _buildTextField(
-                controller: _descriptionController,
-                label: 'Description',
-                icon: Icons.description,
-                validator: (value) => value!.isEmpty ? 'Please enter description' : null,
-              ),
-              // Type
-              _buildTextField(
-                controller: _typeController,
-                label: 'Type',
-                icon: Icons.category,
-                validator: (value) => value!.isEmpty ? 'Please enter type' : null,
-              ),
-              // Price
-              _buildTextField(
-                controller: _priceController,
-                label: 'Price',
-                icon: Icons.monetization_on,
-                validator: (value) => value!.isEmpty ? 'Please enter price' : null,
-                keyboardType: TextInputType.number,
-              ),
-              // حقل نسبة العرض (اختياري)
-              _buildTextField(
-                controller: _discountPercentageController,
-                label: 'Discount Percentage (Optional)',
-                icon: Icons.percent,
-                validator: (value) {
-                  if (value != null && value.isNotEmpty) {
-                    final double? percentage = double.tryParse(value);
-                    if (percentage == null || percentage < 0 || percentage > 100) {
-                      return 'Please enter a valid percentage between 0 and 100';
-                    }
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 20),
-
-              // Add Medication Button
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _addMedication();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff2f9a8f),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                ),
-                child: Text(
-                  'Add Medication',
-                  style: TextStyle(color: Colors.black, fontSize: 20),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
+    else{
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Add New Medication",
+            style: TextStyle(fontSize: 24),
+          ),
+          backgroundColor: const Color(0xff2f9a8f),
+        ),
+        body: Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                // Image Selection (Circle Avatar with Camera Icon)
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.grey[200],
+                        child: _imageFile == null
+                            ? Icon(Icons.camera_alt, size: 40, color: Colors.black)
+                            : ClipOval(child: Image.file(_imageFile!, fit: BoxFit.cover)),
+                      ),
+                      SizedBox(height: 8),
+                      if (_imageName != null) Text(_imageName!, style: TextStyle(fontSize: 16, color: Colors.black)),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+
+                // Medication Name
+                _buildTextField(
+                  controller: _medicationNameController,
+                  label: 'Medication Name',
+                  icon: Icons.medication,
+                  validator: (value) => value!.isEmpty ? 'Please enter medication name' : null,
+                ),
+                // Scientific Name
+                _buildTextField(
+                  controller: _scientificNameController,
+                  label: 'Scientific Name',
+                  icon: Icons.science,
+                  validator: (value) => value!.isEmpty ? 'Please enter scientific name' : null,
+                ),
+                // Stock Quantity
+                _buildTextField(
+                  controller: _stockQuantityController,
+                  label: 'Stock Quantity',
+                  icon: Icons.numbers,
+                  validator: (value) => value!.isEmpty ? 'Please enter stock quantity' : null,
+                  keyboardType: TextInputType.number,
+                ),
+                // Expiration Date
+                _buildTextField(
+                  controller: _expirationDateController,
+                  label: 'Expiration Date',
+                  icon: Icons.calendar_today,
+                  validator: (value) => value!.isEmpty ? 'Please enter expiration date' : null,
+                ),
+                // Description
+                _buildTextField(
+                  controller: _descriptionController,
+                  label: 'Description',
+                  icon: Icons.description,
+                  validator: (value) => value!.isEmpty ? 'Please enter description' : null,
+                ),
+                // Type
+                _buildTextField(
+                  controller: _typeController,
+                  label: 'Type',
+                  icon: Icons.category,
+                  validator: (value) => value!.isEmpty ? 'Please enter type' : null,
+                ),
+                // Price
+                _buildTextField(
+                  controller: _priceController,
+                  label: 'Price',
+                  icon: Icons.monetization_on,
+                  validator: (value) => value!.isEmpty ? 'Please enter price' : null,
+                  keyboardType: TextInputType.number,
+                ),
+                // حقل نسبة العرض (اختياري)
+                _buildTextField(
+                  controller: _discountPercentageController,
+                  label: 'Discount Percentage (Optional)',
+                  icon: Icons.percent,
+                  validator: (value) {
+                    if (value != null && value.isNotEmpty) {
+                      final double? percentage = double.tryParse(value);
+                      if (percentage == null || percentage < 0 || percentage > 100) {
+                        return 'Please enter a valid percentage between 0 and 100';
+                      }
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.number,
+                ),
+                SizedBox(height: 20),
+
+                // Add Medication Button
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _addMedication();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff2f9a8f),
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  child: Text(
+                    'Add Medication',
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+    }
+
   }
 
   // Custom text field builder with icon and validation

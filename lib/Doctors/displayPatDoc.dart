@@ -6,6 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'docChat.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+
 
 class DisplayPatDoc extends StatefulWidget {
   @override
@@ -345,111 +347,236 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Messages'),
-        backgroundColor: Color(0xff2f9a8f),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.white,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.black,
-          labelStyle: TextStyle(fontSize: 20),
-          unselectedLabelStyle: TextStyle(fontSize: 18),
-          tabs: [
-            Tab(text: "Doctors"),
-            Tab(text: "Patients"),
-          ],
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/back.jpg'),
-            fit: BoxFit.cover,
+    if (kIsWeb) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Messages'),
+          backgroundColor: Color(0xff2f9a8f),
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.black,
+            labelStyle: TextStyle(fontSize: 20),
+            unselectedLabelStyle: TextStyle(fontSize: 18),
+            tabs: [
+              Tab(text: "Doctors"),
+              Tab(text: "Patients"),
+            ],
           ),
         ),
-        child: isLoading
-            ? Center(child: CircularProgressIndicator())
-            : Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/back.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
+                  onChanged: (query) {
+                    setState(() {
+                      searchQuery = query;
+                    });
+                  },
                 ),
-                onChanged: (query) {
-                  setState(() {
-                    searchQuery = query;
-                  });
-                },
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  FutureBuilder<List<Doctor>>(
-                    future: getSortedDoctors(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
+              Expanded(
+                child: Row(
+                  children: [
+                    // Doctor list container
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FutureBuilder<List<Doctor>>(
+                          future: getSortedDoctors(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
 
-                      if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      }
+                            if (snapshot.hasError) {
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            }
 
-                      if (snapshot.hasData) {
-                        final doctorsList = snapshot.data!
-                            .where((doctor) =>
-                            doctor.name.toLowerCase().contains(searchQuery.toLowerCase()))
-                            .toList();
+                            if (snapshot.hasData) {
+                              final doctorsList = snapshot.data!
+                                  .where((doctor) =>
+                                  doctor.name.toLowerCase().contains(searchQuery.toLowerCase()))
+                                  .toList();
 
-                        return ListView(
-                          children: doctorsList.map(buildDoctorTile).toList(),
-                        );
-                      }
+                              return ListView(
+                                children: doctorsList.map(buildDoctorTile).toList(),
+                              );
+                            }
 
-                      return Center(child: Text('No doctors found.'));
-                    },
-                  ),
-                  FutureBuilder<List<Patient>>(
-                    future: getSortedPatients(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
+                            return Center(child: Text('No doctors found.'));
+                          },
+                        ),
+                      ),
+                    ),
+                    // Patient list container
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FutureBuilder<List<Patient>>(
+                          future: getSortedPatients(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
 
-                      if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      }
+                            if (snapshot.hasError) {
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            }
 
-                      if (snapshot.hasData) {
-                        final patientsList = snapshot.data!
-                            .where((patient) =>
-                            patient.username.toLowerCase().contains(searchQuery.toLowerCase()))
-                            .toList();
+                            if (snapshot.hasData) {
+                              final patientsList = snapshot.data!
+                                  .where((patient) =>
+                                  patient.username.toLowerCase().contains(searchQuery.toLowerCase()))
+                                  .toList();
 
-                        return ListView(
-                          children: patientsList.map(buildPatientTile).toList(),
-                        );
-                      }
+                              return ListView(
+                                children: patientsList.map(buildPatientTile).toList(),
+                              );
+                            }
 
-                      return Center(child: Text('No patients found.'));
-                    },
-                  ),
-                ],
+                            return Center(child: Text('No patients found.'));
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+
+    }
+    else{
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Messages'),
+          backgroundColor: Color(0xff2f9a8f),
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.black,
+            labelStyle: TextStyle(fontSize: 20),
+            unselectedLabelStyle: TextStyle(fontSize: 18),
+            tabs: [
+              Tab(text: "Doctors"),
+              Tab(text: "Patients"),
+            ],
+          ),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/back.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  onChanged: (query) {
+                    setState(() {
+                      searchQuery = query;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    FutureBuilder<List<Doctor>>(
+                      future: getSortedDoctors(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        }
+
+                        if (snapshot.hasData) {
+                          final doctorsList = snapshot.data!
+                              .where((doctor) =>
+                              doctor.name.toLowerCase().contains(searchQuery.toLowerCase()))
+                              .toList();
+
+                          return ListView(
+                            children: doctorsList.map(buildDoctorTile).toList(),
+                          );
+                        }
+
+                        return Center(child: Text('No doctors found.'));
+                      },
+                    ),
+                    FutureBuilder<List<Patient>>(
+                      future: getSortedPatients(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        }
+
+                        if (snapshot.hasData) {
+                          final patientsList = snapshot.data!
+                              .where((patient) =>
+                              patient.username.toLowerCase().contains(searchQuery.toLowerCase()))
+                              .toList();
+
+                          return ListView(
+                            children: patientsList.map(buildPatientTile).toList(),
+                          );
+                        }
+
+                        return Center(child: Text('No patients found.'));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+    }
+
+
+
   }
 }
 

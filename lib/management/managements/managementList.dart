@@ -8,6 +8,7 @@ import '../doctor/doctorList.dart';
 import 'managementDetailPage.dart';
 import 'AddManagementPage.dart';
 import '../managementLogin.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class ManagementListPage extends StatefulWidget {
   @override
@@ -21,35 +22,71 @@ class _ManagementListPageState extends State<ManagementListPage> {
   String _searchText = '';
 
   Future<void> fetchManagements() async {
-    try {
-      final response = await http.get(
-          Uri.parse("http://10.0.2.2:5000/api/healup/management/"));
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        setState(() {
-          managements = data.map((management) {
-            return {
-              'id': management['_id'],
-              'name': management['name'],
-              'gender': management['gender'] ?? 'Not provided',
-              'phone': management['phone'] ?? 'Not provided',
-              'address': management['address'] ?? 'Not provided',
-              'email': management['email'] ?? 'Not provided',
-              'pic': management['photo'] ?? 'images/default_manager.png',
-            };
-          }).toList();
-          filteredManagements = List.from(managements);
-        });
-      } else {
+    if(kIsWeb){
+      try {
+        final response = await http.get(
+            Uri.parse("http://localhost:5000/api/healup/management/"));
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(response.body);
+          setState(() {
+            managements = data.map((management) {
+              return {
+                'id': management['_id'],
+                'name': management['name'],
+                'gender': management['gender'] ?? 'Not provided',
+                'phone': management['phone'] ?? 'Not provided',
+                'address': management['address'] ?? 'Not provided',
+                'email': management['email'] ?? 'Not provided',
+                'pic': management['photo'] ?? 'images/default_manager.png',
+              };
+            }).toList();
+            filteredManagements = List.from(managements);
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch managements: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to fetch managements: ${response.reasonPhrase}")),
+          SnackBar(content: Text("An error occurred: $error")),
         );
       }
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("An error occurred: $error")),
-      );
+
     }
+    else{
+      try {
+        final response = await http.get(
+            Uri.parse("http://10.0.2.2:5000/api/healup/management/"));
+        if (response.statusCode == 200) {
+          List<dynamic> data = jsonDecode(response.body);
+          setState(() {
+            managements = data.map((management) {
+              return {
+                'id': management['_id'],
+                'name': management['name'],
+                'gender': management['gender'] ?? 'Not provided',
+                'phone': management['phone'] ?? 'Not provided',
+                'address': management['address'] ?? 'Not provided',
+                'email': management['email'] ?? 'Not provided',
+                'pic': management['photo'] ?? 'images/default_manager.png',
+              };
+            }).toList();
+            filteredManagements = List.from(managements);
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Failed to fetch managements: ${response.reasonPhrase}")),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An error occurred: $error")),
+        );
+      }
+
+    }
+
   }
 
   @override
@@ -164,209 +201,412 @@ class _ManagementListPageState extends State<ManagementListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,  // لإزالة سهم التراجع
-        title: const Text(
-          "Management List",
-          style: TextStyle(
-            fontSize: 24,  // زيادة حجم الخط
-            fontWeight: FontWeight.bold,  // جعل الخط عريض
-          ),
-        ),
-        backgroundColor: const Color(0xff2f9a8f),
-
-        actions: [
-          // أيقونة إضافة (Add)
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddManagementPage(),  // الانتقال لصفحة إضافة الإدارة
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ManagementLoginPage(),  // الانتقال لصفحة إضافة الإدارة
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/back.jpg'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.3),
-              BlendMode.darken,
+    if (kIsWeb) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
+          title: const Text(
+            "Management List",
+            style: TextStyle(
+              fontSize: 28,  // زيادة حجم الخط
+              fontWeight: FontWeight.bold,  // جعل الخط عريض
             ),
           ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _searchText = value;
-                  });
-                  _filterManagements();
-                },
-                decoration: InputDecoration(
-                  hintText: "Search for management",
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25.0),
+          backgroundColor: const Color(0xff2f9a8f),
+
+          actions: [
+            // أيقونة إضافة (Add)
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddManagementPage(),  // الانتقال لصفحة إضافة الإدارة
                   ),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.7),
-                ),
-              ),
+                );
+              },
             ),
-            managements.isEmpty
-                ? const Center(
-              child: Text(
-                "No management found.",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+            IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ManagementLoginPage(),  // الانتقال لصفحة إدارة الدخول
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _currentIndex,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+                onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
+              },
+              backgroundColor: const Color(0xff2f9a8f),
+              selectedIconTheme: const IconThemeData(color: Colors.white),
+              unselectedIconTheme: const IconThemeData(color: Colors.black54),
+              selectedLabelTextStyle: const TextStyle(color: Colors.white),
+              unselectedLabelTextStyle: const TextStyle(color: Colors.black54),
+              extended: true, // لتوسيع القائمة وعرض النص بجانب الأيقونة
+              destinations: const [
+                NavigationRailDestination(
+                  icon: Icon(Icons.person),
+                  label: Text("Patient List"),
                 ),
-              ),
-            )
-                : Expanded(
-              child: ListView.builder(
-                itemCount: filteredManagements.length,
-                itemBuilder: (context, index) {
-                  final management = filteredManagements[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ManagementDetailsPage(managementId: management['id']),
-                        ),
-                      );
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            // CircleAvatar(
-                            //   radius: 35,
-                            //   backgroundImage: NetworkImage(management['pic']),
-                            // ),
-                            //const SizedBox(width: 16.0),
-                            IconButton(
-                              icon: const Icon(Icons.admin_panel_settings, color: Colors.black45),
-                              onPressed: () {
-                                // _showDeleteDialog(order['id'], order['patient']);
-                              },
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    management['name'],
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Gender: ${management['gender']}",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  // Text(
-                                  //   "Phone: ${management['phone']}",
-                                  //   style: const TextStyle(
-                                  //     fontSize: 14,
-                                  //     color: Colors.grey,
-                                  //   ),
-                                  // ),
-                                  // Text(
-                                  //   "Email: ${management['email']}",
-                                  //   style: const TextStyle(
-                                  //     fontSize: 14,
-                                  //     color: Colors.grey,
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                _showDeleteDialog(management['id'], management['name']);
-                              },
-                            ),
-                          ],
+                NavigationRailDestination(
+                  icon: Icon(Icons.medical_services),
+                  label: Text("Doctor List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.local_pharmacy),
+                  label: Text("Medication List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.shopping_cart),
+                  label: Text("Order List"),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.admin_panel_settings),
+                  label: Text("Management List"),
+                ),
+              ],
+            ),
+            const VerticalDivider(thickness: 1, width: 1),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('images/back.jpg'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.3),
+                      BlendMode.darken,
+                    ),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            _searchText = value;
+                          });
+                          _filterManagements();
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Search for management",
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.7),
                         ),
                       ),
                     ),
-                  );
-                },
+                    managements.isEmpty
+                        ? const Center(
+                      child: Text(
+                        "No management found.",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    )
+                        : Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredManagements.length,
+                        itemBuilder: (context, index) {
+                          final management = filteredManagements[index];
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ManagementDetailsPage(managementId: management['id']),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(
+                                  children: [
+                                    // يمكنك إضافة صورة هنا
+                                    IconButton(
+                                      icon: const Icon(Icons.admin_panel_settings, color: Colors.black45),
+                                      onPressed: () {
+                                        // _showDeleteDialog(order['id'], order['patient']);
+                                      },
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            management['name'],
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Gender: ${management['gender']}",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () {
+                                        _showDeleteDialog(management['id'], management['name']);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: onTabTapped,
-        backgroundColor: const Color(0xff2f9a8f),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black54,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Patient",
+      );
+    }
+    else{
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
+          title: const Text(
+            "Management List",
+            style: TextStyle(
+              fontSize: 24,  // زيادة حجم الخط
+              fontWeight: FontWeight.bold,  // جعل الخط عريض
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.medical_services),
-            label: "Doctor",
+          backgroundColor: const Color(0xff2f9a8f),
+
+          actions: [
+            // أيقونة إضافة (Add)
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddManagementPage(),  // الانتقال لصفحة إضافة الإدارة
+                  ),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ManagementLoginPage(),  // الانتقال لصفحة إضافة الإدارة
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/back.jpg'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.3),
+                BlendMode.darken,
+              ),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_pharmacy),
-            label: "Medication",
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _searchText = value;
+                    });
+                    _filterManagements();
+                  },
+                  decoration: InputDecoration(
+                    hintText: "Search for management",
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+              ),
+              managements.isEmpty
+                  ? const Center(
+                child: Text(
+                  "No management found.",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              )
+                  : Expanded(
+                child: ListView.builder(
+                  itemCount: filteredManagements.length,
+                  itemBuilder: (context, index) {
+                    final management = filteredManagements[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ManagementDetailsPage(managementId: management['id']),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              // CircleAvatar(
+                              //   radius: 35,
+                              //   backgroundImage: NetworkImage(management['pic']),
+                              // ),
+                              //const SizedBox(width: 16.0),
+                              IconButton(
+                                icon: const Icon(Icons.admin_panel_settings, color: Colors.black45),
+                                onPressed: () {
+                                  // _showDeleteDialog(order['id'], order['patient']);
+                                },
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      management['name'],
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Gender: ${management['gender']}",
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    // Text(
+                                    //   "Phone: ${management['phone']}",
+                                    //   style: const TextStyle(
+                                    //     fontSize: 14,
+                                    //     color: Colors.grey,
+                                    //   ),
+                                    // ),
+                                    // Text(
+                                    //   "Email: ${management['email']}",
+                                    //   style: const TextStyle(
+                                    //     fontSize: 14,
+                                    //     color: Colors.grey,
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  _showDeleteDialog(management['id'], management['name']);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: "Order",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings),
-            label: "Management",
-          ),
-        ],
-      ),
-    );
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          onTap: onTabTapped,
+          backgroundColor: const Color(0xff2f9a8f),
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.black54,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Patient",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.medical_services),
+              label: "Doctor",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.local_pharmacy),
+              label: "Medication",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              label: "Order",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.admin_panel_settings),
+              label: "Management",
+            ),
+          ],
+        ),
+      );
+    }
   }
+
 }
+
 
 // import 'dart:convert';
 // import 'package:flutter/material.dart';

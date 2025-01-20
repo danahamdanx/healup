@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'doctorList.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+
+
 class AddDoctorPage extends StatefulWidget {
   @override
   _AddDoctorPageState createState() => _AddDoctorPageState();
@@ -26,183 +29,356 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
 
   // Add Doctor function
   Future<void> _addDoctor() async {
-    final url = 'http://10.0.2.2:5000/api/healup/doctors/register';
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'name': _nameController.text,
-        'username': _usernameController.text,
-        'password': _passwordController.text,
-        'specialization': _specializationController.text,
-        'phone': _phoneController.text,
-        'email': _emailController.text,
-        'address': _addressController.text,
-        'hospital': _hospitalController.text,
-        'availability': _availabilityController.text,
-        'yearExperience': int.parse(_yearExperienceController.text),
-        'pricePerHour': int.parse(_pricePerHourController.text),
-        'seal': _sealController.text,
-      }),
-    );
+    if(kIsWeb){
+      final url = 'http://localhost:5000/api/healup/doctors/register';
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'name': _nameController.text,
+          'username': _usernameController.text,
+          'password': _passwordController.text,
+          'specialization': _specializationController.text,
+          'phone': _phoneController.text,
+          'email': _emailController.text,
+          'address': _addressController.text,
+          'hospital': _hospitalController.text,
+          'availability': _availabilityController.text,
+          'yearExperience': int.parse(_yearExperienceController.text),
+          'pricePerHour': int.parse(_pricePerHourController.text),
+          'seal': _sealController.text,
+        }),
+      );
 
-    if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Doctor added successfully')),
-      );
-      //Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DoctorListPage()),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add doctor')),
-      );
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Doctor added successfully')),
+        );
+        //Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DoctorListPage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add doctor')),
+        );
+      }
+
     }
+    else{
+      final url = 'http://10.0.2.2:5000/api/healup/doctors/register';
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'name': _nameController.text,
+          'username': _usernameController.text,
+          'password': _passwordController.text,
+          'specialization': _specializationController.text,
+          'phone': _phoneController.text,
+          'email': _emailController.text,
+          'address': _addressController.text,
+          'hospital': _hospitalController.text,
+          'availability': _availabilityController.text,
+          'yearExperience': int.parse(_yearExperienceController.text),
+          'pricePerHour': int.parse(_pricePerHourController.text),
+          'seal': _sealController.text,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Doctor added successfully')),
+        );
+        //Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => DoctorListPage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add doctor')),
+        );
+      }
+
+    }
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    if (kIsWeb) {
+      // Code for web platform
+      return Scaffold(
         appBar: AppBar(
-        //automaticallyImplyLeading: false,  // لإزالة سهم التراجع
-        title: const Text(
-        "Add New Doctor",
-        style: TextStyle(
-        fontSize: 24,  // زيادة حجم الخط
-        //fontWeight: FontWeight.bold,  // جعل الخط عريض
-    ),
-    ),
-    backgroundColor: const Color(0xff2f9a8f),
+          title: const Text(
+            "Add New Doctor",
+            style: TextStyle(fontSize: 24),
+          ),
+          backgroundColor: const Color(0xff2f9a8f),
         ),
-    body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/pat.jpg'),
-
-            //image: AssetImage('images/back.jpg'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.3),
-              BlendMode.darken,
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/pat.jpg'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.3),
+                BlendMode.darken,
+              ),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Container(
+              width: 500, // Adjust the width as per your requirement
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  shrinkWrap: true, // To ensure the list view doesn't expand unnecessarily
+                  children: [
+                    _buildTextField(
+                      controller: _nameController,
+                      label: 'Doctor Name',
+                      icon: Icons.person,
+                      validator: (value) => value!.isEmpty ? 'Please enter doctor\'s name' : null,
+                    ),
+                    _buildTextField(
+                      controller: _usernameController,
+                      label: 'Username',
+                      icon: Icons.account_circle,
+                      validator: (value) => value!.isEmpty ? 'Please enter username' : null,
+                    ),
+                    _buildTextField(
+                      controller: _passwordController,
+                      label: 'Password',
+                      icon: Icons.lock,
+                      validator: (value) => value!.isEmpty ? 'Please enter password' : null,
+                    ),
+                    _buildTextField(
+                      controller: _specializationController,
+                      label: 'Specialization',
+                      icon: Icons.medical_services,
+                      validator: (value) => value!.isEmpty ? 'Please enter specialization' : null,
+                    ),
+                    _buildTextField(
+                      controller: _phoneController,
+                      label: 'Phone',
+                      icon: Icons.phone,
+                      validator: (value) => value!.isEmpty ? 'Please enter phone number' : null,
+                    ),
+                    _buildTextField(
+                      controller: _emailController,
+                      label: 'Email',
+                      icon: Icons.email,
+                      validator: (value) => value!.isEmpty ? 'Please enter email' : null,
+                    ),
+                    _buildTextField(
+                      controller: _addressController,
+                      label: 'Address',
+                      icon: Icons.location_on,
+                      validator: (value) => value!.isEmpty ? 'Please enter address' : null,
+                    ),
+                    _buildTextField(
+                      controller: _hospitalController,
+                      label: 'Hospital',
+                      icon: Icons.local_hospital,
+                      validator: (value) => value!.isEmpty ? 'Please enter hospital' : null,
+                    ),
+                    _buildTextField(
+                      controller: _availabilityController,
+                      label: 'Availability',
+                      icon: Icons.access_time,
+                      validator: (value) => value!.isEmpty ? 'Please enter availability' : null,
+                    ),
+                    _buildTextField(
+                      controller: _yearExperienceController,
+                      label: 'Years of Experience',
+                      icon: Icons.accessibility,
+                      validator: (value) => value!.isEmpty ? 'Please enter years of experience' : null,
+                      keyboardType: TextInputType.number,
+                    ),
+                    _buildTextField(
+                      controller: _pricePerHourController,
+                      label: 'Price Per Hour',
+                      icon: Icons.monetization_on,
+                      validator: (value) => value!.isEmpty ? 'Please enter price per hour' : null,
+                      keyboardType: TextInputType.number,
+                    ),
+                    _buildTextField(
+                      controller: _sealController,
+                      label: 'Seal',
+                      icon: Icons.security,
+                      validator: (value) => value!.isEmpty ? 'Please enter seal' : null,
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _addDoctor();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff2f9a8f),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                      ),
+                      child: Text(
+                        'Add Doctor',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              // Doctor Name
-              _buildTextField(
-                controller: _nameController,
-                label: 'Doctor Name',
-                icon: Icons.person,
-                validator: (value) => value!.isEmpty ? 'Please enter doctor\'s name' : null,
+      );
+    }
+    else{
+      return Scaffold(
+        appBar: AppBar(
+          //automaticallyImplyLeading: false,  // لإزالة سهم التراجع
+          title: const Text(
+            "Add New Doctor",
+            style: TextStyle(
+              fontSize: 24,  // زيادة حجم الخط
+              //fontWeight: FontWeight.bold,  // جعل الخط عريض
+            ),
+          ),
+          backgroundColor: const Color(0xff2f9a8f),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/pat.jpg'),
+
+              //image: AssetImage('images/back.jpg'),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.3),
+                BlendMode.darken,
               ),
-              // Username
-              _buildTextField(
-                controller: _usernameController,
-                label: 'Username',
-                icon: Icons.account_circle,
-                validator: (value) => value!.isEmpty ? 'Please enter username' : null,
-              ),
-              // Password
-              _buildTextField(
-                controller: _passwordController,
-                label: 'Password',
-                icon: Icons.lock,
-                //obscureText: true,
-                validator: (value) => value!.isEmpty ? 'Please enter password' : null,
-              ),
-              // Specialization
-              _buildTextField(
-                controller: _specializationController,
-                label: 'Specialization',
-                icon: Icons.medical_services,
-                validator: (value) => value!.isEmpty ? 'Please enter specialization' : null,
-              ),
-              // Phone
-              _buildTextField(
-                controller: _phoneController,
-                label: 'Phone',
-                icon: Icons.phone,
-                validator: (value) => value!.isEmpty ? 'Please enter phone number' : null,
-              ),
-              // Email
-              _buildTextField(
-                controller: _emailController,
-                label: 'Email',
-                icon: Icons.email,
-                validator: (value) => value!.isEmpty ? 'Please enter email' : null,
-              ),
-              // Address
-              _buildTextField(
-                controller: _addressController,
-                label: 'Address',
-                icon: Icons.location_on,
-                validator: (value) => value!.isEmpty ? 'Please enter address' : null,
-              ),
-              // Hospital
-              _buildTextField(
-                controller: _hospitalController,
-                label: 'Hospital',
-                icon: Icons.local_hospital,
-                validator: (value) => value!.isEmpty ? 'Please enter hospital' : null,
-              ),
-              // Availability
-              _buildTextField(
-                controller: _availabilityController,
-                label: 'Availability',
-                icon: Icons.access_time,
-                validator: (value) => value!.isEmpty ? 'Please enter availability' : null,
-              ),
-              // Year of Experience
-              _buildTextField(
-                controller: _yearExperienceController,
-                label: 'Years of Experience',
-                icon: Icons.accessibility,
-                validator: (value) => value!.isEmpty ? 'Please enter years of experience' : null,
-                keyboardType: TextInputType.number,
-              ),
-              // Price Per Hour
-              _buildTextField(
-                controller: _pricePerHourController,
-                label: 'Price Per Hour',
-                icon: Icons.monetization_on,
-                validator: (value) => value!.isEmpty ? 'Please enter price per hour' : null,
-                keyboardType: TextInputType.number,
-              ),
-              // Seal
-              _buildTextField(
-                controller: _sealController,
-                label: 'Seal',
-                icon: Icons.security,
-                validator: (value) => value!.isEmpty ? 'Please enter seal' : null,
-              ),
-              SizedBox(height: 20),
-              // Add Doctor Button
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _addDoctor();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff2f9a8f),
-                  padding: EdgeInsets.symmetric(vertical: 15),
+            ),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                // Doctor Name
+                _buildTextField(
+                  controller: _nameController,
+                  label: 'Doctor Name',
+                  icon: Icons.person,
+                  validator: (value) => value!.isEmpty ? 'Please enter doctor\'s name' : null,
                 ),
-                child: Text(
-                  'Add Doctor',
-                  style: TextStyle(color: Colors.black, fontSize: 20),
+                // Username
+                _buildTextField(
+                  controller: _usernameController,
+                  label: 'Username',
+                  icon: Icons.account_circle,
+                  validator: (value) => value!.isEmpty ? 'Please enter username' : null,
                 ),
-              ),
-            ],
+                // Password
+                _buildTextField(
+                  controller: _passwordController,
+                  label: 'Password',
+                  icon: Icons.lock,
+                  //obscureText: true,
+                  validator: (value) => value!.isEmpty ? 'Please enter password' : null,
+                ),
+                // Specialization
+                _buildTextField(
+                  controller: _specializationController,
+                  label: 'Specialization',
+                  icon: Icons.medical_services,
+                  validator: (value) => value!.isEmpty ? 'Please enter specialization' : null,
+                ),
+                // Phone
+                _buildTextField(
+                  controller: _phoneController,
+                  label: 'Phone',
+                  icon: Icons.phone,
+                  validator: (value) => value!.isEmpty ? 'Please enter phone number' : null,
+                ),
+                // Email
+                _buildTextField(
+                  controller: _emailController,
+                  label: 'Email',
+                  icon: Icons.email,
+                  validator: (value) => value!.isEmpty ? 'Please enter email' : null,
+                ),
+                // Address
+                _buildTextField(
+                  controller: _addressController,
+                  label: 'Address',
+                  icon: Icons.location_on,
+                  validator: (value) => value!.isEmpty ? 'Please enter address' : null,
+                ),
+                // Hospital
+                _buildTextField(
+                  controller: _hospitalController,
+                  label: 'Hospital',
+                  icon: Icons.local_hospital,
+                  validator: (value) => value!.isEmpty ? 'Please enter hospital' : null,
+                ),
+                // Availability
+                _buildTextField(
+                  controller: _availabilityController,
+                  label: 'Availability',
+                  icon: Icons.access_time,
+                  validator: (value) => value!.isEmpty ? 'Please enter availability' : null,
+                ),
+                // Year of Experience
+                _buildTextField(
+                  controller: _yearExperienceController,
+                  label: 'Years of Experience',
+                  icon: Icons.accessibility,
+                  validator: (value) => value!.isEmpty ? 'Please enter years of experience' : null,
+                  keyboardType: TextInputType.number,
+                ),
+                // Price Per Hour
+                _buildTextField(
+                  controller: _pricePerHourController,
+                  label: 'Price Per Hour',
+                  icon: Icons.monetization_on,
+                  validator: (value) => value!.isEmpty ? 'Please enter price per hour' : null,
+                  keyboardType: TextInputType.number,
+                ),
+                // Seal
+                _buildTextField(
+                  controller: _sealController,
+                  label: 'Seal',
+                  icon: Icons.security,
+                  validator: (value) => value!.isEmpty ? 'Please enter seal' : null,
+                ),
+                SizedBox(height: 20),
+                // Add Doctor Button
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _addDoctor();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff2f9a8f),
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  child: Text(
+                    'Add Doctor',
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+
+    }
+
   }
 
   // Custom text field builder with icon and validation
