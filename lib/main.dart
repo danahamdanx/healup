@@ -8,7 +8,7 @@ import 'patient/PatientPage.dart';
 import 'patient/login&signUP/signUp.dart';
 import 'patient/login&signUP/login.dart';
 import 'patient/login&signUP/ResetPasswordPage.dart';
-import 'Doctors/DoctorLoginPage.dart';
+import 'Doctors/login/DoctorLoginPage.dart';
 import 'patient/Appointement/ScheduleScreen.dart';
 import 'homepage.dart';
 import 'patient/profile/ThemeNotifier.dart';

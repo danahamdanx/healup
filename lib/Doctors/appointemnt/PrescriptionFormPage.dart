@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'PrescriptionForm.dart'; // Import the form widget
+import '../PrescriptionForm.dart'; // Import the form widget
 import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class PrescriptionFormPage extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'ehr_detail_screen.dart'; // Screen for detailed EHR view
+import '../appointemnt/ehr_detail_screen.dart'; // Screen for detailed EHR view
 import 'package:flutter/foundation.dart'; // For kIsWeb
 
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'DoctorMainPage.dart';
+import '../DoctorMainPage.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class DoctorLoginPage extends StatefulWidget {

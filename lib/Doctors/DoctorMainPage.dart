@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'DoctorAppointmentManagement.dart';
-import 'DoctorProfilePage.dart';
-import 'search_screen.dart';
-import 'displayPatDoc.dart'; // Import your chat page
+import 'appointemnt/DoctorAppointmentManagement.dart';
+import 'profile/DoctorProfilePage.dart';
+import 'search/search_screen.dart';
+import 'chat/displayPatDoc.dart'; // Import your chat page
 import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class MainPage extends StatefulWidget {
