@@ -12,6 +12,8 @@ import 'medication/MedicineDetailPage.dart';
 import 'medication/cart.dart';
 import 'medication/medicine.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
+import 'dart:async';
+
 
 class HomeTab extends StatefulWidget {
   final Function(Map<String, dynamic>) onAppointmentBooked;
@@ -35,13 +37,15 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   List<Map<String, dynamic>> doctors = [];
   List<Map<String, dynamic>> medications = []; // To store discounted medications
   static List<Map<String, dynamic>> cart = [];
-
-  late AnimationController _animationController; // Controller for animation
-  late Animation<Offset> _slideAnimation; // Animation for sliding
+  late PageController _pageController;
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation; // Define the slide animation
+  int _currentPage = 0;
 
   String userName = "";
   String patientId = ""; // Add a variable to store the patient ID
   final FlutterSecureStorage _storage = FlutterSecureStorage(); // Declare the storage instance
+  late Timer _sliderTimer; // Declare the Timer for the slider
 
   void onRatingUpdated(double newRating, int newReviews) {
     setState(() {
@@ -53,31 +57,46 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    fetchDoctors();
-    fetchDiscountedMedications();  // Fetch discounted medications
-    _setupAnimation();  // Setup the animation
-
-    _getUserName();
-    _getPatientId(); // Fetch the patient ID when the screen initializes
-  }
-
-  // Setup the sliding animation
-  void _setupAnimation() {
+    // Initialize the animation controller
     _animationController = AnimationController(
-      vsync: this,  // 'this' refers to the TickerProvider provided by the mixin
-      duration: Duration(seconds: 3),  // Adjusted duration for each slide
-    )..repeat(reverse: true); // Repeat the animation with reverse motion
-
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0),  // Starting position (0, 0)
-      end: Offset(-1.0, 0), // Ending position (moving left)
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.linear,
-      ),
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
     );
+
+    // Define a slide animation
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(1, 0), // Start off-screen to the right
+      end: Offset(0, 0),   // End at its original position
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start the animation
+    _animationController.forward();
+
+    // Other initializations
+    _pageController = PageController(initialPage: 0);
+    _sliderTimer = Timer.periodic(Duration(seconds: 3), (timer) {
+      if (mounted) {
+        setState(() {
+          _currentPage = (_currentPage + 1) % medications.length;
+          _pageController.animateToPage(
+            _currentPage,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        });
+      }
+    });
+
+    fetchDoctors();
+    fetchDiscountedMedications();
+    _getUserName();
+    _getPatientId();
   }
+  // Setup the sliding animation
+
 
   Future<void> _getUserName() async {
     final storage = FlutterSecureStorage();
@@ -118,6 +137,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
           'price': double.parse(doctor['pricePerHour'].toString()),
           'yearExperience': int.parse(doctor['yearExperience'].toString()),
           'availability': doctor['availability'],
+          'duration':int.parse(doctor['duration'].toString()),
           'address': doctor['address'],
         })
             .toList()
@@ -156,8 +176,9 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _animationController.dispose();  // Dispose the animation controller
-    super.dispose();
+    _animationController.dispose(); // Dispose of the animation controller
+    _sliderTimer?.cancel(); // Cancel the timer
+    _pageController.dispose();    super.dispose();
   }
 
   @override
@@ -169,16 +190,10 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
     // Check if it's Web
     if (kIsWeb) {
       return Scaffold(
-
-        body: Row(
-          children: [
-            // Main Content (no sidebar)
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
                     // Greeting Section with notification and help icons on the right
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,179 +239,144 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                     ),
                     const SizedBox(height: 20),
                     // Discounted Medications Section
-                    const Text(
-                      'Discounted Medications',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
-                    ),
-                    const SizedBox(height: 10),
-                    medications.isEmpty
-                        ? const Center(child: CircularProgressIndicator())
-                        : SizedBox(
-                      height: 200,
-                      child: AnimatedBuilder(
-                        animation: _animationController,
-                        builder: (context, child) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: medications.length,
-                            itemBuilder: (context, index) {
-                              final medication = medications[index];
+              const SizedBox(height: 20),
+              const Text(
+                'Discounted Medications',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              medications.isEmpty
+                  ? const Center(child: CircularProgressIndicator())
+                  : SizedBox(
+                height: 200,
+                child: AnimatedBuilder(
+                  animation: _slideAnimation,
+                  builder: (context, child) {
+                    return SlideTransition(
+                        position: _slideAnimation,
+                        child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: medications.length,
+                        itemBuilder: (context, index) {
+                      final medication = medications[index];
+                      final medicationName = medication['name'] ?? 'Unknown Medication';
+                      final imageUrl = medication['image'] ?? 'images/default_image.jpg';
+                      final discount = medication['discount'] ?? 0;
+                      final price = medication['price'] ?? 0.0;
+                      final finalPrice = medication['final_price'] ?? price;
 
-                              final medicationName = medication['name'] ?? 'Unknown Medication';
-                              final imageUrl = medication['image'] ?? 'images/default_image.jpg'; // Fallback to a default image
-                              final discount = medication['discount'] ?? 0;
-                              final price = medication['price'] ?? 0.0;
-                              final finalPrice = medication['final_price'] ?? price;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            final description = medication['description'] ?? 'No description available';
+                            final type = medication['type'] ?? 'Unknown';
+                            final selectedMedicine = Medicine(
+                              id: medication['_id'] ?? '',
+                              medication_name: medicationName,
+                              image: imageUrl,
+                              description: description,
+                              price: price,
+                              final_price: finalPrice,
+                              type: type,
+                              quantity: 1,
+                            );
 
-                              // Replace 'medicine' with 'medication' and 'widget.patientId' with 'patientId'
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: Transform.translate(
-                                  offset: _slideAnimation.value,
-                                  child: GestureDetector(
-                                    // داخل الكود الموجود في ListView.builder
-                                    onTap: () {
-                                      print("++++++++++++++++++++++=");
-
-                                      // Safely handle null values and ensure type consistency for numbers
-                                      final medicationName = medication['name'] ?? 'Unknown Medication';
-                                      final imageUrl = medication['image'] ?? 'images/default_image.jpg'; // Fallback to a default image
-                                      final discount = medication['discount'] ?? 0;
-                                      final price = (medication['price'] ?? 0) is int
-                                          ? (medication['price'] as int).toDouble()
-                                          : medication['price'] ?? 0.0;
-                                      final finalPrice = (medication['final_price'] ?? price) is int
-                                          ? (medication['final_price'] as int).toDouble()
-                                          : medication['final_price'] ?? price;
-                                      final description = medication['description'] ?? 'No description available';
-                                      final type = medication['type'] ?? 'Unknown';
-                                      print("Full Medication Data: $medication");
-
-                                      // Print the values to check
-                                      print("Medication Name: $medicationName");
-                                      print("Image URL: $imageUrl");
-                                      print("Discount: $discount%");
-                                      print("Price: $price");
-                                      print("Final Price: $finalPrice");
-                                      print("Description: $description");
-                                      print("Type: $type");
-
-                                      // Create Medicine object for navigation
-                                      Medicine selectedMedicine = Medicine(
-                                        id: medication['_id'] ?? '',  // Ensure _id is not null
-                                        medication_name: medicationName,
-                                        image: imageUrl,
-                                        description: description,  // Fallback for description
-                                        price: price,
-                                        final_price: finalPrice,
-                                        type: type,
-                                        quantity: 1,  // Default quantity
-                                      );
-
-                                      // Navigate to MedicineDetailPage
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MedicineDetailPage(
-                                            medicine: selectedMedicine,
-                                            cart: cart,  // Pass cart
-                                            patientId: patientId,  // Pass patientId
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MedicineDetailPage(
+                                  medicine: selectedMedicine,
+                                  cart: cart,
+                                  patientId: patientId,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 10,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          medicationName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 21,
+                                            color: medicationName == 'Unknown Medication'
+                                                ? Colors.red
+                                                : Colors.teal,
                                           ),
                                         ),
-                                      );
-                                    },
-
-
-
-
-
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width * 0.9,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.1),
-                                            spreadRadius: 2,
-                                            blurRadius: 10,
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Discount: ${discount}%",
+                                          style: const TextStyle(
+                                            color: Colors.green,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ],
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(16.0),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    medicationName,  // Use the name from the map
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 21,
-                                                      color: medicationName == 'Unknown Medication'
-                                                          ? Colors.red
-                                                          : Colors.teal,
-                                                    ),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Text(
-                                                    "Discount: ${medication['discount']} %",
-                                                    style: TextStyle(
-                                                      color: Colors.green,
-                                                      fontSize: 15,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 6),
-                                                  Text(
-                                                    "\$$price",  // Correctly use the price from the map
-                                                    style: TextStyle(
-                                                      color: Colors.grey[600],
-                                                      decoration: TextDecoration.lineThrough,
-                                                      decorationColor: Colors.grey[600],
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "\$$finalPrice",  // Correctly use the finalPrice from the map
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                      fontSize: 22,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                        ),
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          "\$$price",
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            decoration: TextDecoration.lineThrough,
+                                            decorationColor: Colors.grey[600],
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(15),
-                                            child: Image.asset(
-                                              imageUrl,  // Correctly use the image URL from the map
-                                              width: 210,
-                                              height: 120,
-                                              fit: BoxFit.cover,
-                                            ),
+                                        ),
+                                        Text(
+                                          "\$$finalPrice",
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                              );
-
-
-                            },
-                          );
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset(
+                                    imageUrl,
+                                    width: 210,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
                         },
-                      ),
-                    ),
+                        ),
+                    );
+                  },
+                ),
+              ),
                     const SizedBox(height: 20),
 
                     const SizedBox(height: 20),
@@ -517,6 +497,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           rating: doctor['rating'],
                           price: doctor['price'],
                           availability: doctor['availability'],
+                          duration: doctor['duration'],
                           yearExperience: doctor['yearExperience'],
                           address: doctor['address'],
                           onAppointmentBooked: widget.onAppointmentBooked,
@@ -526,13 +507,11 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       },
                     ),
                   ],
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }
+
     else {
       // Mobile layout as already present
       return Scaffold(
@@ -890,6 +869,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                         rating: doctor['rating'],
                         price: doctor['price'],
                         availability: doctor['availability'],
+                        duration:doctor['duration'],
                         yearExperience: doctor['yearExperience'],
                         address: doctor['address'],
                         onAppointmentBooked: widget.onAppointmentBooked,
@@ -935,6 +915,7 @@ class DoctorCard extends StatelessWidget {
   final double price;
   final int yearExperience;
   final String availability;
+  final int duration;
   final String address;
   final Function(Map<String, dynamic>) onAppointmentBooked;
   final Function(Map<String, dynamic>) onAppointmentCanceled;
@@ -952,6 +933,7 @@ class DoctorCard extends StatelessWidget {
     required this.rating,
     required this.price,
     required this.availability,
+    required this.duration,
     required this.yearExperience,
     required this.address,
     required this.onAppointmentBooked,
@@ -1019,6 +1001,7 @@ class DoctorCard extends StatelessWidget {
                 address: address,
                 hospital:hospital,
                 availability: availability,
+                duration :duration,
                 yearsOfExperience: yearExperience,
                 price: price,
                 patientId: patientId,

@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'medicationList.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
-import 'dart:html' as html; // استيراد مكتبة html
+// import 'dart:html' as html; // استيراد مكتبة html
 import 'dart:typed_data'; // لاستيراد Uint8List
 import 'package:http_parser/http_parser.dart';
 
@@ -229,41 +229,42 @@ class _AddMedicationPageState extends State<AddMedicationPage> {
 
 
   Future<void> _pickImage() async {
-    if (kIsWeb) {
-      // Handle Web Image Picking
-      final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-      uploadInput.accept = 'image/*'; // Set accepted file types
-      uploadInput.click(); // Simulate the file upload dialog
-
-      uploadInput.onChange.listen((e) async {
-        final files = uploadInput.files;
-        if (files!.isEmpty) return;
-
-        final reader = html.FileReader();
-        reader.readAsDataUrl(files[0]!); // Read file as Data URL
-        reader.onLoadEnd.listen((e) {
-          // After loading the image as Data URL
-          setState(() {
-            _imageName = files[0]!.name; // Store the image name
-            _imageFile = File(files[0]!.name); // Store the image file
-          });
-
-          // Print the image name in the console
-          print(_imageName);
-
-          // Convert the Data URL to Uint8List
-          final String dataUrl = reader.result as String;
-          final data = dataUrl.split(',').last; // Extract data from Data URL
-          final bytes = Uint8List.fromList(List<int>.from(data.codeUnits));
-
-          // Store the byte data of the image
-          setState(() {
-            _imageBytes = bytes;
-          });
-        });
-      });
-    }
-    else{
+   // if (kIsWeb) {
+   //    // Handle Web Image Picking
+   //    final html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
+   //    uploadInput.accept = 'image/*'; // Set accepted file types
+   //    uploadInput.click(); // Simulate the file upload dialog
+   //
+   //    uploadInput.onChange.listen((e) async {
+   //      final files = uploadInput.files;
+   //      if (files!.isEmpty) return;
+   //
+   //      final reader = html.FileReader();
+   //      reader.readAsDataUrl(files[0]!); // Read file as Data URL
+   //      reader.onLoadEnd.listen((e) {
+   //         // After loading the image as Data URL
+   //        setState(() {
+   //          _imageName = files[0]!.name; // Store the image name
+   //          _imageFile = File(files[0]!.name); // Store the image file
+   //        });
+   //
+   //        // Print the image name in the console
+   //        print(_imageName);
+   //
+   //        // Convert the Data URL to Uint8List
+   //        final String dataUrl = reader.result as String;
+   //        // final data = dataUrl.split(',').last; // Extract data from Data URL
+   //        // final bytes = Uint8List.fromList(List<int>.from(data.codeUnits));
+   //        final data = dataUrl.split(',').last; // Extract data from Data URL
+   //        final bytes = base64Decode(data); // Decode directly from base64
+   //        // Store the byte data of the image
+   //        setState(() {
+   //          _imageBytes = bytes;
+   //        });
+   //      });
+   //    });
+   //  }
+   //  else{
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
       // Check if the widget is still mounted before calling setState
@@ -276,7 +277,7 @@ class _AddMedicationPageState extends State<AddMedicationPage> {
         print(_imageName);
       }
 
-    }
+    // }
 
   }
 

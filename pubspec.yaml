@@ -64,7 +64,7 @@ dependencies:
   js: ^0.6.3
   html: ^0.15.0
   webview_flutter: ^4.10.0
-  flutter_inappwebview: ^6.0.0 # Use the latest version
+  flutter_inappwebview: ^5.8.0
 
 
 
@@ -139,7 +139,7 @@ flutter:
     - images/5_medication_image.jpg
     - images/6_medication_image.png
     - images/7_medication_image.jpg
-
+    - images/9_medication_image.png
 
   #   - images/a_dot_ham.jpeg
 

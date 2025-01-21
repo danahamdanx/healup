@@ -65,6 +65,7 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
           'price': double.parse(doctor['pricePerHour'].toString()),
           'yearExperience': int.parse(doctor['yearExperience'].toString()),
           'availability': doctor['availability'],
+          'duration':int.parse(doctor['duration'].toString()),
           'address': doctor['address'],
         })
             .toList()
@@ -203,6 +204,7 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
                             hospital: doctor['hospital'],
                             specialization: doctor['specialization'],
                             availability: doctor['availability'],
+                            duration:doctor['duration'],
                             price: doctor['price'],
                             reviews: doctor['reviews'],
                             rating: doctor['rating'],
@@ -318,6 +320,7 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
                       hospital: doctor['hospital'],
                       specialization: doctor['specialization'],
                       availability: doctor['availability'],
+                      duration:doctor['duration'],
                       price: doctor['price'],
                       reviews: doctor['reviews'],
                       rating: doctor['rating'],
@@ -347,6 +350,7 @@ class DoctorCard extends StatelessWidget {
   final String hospital;
   final String specialization;
   final String availability;
+  final int duration;
   final int reviews;
   final double price;
   final int yearsOfExperience;
@@ -363,6 +367,7 @@ class DoctorCard extends StatelessWidget {
     required this.hospital,
     required this.specialization,
     required this.availability,
+    required this.duration,
     required this.reviews,
     required this.price,
     required this.yearsOfExperience,
@@ -387,7 +392,8 @@ class DoctorCard extends StatelessWidget {
               reviews:reviews,
               address:address,
               hospital: hospital,  // You might want to pass hospital as address
-              availability: availability,  // You can customize this part as per your data
+              availability: availability, // You can customize this part as per your data
+              duration: duration,
               yearsOfExperience: yearsOfExperience,  // You can also pass the actual years of experience if available
               price: price,  // Price for consultation, update as per your data
               patientId: patientId,  // Pass patientId to PatApp

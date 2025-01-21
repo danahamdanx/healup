@@ -70,9 +70,11 @@ class _MapScreenState extends State<MapScreen> {
 
   // Get the directions from Google Maps API (mobile only)
   Future<void> _getDirections(LatLng origin, LatLng destination) async {
-    final apiKey = 'AIzaSyB-86UTgKSTmSjppYQccJKIbHLjXfc-Q0o'; // Replace with your API key
+    final apiKey = 'AIzaSyDE8Np1v3GFvTH51cQvaRyWtJf8v226Keo'; // Replace with your API key
     final url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$apiKey';
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin
+        .latitude},${origin.longitude}&destination=${destination
+        .latitude},${destination.longitude}&key=$apiKey';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -123,38 +125,38 @@ class _MapScreenState extends State<MapScreen> {
   // Build the map for web using InAppWebView
   Widget _buildWebMap() {
     final iframeHtml = """
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>
-            body, html, #map {
-              height: 100%;
-              margin: 0;
-              padding: 0;
-            }
-          </style>
-          <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-86UTgKSTmSjppYQccJKIbHLjXfc-Q0o&callback=initMap&libraries=places&v=weekly" async></script>
-          <script>
-            function initMap() {
-              const initialLocation = { lat: ${widget.location.latitude}, lng: ${widget.location.longitude} };
-              const map = new google.maps.Map(document.getElementById("map"), {
-                center: initialLocation,
-                zoom: 12,
-              });
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          body, html, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
+        </style>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDE8Np1v3GFvTH51cQvaRyWtJf8v226Keo&callback=initMap&libraries=places&v=weekly" async></script>
+        <script>
+          function initMap() {
+            const initialLocation = { lat: ${widget.location.latitude}, lng: ${widget.location.longitude} };
+            const map = new google.maps.Map(document.getElementById("map"), {
+              center: initialLocation,
+              zoom: 12,
+            });
 
-              const marker = new google.maps.Marker({
-                position: initialLocation,
-                map: map,
-                title: "Location",
-              });
-            }
-          </script>
-        </head>
-        <body>
-          <div id="map"></div>
-        </body>
-      </html>
-    """;
+            const marker = new google.maps.Marker({
+              position: initialLocation,
+              map: map,
+              title: "Location",
+            });
+          }
+        </script>
+      </head>
+      <body>
+        <div id="map"></div>
+      </body>
+    </html>
+  """;
 
     return InAppWebView(
       initialData: InAppWebViewInitialData(data: iframeHtml),
@@ -166,6 +168,7 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

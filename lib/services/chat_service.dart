@@ -6,7 +6,7 @@ class ChatService {
     required String senderId,
     required String receiverId,
     required String message,
-    String? fileUrl, // Optional file URL
+    String? fileUrl, // Allow fileUrl to be nullable
     bool isRead = false, // Default value set to false
   }) async {
     final List<String> users = [senderId, receiverId];

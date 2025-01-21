@@ -23,6 +23,7 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _hospitalController = TextEditingController();
   final TextEditingController _availabilityController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
   final TextEditingController _yearExperienceController = TextEditingController();
   final TextEditingController _pricePerHourController = TextEditingController();
   final TextEditingController _sealController = TextEditingController();
@@ -44,6 +45,7 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
           'address': _addressController.text,
           'hospital': _hospitalController.text,
           'availability': _availabilityController.text,
+          'duration':_durationController,
           'yearExperience': int.parse(_yearExperienceController.text),
           'pricePerHour': int.parse(_pricePerHourController.text),
           'seal': _sealController.text,
@@ -81,6 +83,7 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
           'address': _addressController.text,
           'hospital': _hospitalController.text,
           'availability': _availabilityController.text,
+          'duration':_durationController,
           'yearExperience': int.parse(_yearExperienceController.text),
           'pricePerHour': int.parse(_pricePerHourController.text),
           'seal': _sealController.text,
@@ -190,6 +193,12 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
                       controller: _availabilityController,
                       label: 'Availability',
                       icon: Icons.access_time,
+                      validator: (value) => value!.isEmpty ? 'Please enter availability' : null,
+                    ),
+                    _buildTextField(
+                      controller: _durationController,
+                      label: 'Duration',
+                      icon: Icons.schedule,
                       validator: (value) => value!.isEmpty ? 'Please enter availability' : null,
                     ),
                     _buildTextField(
@@ -329,6 +338,12 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
                   controller: _availabilityController,
                   label: 'Availability',
                   icon: Icons.access_time,
+                  validator: (value) => value!.isEmpty ? 'Please enter availability' : null,
+                ),
+                _buildTextField(
+                  controller: _durationController,
+                  label: 'Duration',
+                  icon: Icons.lock_clock,
                   validator: (value) => value!.isEmpty ? 'Please enter availability' : null,
                 ),
                 // Year of Experience

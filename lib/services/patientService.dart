@@ -1,11 +1,18 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 
-
+String getBaseUrl() {
+  if (kIsWeb) {
+    return "http://localhost:5000"; // For web
+  } else {
+    return "http://10.0.2.2:5000"; // For mobile (Android emulator)
+  }
+}
 class PatientService {
   Future<List<Patient>> getPatients({int page = 1, int limit = 10}) async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:5000/api/healup/patients/'));
+    final response = await http.get(Uri.parse('${getBaseUrl()}/api/healup/patients/'));
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return (data['data'] as List).map((json) => Patient.fromJson(json)).toList();

@@ -5,6 +5,7 @@ import 'package:first/patient/Appointement/EHRdetailsPage.dart'; // Adjust the i
 import 'package:first/patient/Appointement/patientPrescriptionForm.dart'; // Adjust the import path as needed
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
+import 'package:intl/intl.dart';
 
 class ScheduleScreen extends StatefulWidget {
   @override
@@ -58,6 +59,26 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       );
     }
   }
+  bool isWithin48Hours(String appointmentDate) {
+    // Split the date and time range into its components
+    final parts = appointmentDate.split(' - ');
+    if (parts.isEmpty) {
+      throw FormatException("Invalid appointment date format.");
+    }
+
+    // Extract the start date and time (e.g., "2024-12-31 2:00 PM")
+    final startDateTimeString = parts[0];
+
+    // Parse the start date and time
+    final appointmentTime = DateFormat('yyyy-MM-dd h:mm a').parse(startDateTimeString);
+
+    // Get the current time
+    final currentTime = DateTime.now();
+
+    // Check if the appointment is within 48 hours
+    return appointmentTime.difference(currentTime).inHours <= 48;
+  }
+
 
   Future<void> fetchAppointments() async {
     if (patientId.isEmpty) {
@@ -208,67 +229,104 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
-  void _showDateTimePicker(String appointmentId, String doctorId) async {
-    // Step 1: Pick a new date using a date picker
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(), // default to today's date
-      firstDate: DateTime.now(),   // Ensure users can't pick a date in the past
-      lastDate: DateTime(2100),    // Limit to future dates
-    );
 
-    if (selectedDate != null) {
-      final formattedDate = "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+  bool isWithin48Hourss(DateTime appointmentDateTime) {
+    final currentTime = DateTime.now();
+    return appointmentDateTime.difference(currentTime).inHours <= 48;
+  }
 
-      // Step 2: Fetch available time slots for the doctor on the selected date
-      await fetchDoctorAvailableSlots(doctorId, formattedDate);
+  void _showDateTimePicker(String appointmentId, String doctorId, String appointmentDate) async {
+    try {
+      // Extract the start time from the range "2025-12-29 10:00 AM - 11:00 AM"
+      final startTime = appointmentDate.split(" - ")[0];  // "2025-12-29 10:00 AM"
 
-      if (availableTimeSlots.isNotEmpty) {
-        // Step 3: Show a dialog with available time slots
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Select New Appointment Time"),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: availableTimeSlots.map((slot) {
-                    bool isSlotBooked = bookedTimeSlots.contains(slot);
+      // Parse the start time into a DateTime object using DateFormat
+      final DateTime parsedDateTime = DateFormat("yyyy-MM-dd h:mm a").parse(startTime);
 
-                    return ListTile(
-                      title: Text(slot),
-                      onTap: isSlotBooked
-                          ? null // Disable slot if booked
-                          : () {
-                        // If the slot is booked already, prevent update
-                        if (bookedTimeSlots.contains(slot)) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Slot already booked! Please pick another slot.")),
-                          );
-                          return;
-                        }
-
-                        updateAppointmentDate(appointmentId, "$formattedDate $slot");
-                        Navigator.of(context).pop();  // Close the dialog
-                      },
-                      tileColor: isSlotBooked ? Colors.grey : null,  // Change color if booked
-                    );
-                  }).toList(),
-                ),
-              ),
-            );
-          },
-        );
-      } else {
+      // Check if the appointment is within 48 hours
+      if (isWithin48Hourss(parsedDateTime)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("No available time slots for this doctor.")),
+          const SnackBar(content: Text("You cannot edit an appointment within 48 hours of its scheduled time.")),
         );
+        return;
       }
+
+      // Step 1: Pick a new date using a date picker
+      final selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(), // default to today's date
+        firstDate: DateTime.now(),   // Ensure users can't pick a date in the past
+        lastDate: DateTime(2100),    // Limit to future dates
+      );
+
+      if (selectedDate != null) {
+        final formattedDate = "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+
+        // Step 2: Fetch available time slots for the doctor on the selected date
+        await fetchDoctorAvailableSlots(doctorId, formattedDate);
+
+        if (availableTimeSlots.isNotEmpty) {
+          // Step 3: Show a dialog with available time slots
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Select New Appointment Time"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: availableTimeSlots.map((slot) {
+                      bool isSlotBooked = bookedTimeSlots.contains(slot);
+
+                      return ListTile(
+                        title: Text(slot),
+                        onTap: isSlotBooked
+                            ? null // Disable slot if booked
+                            : () {
+                          // If the slot is booked already, prevent update
+                          if (bookedTimeSlots.contains(slot)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Slot already booked! Please pick another slot.")),
+                            );
+                            return;
+                          }
+
+                          updateAppointmentDate(appointmentId, "$formattedDate $slot");
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        tileColor: isSlotBooked ? Colors.grey : null, // Change color if booked
+                      );
+                    }).toList(),
+                  ),
+                ),
+              );
+            },
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("No available time slots for this doctor.")),
+          );
+        }
+      }
+    } catch (e) {
+      print("Error parsing date: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Invalid appointment date format.")),
+      );
     }
   }
 
 
-  Future<void> deleteAppointment(String appointmentId) async {
+
+
+  Future<void> deleteAppointment(String appointmentId, String appointmentDate) async {
+
+    print('$appointmentDate');
+    if (isWithin48Hours(appointmentDate)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("You cannot delete an appointment within 48 hours of its scheduled time.")),
+      );
+      return;
+    }
     final apiUrl = "${getBaseUrl()}/api/healup/appointments/delete/$appointmentId";
     try {
       final response = await http.delete(Uri.parse(apiUrl));
@@ -500,16 +558,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                   icon: const Icon(Icons.edit, color: Colors.blue),
                                   onPressed: () {
                                     if (doctorId != null) {
-                                      _showDateTimePicker(appointment['_id'], doctorId);
+                                      _showDateTimePicker(appointment['_id'], doctorId, appointment['app_date']);
                                     }
                                   },
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete, color: Colors.red),
                                   onPressed: () {
-                                    deleteAppointment(appointment['_id']);
+                                    deleteAppointment(appointment['_id'], appointment['app_date']);
                                   },
                                 ),
+
+
                               ],
                               if (appointment['status'] == 'Completed') ...[
                                 IconButton(
@@ -610,43 +670,42 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // If the status is not 'completed', show the edit and delete icons
-                    if (appointment['status'] != 'Completed')
+                    // If the status is not 'Completed', show the edit and delete icons
+                    if (appointment['status'] != 'Completed') ...[
                       IconButton(
                         icon: const Icon(Icons.edit, color: Colors.blue),
                         onPressed: () {
                           if (doctorId != null) {
-                            _showDateTimePicker(appointment['_id'], doctorId);
+                            _showDateTimePicker(appointment['_id'], doctorId, appointment['app_date']);
                           }
                         },
                       ),
-                    if (appointment['status'] != 'Completed')
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
-                          deleteAppointment(appointment['_id']);
+                          deleteAppointment(appointment['_id'], appointment['app_date']);
                         },
                       ),
-                    // If the status is 'completed', show the medical_services and article icons
-                    if (appointment['status'] == 'Completed')
+                    ],
+
+                    // If the status is 'Completed', show the medical_services and article icons
+                    if (appointment['status'] == 'Completed') ...[
                       IconButton(
-                        icon: const Icon(
-                            Icons.medical_services, color: Colors.blue),
+                        icon: const Icon(Icons.medical_services, color: Colors.blue),
                         onPressed: () {
                           fetchPrescription(appointment['_id']);
                         },
                       ),
-
-                    if (appointment['status'] == 'Completed')
                       IconButton(
                         icon: const Icon(Icons.article, color: Colors.yellow),
                         onPressed: () {
-                          // Handle article click, if needed
                           fetchEHR(appointment['_id'], context);
                         },
                       ),
+                    ],
                   ],
                 ),
+
 
               ),
             );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'patient/login&signUP/login.dart'; // Import the LoginSignupPage
-import 'Doctors/login/DoctorLoginPage.dart';
+import 'Doctors/DoctorLoginPage.dart';
 import 'management/ManagementLogin.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 

@@ -19,6 +19,7 @@ class PatApp extends StatefulWidget {
   final String address;
   final String hospital;
   final String availability;
+  final int duration;
   final int yearsOfExperience;
   final double price;
   final String patientId;
@@ -36,6 +37,7 @@ class PatApp extends StatefulWidget {
     required this.address,
     required this.hospital,
     required this.availability,
+    required this.duration,
     required this.yearsOfExperience,
     required this.price,
     required this.patientId,
@@ -135,7 +137,7 @@ class _PatAppState extends State<PatApp> {
   }
 
   // Generate time intervals (60-minute slots)
-  List<String> generateTimeIntervals(String availability) {
+  List<String> generateTimeIntervals(String availability, int duration) {
     final parts = availability.split(' - ');
     if (parts.length != 2) return [];
 
@@ -146,13 +148,15 @@ class _PatAppState extends State<PatApp> {
     DateTime current = start;
 
     while (current.isBefore(end)) {
-      DateTime next = current.add(const Duration(minutes: 60));
+      DateTime next = current.add(Duration(minutes: duration));
+      if (next.isAfter(end)) next = end; // Adjust the last interval to not exceed `end`
       intervals.add("${_formatTime(current)} - ${_formatTime(next)}");
       current = next;
     }
 
     return intervals;
   }
+
 
   DateTime _parseTime(String timeStr) {
     int hour = int.parse(timeStr.split(":")[0].trim());
@@ -527,7 +531,7 @@ class _PatAppState extends State<PatApp> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: generateTimeIntervals(widget.availability)
+                      children: generateTimeIntervals(widget.availability,widget.duration)
                           .map((time) => Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                         child: _buildTimeButton(time),
@@ -812,7 +816,7 @@ class _PatAppState extends State<PatApp> {
                   Text('Time Slots', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   Column(
-                    children: generateTimeIntervals(widget.availability)
+                    children: generateTimeIntervals(widget.availability,widget.duration)
                         .map((time) => _buildTimeButton(time))
                         .toList(),
                   ),
