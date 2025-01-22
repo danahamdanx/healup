@@ -222,7 +222,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
           ),
           // Semi-transparent overlay to improve readability of the text and form
           Container(
-            color: Colors.white.withOpacity(0.6), // Semi-transparent overlay
+            color: Colors.white.withOpacity(0.00006), // Semi-transparent overlay
           ),
           // The rest of the content goes on top of the background
           SingleChildScrollView(
@@ -243,7 +243,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                 const Center(
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundImage: AssetImage('images/img_2.png'),
+                    backgroundImage: AssetImage('images/img_6.png'),
                   ),
                 ),
                 const SizedBox(height: 30),

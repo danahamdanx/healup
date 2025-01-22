@@ -83,7 +83,7 @@ class _WelcomePageState extends State<WelcomePage>
                       children: [
                         const CircleAvatar(
                           radius: 70, // Adjust logo size
-                          backgroundImage: AssetImage('images/img_2.png'),
+                          backgroundImage: AssetImage('images/img_4.png'),
                         ),
                         const SizedBox(height: 20), // Reduce space below logo
                         ShaderMask(
@@ -145,19 +145,25 @@ class _WelcomePageState extends State<WelcomePage>
               Colors.black.withOpacity(0.1), // Semi-transparent black overlay
             ),
             // SafeArea for content
-            SafeArea(
+
+            SingleChildScrollView(
+
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 120),
+
                   // Circular logo image at the top of the column
                   const Center(
+
                     child: CircleAvatar(
-                      radius: 80, // Adjust size as needed
+
+                      radius: 75, // Adjust size as needed
                       backgroundImage: AssetImage(
-                          'images/img_2.png'), // Replace with your logo image path
+                          'images/img_6.png'), // Replace with your logo image path
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 80),
                   SlideTransition(
                     position: _offsetAnimation!,
                     child: Column(
