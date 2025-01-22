@@ -158,7 +158,7 @@ class _WelcomePageState extends State<WelcomePage>
 
                     child: CircleAvatar(
 
-                      radius: 75, // Adjust size as needed
+                      radius: 73, // Adjust size as needed
                       backgroundImage: AssetImage(
                           'images/img_6.png'), // Replace with your logo image path
                     ),
