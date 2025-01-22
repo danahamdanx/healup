@@ -83,7 +83,7 @@ class _WelcomePageState extends State<WelcomePage>
                       children: [
                         const CircleAvatar(
                           radius: 70, // Adjust logo size
-                          backgroundImage: AssetImage('images/logo.png'),
+                          backgroundImage: AssetImage('images/img_2.png'),
                         ),
                         const SizedBox(height: 20), // Reduce space below logo
                         ShaderMask(
@@ -152,12 +152,11 @@ class _WelcomePageState extends State<WelcomePage>
                   // Circular logo image at the top of the column
                   const Center(
                     child: CircleAvatar(
-                      radius: 70, // Adjust size as needed
+                      radius: 80, // Adjust size as needed
                       backgroundImage: AssetImage(
-                          'images/logo.png'), // Replace with your logo image path
+                          'images/img_2.png'), // Replace with your logo image path
                     ),
                   ),
-                  const SizedBox(height: 20), // Spacing below the logo
                   const SizedBox(height: 20),
                   SlideTransition(
                     position: _offsetAnimation!,

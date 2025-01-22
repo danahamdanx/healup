@@ -243,7 +243,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                 const Center(
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundImage: AssetImage('images/logo.png'),
+                    backgroundImage: AssetImage('images/img_2.png'),
                   ),
                 ),
                 const SizedBox(height: 30),
