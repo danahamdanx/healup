@@ -28,6 +28,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -35,85 +36,32 @@ class _ChatPageState extends State<ChatPage> {
     _markMessagesAsRead(); // Mark messages as read when the chat is opened
   }
 
-  Future<void> _pickFile() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Choose an option'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              InkWell(
-                onTap: () => _pickImage(ImageSource.gallery),
-                child: Row(
-                  children: [
-                    Icon(Icons.photo),
-                    SizedBox(width: 8),
-                    Text('Gallery'),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16),
-              InkWell(
-                onTap: () => _pickImage(ImageSource.camera),
-                child: Row(
-                  children: [
-                    Icon(Icons.camera_alt),
-                    SizedBox(width: 8),
-                    Text('Camera'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      // Call _uploadImage to upload the picked image
+      _uploadImage(File(pickedFile.path));
+    }
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    Navigator.pop(context); // Close the dialog
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: source);
+  // Function to upload the image to Firebase Storage and send it as a message
+  Future<void> _uploadImage(File imageFile) async {
+    try {
+      final fileName = imageFile.path.split('/').last; // Get file name from the path
+      final storageRef = FirebaseStorage.instance.ref().child('chat_images/$fileName');
 
-    if (image != null) {
-      String filePath = image.path;
-      String fileName = image.name;
+      // Upload image to Firebase Storage
+      await storageRef.putFile(imageFile);
 
-      try {
-        // Upload the file to Firebase Storage
-        final Reference storageRef = FirebaseStorage.instance
-            .ref()
-            .child('chat_files/${widget.patientId}/${DateTime.now().millisecondsSinceEpoch}_$fileName');
+      // Get the file URL after upload
+      final fileUrl = await storageRef.getDownloadURL();
 
-        final UploadTask uploadTask = storageRef.putFile(File(filePath));
-
-        // Wait for the upload to complete and get the download URL
-        final TaskSnapshot snapshot = await uploadTask;
-        final String downloadUrl = await snapshot.ref.getDownloadURL();
-
-        // Send the file as a chat message with the download URL
-        _chatService.sendMessage(
-          senderId: widget.patientId,
-          receiverId: widget.doctorId,
-          message: 'Image: $fileName', // Optional: Include file name
-          fileUrl: downloadUrl, // Include the file's URL
-          isRead: false,
-        );
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Image uploaded successfully!')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to upload image: $e')),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No image selected')),
-      );
+      // Send the message with the file URL (including any text entered in the controller)
+      _sendMessage(_messageController.text.trim(), fileUrl: fileUrl);
+    } catch (e) {
+      print("Error uploading image: $e");
     }
   }
 
@@ -148,6 +96,7 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+
   Stream<List<Map<String, dynamic>>> _getMessages() {
     final List<String> users = [widget.patientId, widget.doctorId];
     users.sort();
@@ -175,29 +124,7 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  Future<Map<String, dynamic>> _getLastMessage() async {
-    final List<String> users = [widget.patientId, widget.doctorId];
-    users.sort();
-    final String chatRoomID = users.join("_");
 
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('chats')
-        .doc(chatRoomID)
-        .collection('messages')
-        .orderBy('timestamp', descending: true)
-        .limit(1)
-        .get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      final data = querySnapshot.docs.first.data();
-      return {
-        'message': data['message'] ?? '',
-        'isRead': data['isRead'] ?? true,
-      };
-    } else {
-      return {'message': 'No message yet', 'isRead': true};
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -270,15 +197,25 @@ class _ChatPageState extends State<ChatPage> {
                                               borderRadius: BorderRadius.circular(30),
                                             ),
                                             child: message['fileUrl'] != null
-                                                ? GestureDetector(
-                                              onTap: () => launch(message['fileUrl']),
-                                              child: Text(
-                                                'View File',
-                                                style: TextStyle(
-                                                  color: Colors.blue,
-                                                  decoration: TextDecoration.underline,
+                                                ? Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                if (message['message'].isNotEmpty)
+                                                  Text(
+                                                    message['message'],
+                                                    style: TextStyle(
+                                                      color: isSender ? Colors.white : Colors.black,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                SizedBox(height: 8),
+                                                Image.network(
+                                                  message['fileUrl'], // Display the image
+                                                  height: 200, // Adjust as needed
+                                                  width: 200,
+                                                  fit: BoxFit.cover,
                                                 ),
-                                              ),
+                                              ],
                                             )
                                                 : Text(
                                               message['message'],
@@ -331,9 +268,13 @@ class _ChatPageState extends State<ChatPage> {
                               onSubmitted: (value) => _sendMessage(value),
                             ),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.attach_file),
-                            onPressed: _pickFile,
+                          ListTile(
+                            leading: Icon(Icons.image),
+                            title: Text('Pick Image'),
+                            onTap: () {
+                              Navigator.pop(context); // Close the bottom sheet
+                              _pickImage();  // Trigger the image picker
+                            },
                           ),
                           IconButton(
                             icon: Icon(Icons.send),
@@ -350,14 +291,18 @@ class _ChatPageState extends State<ChatPage> {
         ),
       );
     } else {
-      return Scaffold(
+      return  Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white70,
           title: Row(
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage(widget.doctorPhoto),
-                radius: 20,
+                 backgroundImage: widget.doctorPhoto.isNotEmpty
+                    ? AssetImage(widget.doctorPhoto)
+                    : null,
+                child: widget.doctorPhoto.isEmpty
+                    ? Icon(Icons.person, color: Colors.white)
+                    : null,
               ),
               SizedBox(width: 10),
               Text('${widget.doctorName}'),
@@ -390,63 +335,62 @@ class _ChatPageState extends State<ChatPage> {
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
                           final message = messages[index];
-                          final isSender = message['senderId'] ==
-                              widget.patientId;
+                          final isSender = message['senderId'] == widget.patientId;
 
                           return ListTile(
                             title: Align(
-                              alignment: isSender
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
+                              alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
                               child: Column(
-                                crossAxisAlignment:
-                                isSender
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
+                                crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                     padding: EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: isSender
-                                          ? Color(0xff2f9a8f)
-                                          : Colors.grey[300],
+                                      color: isSender ? Color(0xff2f9a8f) : Colors.grey[300],
                                       borderRadius: BorderRadius.circular(30),
                                     ),
                                     child: message['fileUrl'] != null
-                                        ? GestureDetector(
-                                      onTap: () => launch(message['fileUrl']),
-                                      child: Text(
-                                        'View File',
-                                        style: TextStyle(
-                                          color: Colors.blue,
-                                          decoration: TextDecoration.underline,
+                                        ? Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        if (message['message'].isNotEmpty)
+                                          Text(
+                                            message['message'],
+                                            style: TextStyle(
+                                              color: isSender ? Colors.white : Colors.black,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        SizedBox(height: 8),
+                                        Image.network(
+                                          message['fileUrl'], // Display the image
+                                          height: 200, // Adjust as needed
+                                          width: 200,
+                                          fit: BoxFit.cover,
                                         ),
-                                      ),
+                                      ],
                                     )
                                         : Text(
                                       message['message'],
                                       style: TextStyle(
-                                        color: isSender ? Colors.white : Colors
-                                            .black,
+                                        color: isSender ? Colors.white : Colors.black,
                                         fontSize: 16,
                                       ),
                                     ),
                                   ),
-                                  if (!isSender)
-                                    Text(
-                                      message['isRead'] ? 'Read' : 'Unread',
-                                      style: TextStyle(
-                                        color: message['isRead']
-                                            ? Colors.grey
-                                            : Colors.red,
-                                        fontSize: 12,
-                                        fontStyle: FontStyle.italic,
-                                      ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    message['status'] ?? 'sent',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
                                     ),
+                                  ),
                                 ],
                               ),
                             ),
                           );
+
                         },
                       );
                     }
@@ -465,18 +409,39 @@ class _ChatPageState extends State<ChatPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.attach_file),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ListTile(
+                                        leading: Icon(Icons.image),
+                                        title: Text('Pick Image'),
+                                        onTap: () {
+                                          Navigator.pop(context); // Close the bottom sheet
+                                          _pickImage();  // Trigger the image picker
+                                        },
+                                      ),
+                                      // Add other file options if needed here
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.attach_file),
-                      onPressed: _pickFile,
-                    ),
-                    IconButton(
                       icon: Icon(Icons.send),
-                      onPressed: () => _sendMessage(_messageController.text),
+                      onPressed: () {
+                        _sendMessage(_messageController.text.trim());
+                      },
                     ),
                   ],
                 ),
