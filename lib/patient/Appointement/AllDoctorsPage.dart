@@ -18,7 +18,7 @@ class AllDoctorsPage extends StatefulWidget {
 
 class _AllDoctorsPageState extends State<AllDoctorsPage> {
   List<Map<String, dynamic>> allDoctors = [];
-  List<String> specialties = ['All', 'General', 'Cardiology', 'Pediatrics', 'Neurology', 'Orthopedics', 'Dermatology','infectious disease'];
+  List<String> specialties = ['All', 'General', 'Cardiology', 'Pediatrics', 'Neurology', 'Orthopedics', 'Dermatology','Ophthalmology','Radiology','Internal Medicine'];
   String selectedSpecialty = 'All';
   String searchText = '';
   // Define the callback here

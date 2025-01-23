@@ -439,6 +439,30 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                               _navigateToSpecialty('Dermatology');
                             },
                           ),
+                          const SizedBox(width: 15), // Add space between cards
+                          DoctorSpecialityCard(
+                            icon: FontAwesomeIcons.eye,
+                            title: 'Ophthalmology ',
+                            onTap: () {
+                              _navigateToSpecialty('Ophthalmology');
+                            },
+                          ),
+                          const SizedBox(width: 15), // Add space between cards
+                          DoctorSpecialityCard(
+                            icon: FontAwesomeIcons.xRay,
+                            title: 'Radiology  ',
+                            onTap: () {
+                              _navigateToSpecialty('Radiology ');
+                            },
+                          ),
+                          const SizedBox(width: 15), // Add space between cards
+                          DoctorSpecialityCard(
+                            icon: FontAwesomeIcons.xRay,
+                            title: 'Internal Medicine  ',
+                            onTap: () {
+                              _navigateToSpecialty('Internal Medicine ');
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -812,7 +836,28 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           onTap: () {
                             _navigateToSpecialty('Dermatology');
                           },
-                        )
+                        ),
+                        DoctorSpecialityCard(
+                          icon: FontAwesomeIcons.eye,
+                          title: 'Ophthalmology ',
+                          onTap: () {
+                            _navigateToSpecialty('Ophthalmology');
+                          },
+                        ),
+                        DoctorSpecialityCard(
+                          icon: FontAwesomeIcons.xRay,
+                          title: 'Radiology  ',
+                          onTap: () {
+                            _navigateToSpecialty('Radiology ');
+                          },
+                        ),
+                        DoctorSpecialityCard(
+                          icon: FontAwesomeIcons.stethoscope,
+                          title: 'Internal Medicine  ',
+                          onTap: () {
+                            _navigateToSpecialty('Internal Medicine ');
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -953,7 +998,7 @@ class DoctorCard extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           backgroundImage: AssetImage(photo),
-          radius: 25,
+          radius: 30,
         ),
         title: Expanded( // Wrap the title with Expanded to avoid overflow
           child: Text(
@@ -1037,7 +1082,7 @@ class DoctorSpecialityCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap, // Wrap the Container with GestureDetector to handle taps
       child: Container(
-        width: 120,
+        width: 150,
         height: 100,
         margin: const EdgeInsets.only(right: 16),
         padding: const EdgeInsets.all(16),

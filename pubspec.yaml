@@ -129,10 +129,13 @@ flutter:
     - images/Kathryn_Barlow.jpg
     - images/manar.jpg
     - images/foad.webp
+    - images/tariq.jpg
     - images/clara_smith.jpg
     - images/david.jpg
     - images/emily.webp
     - images/ahmad.jpg
+    - images/HANA.jpg
+    - images/fatima.jpg
     - images/calcium-vitamin D.jpg
     - images/logo2.jpg
     - images/img_6.png
@@ -146,6 +149,7 @@ flutter:
     - images/6_medication_image.png
     - images/7_medication_image.jpg
     - images/9_medication_image.png
+    - images/67458a3b47a7c2ca4fdeed7a_profile_image.png
 
   #   - images/a_dot_ham.jpeg
 

@@ -498,7 +498,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           Row(
                             children: [
                               CircleAvatar(
-                                radius: 30.0,
+                                radius: 20.0,
                                 backgroundImage: (doctorPhoto?.isNotEmpty ?? false)
                                     ? AssetImage(doctorPhoto!)
                                     : const AssetImage('assets/images/person_icon.png')
@@ -635,7 +635,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               child: ListTile(
                 contentPadding: const EdgeInsets.all(16.0),
                 leading: CircleAvatar(
-                  radius: 25.0,
+                  radius: 35.0,
                   backgroundImage: (doctorPhoto?.isNotEmpty ?? false)
                       ? AssetImage(doctorPhoto!) // Display doctor's photo
                       : AssetImage(
