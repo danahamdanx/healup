@@ -48,7 +48,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: 1);
+    _pageController = PageController(initialPage: _currentPage);
     _startTimer();
     fetchDoctors();
     fetchDiscountedMedications();
@@ -353,7 +353,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                   borderRadius: BorderRadius.circular(15),
                                   child: Image.asset(
                                     imageUrl,
-                                    width: 120, // Adjust image width
+                                    width: 300, // Adjust image width
                                     height: 120,
                                     fit: BoxFit.cover,
                                   ),
