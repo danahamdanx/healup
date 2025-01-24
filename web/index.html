@@ -1,44 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://js.stripe.com/v3/"></script>
-  <script>
-    // Wait for the DOM content to be fully loaded before executing Stripe logic
-    document.addEventListener("DOMContentLoaded", function() {
-      // Define the initializeStripe function in the global scope
-      function initializeStripe(clientSecret, publicKey) {
-        console.log("Initializing Stripe with clientSecret:", clientSecret);
-        var stripe = Stripe(publicKey);
-        var elements = stripe.elements();
-        var card = elements.create('card');
-        card.mount('#card-element'); // Mount the card element to the page
-
-        var form = document.getElementById('payment-form');
-        form.addEventListener('submit', function(event) {
-          event.preventDefault();
-          stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-              card: card,
-              billing_details: {
-                name: 'Test User'
-              }
-            }
-          }).then(function(result) {
-            if (result.error) {
-              alert(result.error.message);
-            } else if (result.paymentIntent.status === 'succeeded') {
-              alert('Payment Successful!');
-            }
-          });
-        });
-      }
-
-      // Example usage: Initialize Stripe with actual values for clientSecret and publicKey
-      const clientSecret = 'your-client-secret';  // Replace with your actual client secret from backend
-      const publicKey = 'your-public-key';  // Replace with your actual public key from Stripe
-      initializeStripe(clientSecret, publicKey);
-    });
-  </script>
 
   <base href="$FLUTTER_BASE_HREF">
   <meta charset="UTF-8">
