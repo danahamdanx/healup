@@ -115,7 +115,6 @@ flutter:
     - images/pat.jpg
     - images/med.png
     - images/paracetamol.jpg
-    - images/Screenshot 2025-01-25 215004.png
     - images/Aspirin.jpg
     - images/vitaminC.jpg
     - images/Digestive Health.jpg
@@ -137,25 +136,29 @@ flutter:
     - images/ahmad.jpg
     - images/HANA.jpg
     - images/fatima.jpg
-    - images/calcium-vitamin D.jpg
     - images/logo2.jpg
-    - images/img.png
-    - images/img_1.png
-    - images/img_2.png
-    - images/img_3.png
     - images/img_6.png
     - images/logo.jpg
     - images/logoo.png
     - images/chatBack.jpg
-    - images/2_medication_image.jpg
-    - images/3_medication_image.jpg
-    - images/4_medication_image.jpg
-    - images/5_medication_image.jpg
+    - images/1_medication_image.png
+    - images/2_medication_image.png
+    - images/3_medication_image.png
+    - images/4_medication_image.png
+    - images/5_medication_image.png
     - images/6_medication_image.png
-    - images/7_medication_image.jpg
+    - images/7_medication_image.png
+    - images/8_medication_image.png
     - images/9_medication_image.png
+    - images/10_medication_image.png
+    - images/11_medication_image.png
+    - images/12_medication_image.png
+    - images/13_medication_image.png
+    - images/14_medication_image.png
+    - images/15_medication_image.png
+    - images/16_medication_image.png
     - images/67458a3b47a7c2ca4fdeed7a_profile_image.png
-
+    - images/img_2.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

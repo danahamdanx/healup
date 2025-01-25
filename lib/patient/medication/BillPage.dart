@@ -44,7 +44,7 @@ class BillPage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Bill Details"),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
           future: fetchBillingDetails(billingId),
@@ -189,7 +189,7 @@ class BillPage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Bill Details"),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
           future: fetchBillingDetails(billingId),

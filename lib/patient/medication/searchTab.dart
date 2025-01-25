@@ -289,7 +289,7 @@ class _SearchMedicinePageState extends State<SearchMedicinePage> {
                             Navigator.pop(context);  // إغلاق Dialog
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xfff08486),
+                            backgroundColor: const Color(0xff414370),
                           ),
                           child: const Text(
                             'Cancel',
@@ -303,7 +303,7 @@ class _SearchMedicinePageState extends State<SearchMedicinePage> {
                             _addToCart(medicine, _quantity);  // إضافة الدواء للعربة مع الكمية
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xfff08486),
+                            backgroundColor: const Color(0xff414370),
                           ),
                           child: const Text(
                             'Add to Cart',
@@ -375,7 +375,7 @@ if(kIsWeb){
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.grey[400]!, Colors.white],
+              colors: [Color(0xfff3efd9), Colors.white],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -426,8 +426,9 @@ if(kIsWeb){
                   vertical: 10.0, horizontal: 15.0),
                   decoration: BoxDecoration(
                   color: isSelected ? Colors.white : const Color(
-                  0xfff08486),
+                      0xff414370),
                   borderRadius: BorderRadius.circular(20),
+
                   border: Border.all(
                   color: const Color(0xff414370), width: 2),
                   ),
@@ -487,7 +488,7 @@ if(kIsWeb){
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
+                            color:  Color(0xffb8e1f1), // Set the card's background color
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
@@ -532,7 +533,7 @@ if(kIsWeb){
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: Color(0xff800020),
                                 ),
                               ),
                               const SizedBox(height: 8.0),
@@ -569,7 +570,7 @@ if(kIsWeb){
   else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Search Medicine",style: TextStyle(color: Colors.white70),),
+          title: const Text("Search Medicine",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
           backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
@@ -594,7 +595,7 @@ if(kIsWeb){
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.grey[400]!, Colors.white],
+                  colors: [Color(0xfff3efd9), Colors.white],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -645,7 +646,7 @@ if(kIsWeb){
                               vertical: 10.0, horizontal: 15.0),
                           decoration: BoxDecoration(
                             color: isSelected ? Colors.white : const Color(
-                                0xfff08486),
+                                0xff414370),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                                 color: const Color(0xff414370), width: 2),
@@ -698,7 +699,7 @@ if(kIsWeb){
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color:  Color(0xffe5eeff), // Set the card's background color
+                            color:  Color(0xffb8e1f1), // Set the card's background color
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
@@ -734,6 +735,7 @@ if(kIsWeb){
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
+                                  color: Color(0xff414370),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -746,14 +748,14 @@ if(kIsWeb){
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                                  color: Color(0xff800020),
                                 ),
                               ),
                               const SizedBox(height: 8.0),
                               ElevatedButton(
                                 onPressed: () => _selectQuantity(medicine),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xfff08486),
+                                  backgroundColor: const Color(0xff414370),
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10.0, horizontal: 20.0),
                                 ),

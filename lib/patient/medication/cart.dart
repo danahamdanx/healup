@@ -121,7 +121,7 @@ class CartPageState extends State<CartPage> {
                 Navigator.of(context).pop(); // Close the dialog
               },
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f), // Set the color for the text of the button
+                backgroundColor: const Color(0xff414370), // Set the color for the text of the button
               ),
               child: const Text("Cancel"),
             ),
@@ -165,7 +165,7 @@ class CartPageState extends State<CartPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f), // Set the button color
+                backgroundColor: const Color(0xff414370), // Set the button color
               ),
               child: const Text("Delete"),
             ),
@@ -343,7 +343,7 @@ class CartPageState extends State<CartPage> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.grey[400]!, Colors.white],
+                colors: [Color(0xfff3efd9), Colors.white],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -459,8 +459,11 @@ class CartPageState extends State<CartPage> {
                 Container(
                   padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+                    gradient: LinearGradient(
+                      colors: [Color(0xfff3efd9), Colors.white],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),                    borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -524,7 +527,7 @@ class CartPageState extends State<CartPage> {
                           }
                         },
                         style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xfff08486), // Customize button color
+                          backgroundColor: const Color(0xff414370), // Customize button color
                           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -559,7 +562,7 @@ class CartPageState extends State<CartPage> {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.grey[400]!, Colors.white],
+                  colors: [Color(0xfff3efd9), Colors.white],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -686,7 +689,7 @@ class CartPageState extends State<CartPage> {
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
     gradient: LinearGradient(
-    colors: [Colors.grey[400]!, Colors.white],
+      colors: [Color(0xfff3efd9), Colors.white],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,),
                     borderRadius: const BorderRadius.vertical(
@@ -767,13 +770,14 @@ class CartPageState extends State<CartPage> {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: const Color(
-                              0xfff08486), // Set the color for the text of the button
+                              0xff414370), // Set the color for the text of the button
                         ),
                         child: const Text(
                           "Confirm",
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
+                            color: Colors.white70,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
                           ),
                         ),
                       )

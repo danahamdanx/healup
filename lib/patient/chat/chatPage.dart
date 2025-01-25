@@ -132,7 +132,7 @@ class _ChatPageState extends State<ChatPage> {
       // Web layout (larger view, possibly horizontal layout)
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white70,
+          backgroundColor: Color(0xff414370),
           title: Row(
             children: [
               CircleAvatar(
@@ -140,7 +140,7 @@ class _ChatPageState extends State<ChatPage> {
                 radius: 20,
               ),
               SizedBox(width: 10),
-              Text('${widget.doctorName}'),
+              Text('${widget.doctorName}',style: TextStyle(color: Colors.white70),),
             ],
           ),
         ),
@@ -192,7 +192,7 @@ class _ChatPageState extends State<ChatPage> {
                                             padding: EdgeInsets.all(12),
                                             decoration: BoxDecoration(
                                               color: isSender
-                                                  ? Color(0xff2f9a8f)
+                                                  ? Color(0xff414370)
                                                   : Colors.grey[300],
                                               borderRadius: BorderRadius.circular(30),
                                             ),
@@ -293,7 +293,7 @@ class _ChatPageState extends State<ChatPage> {
     } else {
       return  Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white70,
+          backgroundColor: Color(0xff414370),
           title: Row(
             children: [
               CircleAvatar(
@@ -305,7 +305,7 @@ class _ChatPageState extends State<ChatPage> {
                     : null,
               ),
               SizedBox(width: 10),
-              Text('${widget.doctorName}'),
+              Text('${widget.doctorName}',style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
             ],
           ),
         ),
@@ -346,7 +346,7 @@ class _ChatPageState extends State<ChatPage> {
                                   Container(
                                     padding: EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: isSender ? Color(0xff2f9a8f) : Colors.grey[300],
+                                      color: isSender ? Color(0xff414370) : Colors.grey[300],
                                       borderRadius: BorderRadius.circular(30),
                                     ),
                                     child: message['fileUrl'] != null

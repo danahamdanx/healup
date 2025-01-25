@@ -282,7 +282,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                           padding: const EdgeInsets.only(
                                               right: 18.0),
                                           child: Icon(FontAwesomeIcons.comments,
-                                              color: Color(0xfff08486)),
+                                              color: Color(0xff414370)),
                                         ),
                                       ],
                                     ),
@@ -342,6 +342,13 @@ else {
           ],
         ),
         body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
 
           child: Column(
             children: [
@@ -479,7 +486,7 @@ else {
                                               right: 18.0),
                                           // Add space to the left of the icon
                                           child: Icon(FontAwesomeIcons.comments,
-                                              color: Color(0xfff08486)),
+                                              color: Color(0xff414370)),
                                         ),
                                       ],
                                     ),

@@ -97,7 +97,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                       TextButton(
                         onPressed: () => Navigator.pop(context),
                         style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xfff08486), // Set background color
+                          backgroundColor: const Color(0xff414370), // Set background color
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         ),
                         child: const Text(
@@ -138,7 +138,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                           //Navigator.pop(context); // Close the details page
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xfff08486), // Set background color
+                          backgroundColor: const Color(0xff414370), // Set background color
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         ),
                         child: const Text(
@@ -346,7 +346,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                         _addToCart(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xfff08486),
+                        backgroundColor: const Color(0xff414370),
                         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),  // Increased padding for a larger button
                         textStyle: const TextStyle(fontSize: 24),  // Increased font size
                       ),
@@ -381,7 +381,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.grey[400]!, Colors.white],
+                  colors: [Color(0xfff3efd9), Colors.white],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -433,7 +433,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: Color(0xff800020),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -443,7 +443,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                           _addToCart(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xfff08486),
+                          backgroundColor: const Color(0xff414370),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           textStyle: const TextStyle(fontSize: 18),
                         ),

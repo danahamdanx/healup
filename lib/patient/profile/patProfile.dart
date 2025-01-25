@@ -425,7 +425,7 @@ class _PatProfileState extends State<PatProfile> {
                 // Save Button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xfff08486),
+                    backgroundColor: const Color(0xff414370),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -456,7 +456,7 @@ class _PatProfileState extends State<PatProfile> {
     }else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Patient Profile",style: TextStyle(color: Colors.white70),),
+          title: const Text("Patient Profile",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
           backgroundColor: const Color(0xff414370),
 
           actions: [
@@ -495,7 +495,7 @@ class _PatProfileState extends State<PatProfile> {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xff6bc9ee), Colors.white],
+                  colors: [Color(0xfff3efd9), Colors.white],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -570,7 +570,7 @@ class _PatProfileState extends State<PatProfile> {
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:  Color(0xfff08486),
+                          backgroundColor:  Color(0xff414370),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 40, vertical: 15),
                           shape: RoundedRectangleBorder(

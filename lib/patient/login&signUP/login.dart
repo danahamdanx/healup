@@ -343,7 +343,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                         ElevatedButton(
                           onPressed: _login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurple[400],
+                            backgroundColor: Color(0xff414370),
                             padding: const EdgeInsets.symmetric(horizontal: 40,
                                 vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -536,7 +536,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                                 ElevatedButton(
                                   onPressed: _login,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:  Colors.deepPurple[400],
+                                    backgroundColor:  Color(0xff414370),
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 30, vertical: 12),
                                     shape: RoundedRectangleBorder(

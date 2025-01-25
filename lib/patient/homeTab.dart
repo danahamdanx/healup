@@ -163,7 +163,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
         title:  ShaderMask(
           shaderCallback: (bounds) =>  LinearGradient(
             colors: [
-              Color(0xfff08486), // Soft teal (primary color)
+              Color(0xff414370), // Soft teal (primary color)
               Colors.blue, // Soft blue (secondary color)
             ],
             begin: Alignment.topLeft,
@@ -523,7 +523,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
           shaderCallback: (bounds) =>  LinearGradient(
             colors: [
               Color(0xff6be4d7), // Soft teal (primary color)
-              Color(0xfff08486), // Soft blue (secondary color)
+              Color(0xff414370), // Soft blue (secondary color)
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -546,7 +546,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.grey[400]!, Colors.white],
+                colors: [Color(0xfff3efd9), Colors.white],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -566,7 +566,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                         children: [
                           Text(
                             'Hi, $userName!',
-                            style:  TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Color(0xfff08486)),
+                            style:  TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Color(0xff414370)),
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -646,7 +646,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
+                              color: Color(0xffb8e1f1),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.1),
@@ -671,7 +671,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                             fontSize: 21,
                                             color: medicationName == 'Unknown Medication'
                                                 ? Colors.red
-                                                : Colors.teal,
+                                                : Color(0xff414370),
                                           ),
                                         ),
                                         const SizedBox(height: 8),
@@ -927,6 +927,8 @@ class DoctorCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
+      color:  Color(0xffb8e1f1), // Set the card's background color
+
       elevation: 5,
       child: ListTile(
         leading: CircleAvatar(
@@ -1020,13 +1022,13 @@ class DoctorSpecialityCard extends StatelessWidget {
         margin: const EdgeInsets.only(right: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xffeef7fe),
+          color: const Color(0xffb8e1f1),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: const Color(0xfff08486 )),
+            Icon(icon, size: 40, color: const Color(0xff414370 )),
             const SizedBox(height: 8),
             Text(title, textAlign: TextAlign.center),
           ],
