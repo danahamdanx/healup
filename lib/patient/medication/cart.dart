@@ -377,6 +377,8 @@ class CartPageState extends State<CartPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
+                        color:  Color(0xffe5eeff), // Set the card's background color
+
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(10.0),
                           leading: Row(
@@ -522,7 +524,7 @@ class CartPageState extends State<CartPage> {
                           }
                         },
                         style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xff414370), // Customize button color
+                          backgroundColor: const Color(0xfff08486), // Customize button color
                           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -549,7 +551,7 @@ class CartPageState extends State<CartPage> {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Cart"),
+          title: const Text("Cart",style: TextStyle(color: Colors.white70,fontSize: 25,fontWeight: FontWeight.bold),),
           backgroundColor: const Color(0xff414370),
         ),
         body: Stack(
@@ -584,6 +586,8 @@ class CartPageState extends State<CartPage> {
                       return Card(
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
+                        color:  Color(0xffe5eeff), // Set the card's background color
+
                         child: ListTile(
                           leading: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -678,9 +682,13 @@ class CartPageState extends State<CartPage> {
                   ),
                 ),
                 Container(
+
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+    gradient: LinearGradient(
+    colors: [Colors.grey[400]!, Colors.white],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,),
                     borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(20)),
                     boxShadow: [
@@ -759,7 +767,7 @@ class CartPageState extends State<CartPage> {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: const Color(
-                              0xff414370), // Set the color for the text of the button
+                              0xfff08486), // Set the color for the text of the button
                         ),
                         child: const Text(
                           "Confirm",
