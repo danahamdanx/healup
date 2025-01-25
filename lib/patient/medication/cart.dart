@@ -123,7 +123,7 @@ class CartPageState extends State<CartPage> {
               style: TextButton.styleFrom(
                 backgroundColor: const Color(0xff414370), // Set the color for the text of the button
               ),
-              child: const Text("Cancel"),
+              child: const Text("Cancel",style: TextStyle(color: Colors.white70)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -167,7 +167,7 @@ class CartPageState extends State<CartPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff414370), // Set the button color
               ),
-              child: const Text("Delete"),
+              child: const Text("Delete",style: TextStyle(color: Colors.white70)),
             ),
           ],
         );
@@ -712,6 +712,7 @@ class CartPageState extends State<CartPage> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              color: Color(0xff414370)
                             ),
                           ),
                           Text(
@@ -719,6 +720,8 @@ class CartPageState extends State<CartPage> {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                                color: Color(0xff414370)
+
                             ),
                           ),
                         ],

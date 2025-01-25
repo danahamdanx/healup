@@ -43,7 +43,7 @@ class BillPage extends StatelessWidget {
     if (kIsWeb) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Bill Details"),
+          title: const Text("Bill Details",style: TextStyle(color: Colors.white70,fontSize: 25,fontWeight: FontWeight.bold),),
           backgroundColor: const Color(0xff414370),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
@@ -103,7 +103,7 @@ class BillPage extends StatelessWidget {
                           },
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            backgroundColor: const Color(0xff2f9a8f),
+                            backgroundColor: const Color(0xff414370),
                           ),
                           child: const Text(
                             "Track Order",
@@ -168,16 +168,50 @@ class BillPage extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
-                        color: const Color(0xff2f9a8f),
+                        color: const Color(0xff414370),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Center(
                         child: Text(
                           'Total Amount: ₪${totalAmount.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
                         ),
                       ),
+
                     ),
+                    const SizedBox(height: 180),
+                    const Divider(),
+                    Center(child: TextButton(
+
+                      onPressed: () {
+                        // Add the tracking functionality here
+                        print("Tracking Order Button Pressed");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                OrderTrackingPage(
+                                    patientAddress: patientAddress), // تم تمرير العنوان
+                          ),
+                        );
+                        // You can navigate to a tracking page or handle the tracking logic
+                      },
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        backgroundColor: const Color(0xff414370),
+                        disabledBackgroundColor: Colors.white,
+                        minimumSize: const Size(200, 50), // Set the minimum width and height
+
+                      ),
+                      child: const Text(
+                        "Track Order",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white70, // Set text color to black here
+                        ),
+                      ),
+                    ),)
                   ],
                 ),
               ),
@@ -188,10 +222,23 @@ class BillPage extends StatelessWidget {
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Bill Details"),
+          title: const Text("Bill Details",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
           backgroundColor: const Color(0xff414370),
         ),
-        body: FutureBuilder<Map<String, dynamic>>(
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+
+
+
+          FutureBuilder<Map<String, dynamic>>(
           future: fetchBillingDetails(billingId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -225,7 +272,7 @@ class BillPage extends StatelessWidget {
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
-                        color: Colors.blueGrey[800],
+                        color: Color(0xff414370),
                       ),
                     ),
                   ),
@@ -238,40 +285,12 @@ class BillPage extends StatelessWidget {
                       Text(
                         ' Date: ${billing['billingDate'] ?? "N/A"}',
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 20,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                          color: Color(0xff414370),
                         ),
                       ),
                       // Tracking Order Button
-                      TextButton(
-                        onPressed: () {
-                          // Add the tracking functionality here
-                          print("Tracking Order Button Pressed");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  OrderTrackingPage(
-                                      patientAddress: patientAddress), // تم تمرير العنوان
-                            ),
-                          );
-                          // You can navigate to a tracking page or handle the tracking logic
-                        },
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          backgroundColor: const Color(0xff2f9a8f),
-                          disabledBackgroundColor: Colors.white,
-                        ),
-                        child: const Text(
-                          "Track Order",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black, // Set text color to black here
-                          ),
-                        ),
-                      ),
 
                     ],
                   ),
@@ -316,6 +335,8 @@ class BillPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
+                        color:  Color(0xffb8e1f1), // Set the card's background color
+
                         elevation: 4,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -361,9 +382,10 @@ class BillPage extends StatelessWidget {
 
                   // Total Amount in a Box at the Bottom
                   Container(
+
                     padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
-                      color: const Color(0xff2f9a8f),
+                      color: const Color(0xff414370),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Align(
@@ -373,16 +395,51 @@ class BillPage extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Colors.white70,
                         ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 180),
+                  const Divider(),
+Center(child: TextButton(
+
+  onPressed: () {
+    // Add the tracking functionality here
+    print("Tracking Order Button Pressed");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            OrderTrackingPage(
+                patientAddress: patientAddress), // تم تمرير العنوان
+      ),
+    );
+    // You can navigate to a tracking page or handle the tracking logic
+  },
+  style: TextButton.styleFrom(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    backgroundColor: const Color(0xff414370),
+    disabledBackgroundColor: Colors.white,
+    minimumSize: const Size(200, 50), // Set the minimum width and height
+
+  ),
+  child: const Text(
+    "Track Order",
+    style: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: Colors.white70, // Set text color to black here
+    ),
+  ),
+),)
+
+
                 ],
               ),
             );
           },
-        ),
+        ),],)
       );
     }
   }

@@ -456,10 +456,19 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Your Appointments (Web)"),
-          backgroundColor: const Color(0xff6be4d7),
+          backgroundColor: const Color(0xff414370),
         ),
         body: Stack(
           children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
             isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : appointments.isEmpty
@@ -485,6 +494,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       : null;
 
                   return Card(
+                    color:  Color(0xffb8e1f1), // Set the card's background color
+
                     elevation: 4.0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
@@ -579,7 +590,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                   },
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.article, color: Colors.yellow),
+                                  icon: const Icon(Icons.article, color: Colors.amber),
                                   onPressed: () {
                                     fetchEHR(appointment['_id'], context);
                                   },
@@ -600,15 +611,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }else {
   return Scaffold(
     appBar: AppBar(
-      title: const Text("Your Appointments"),
-      backgroundColor: const Color(0xff6be4d7),
+      title: const Text("Your Appointments",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+      backgroundColor: const Color(0xff414370),
     ),
     body: Stack(
       children: [
-        Positioned.fill(
-          child: Image.asset(
-            'images/back.jpg',
-            fit: BoxFit.cover,
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
         ),
         isLoading
@@ -631,20 +645,23 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
             return Card(
               margin: const EdgeInsets.all(8.0),
+              color:  Color(0xffb8e1f1), // Set the card's background color
+
               elevation: 5.0,
               child: ListTile(
                 contentPadding: const EdgeInsets.all(16.0),
-                leading: CircleAvatar(
-                  radius: 35.0,
-                  backgroundImage: (doctorPhoto?.isNotEmpty ?? false)
-                      ? AssetImage(doctorPhoto!) // Display doctor's photo
-                      : AssetImage(
-                      'assets/images/person_icon.png') as ImageProvider,
-                  // Fallback to default image
-                  child: (doctorPhoto == null || doctorPhoto!.isEmpty)
-                      ? const Icon(
-                      Icons.person) // If no photo URL, show default icon
-                      : null,
+                leading: SizedBox(
+                  width: 70, // Adjust width to accommodate the larger CircleAvatar
+                 // height: 100, // Adjust height to accommodate the larger CircleAvatar
+                  child: CircleAvatar(
+                    radius: 70.0, // Increased radius
+                    backgroundImage: (doctorPhoto?.isNotEmpty ?? false)
+                        ? AssetImage(doctorPhoto!) // Display doctor's photo
+                        : const AssetImage('assets/images/person_icon.png') as ImageProvider,
+                    child: (doctorPhoto == null || doctorPhoto!.isEmpty)
+                        ? const Icon(Icons.person, size: 60) // Adjust icon size for larger CircleAvatar
+                        : null,
+                  ),
                 ),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -658,13 +675,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     Text(
                       doctorSpecialty, // Display doctor's specialty here
                       style: TextStyle(
-                          fontStyle: FontStyle.normal, color: Colors.grey),
+                          fontStyle: FontStyle.normal, color: Colors.grey[700]),
                     ),
                   ],
                 ),
                 subtitle: Text(
                   "${appointment['app_date']} - ${appointment['status']}",
-                  style: TextStyle(color: Color(0xff2f9a8f),
+                  style: TextStyle(color: Color(0xff414370),
                       fontWeight: FontWeight.bold),
                 ),
                 trailing: Row(
@@ -697,7 +714,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.article, color: Colors.yellow),
+                        icon: const Icon(Icons.article, color: Colors.amber),
                         onPressed: () {
                           fetchEHR(appointment['_id'], context);
                         },
