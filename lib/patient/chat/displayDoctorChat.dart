@@ -426,7 +426,7 @@ else {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  color:  Colors.grey[300], // Set the card's background color
+                                  color:  Color(0xffe5eeff), // Set the card's background color
 
                                   elevation: 5,
                                   child: ListTile(

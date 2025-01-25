@@ -567,11 +567,11 @@ if(kIsWeb){
   else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Search Medicine"),
+          title: const Text("Search Medicine",style: TextStyle(color: Colors.white70),),
           backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
-              icon: const Icon(Icons.shopping_cart),
+              icon: const Icon(Icons.shopping_cart,color: Colors.white70,),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -589,14 +589,7 @@ if(kIsWeb){
         ),
         body: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/pat.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+
             Column(
               children: [
                 Padding(
@@ -642,10 +635,10 @@ if(kIsWeb){
                               vertical: 10.0, horizontal: 15.0),
                           decoration: BoxDecoration(
                             color: isSelected ? Colors.white : const Color(
-                                0xff2f9a8f),
+                                0xfff08486),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                                color: const Color(0xff2f9a8f), width: 2),
+                                color: const Color(0xff414370), width: 2),
                           ),
                           child: Text(
                             type,
@@ -695,7 +688,7 @@ if(kIsWeb){
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.white,
+                            color:  Color(0xffe5eeff), // Set the card's background color
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
@@ -750,7 +743,7 @@ if(kIsWeb){
                               ElevatedButton(
                                 onPressed: () => _selectQuantity(medicine),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xff0C969C),
+                                  backgroundColor: const Color(0xfff08486),
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10.0, horizontal: 20.0),
                                 ),
