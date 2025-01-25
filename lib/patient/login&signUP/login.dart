@@ -428,10 +428,10 @@ class _PatLoginPageState extends State<PatLoginPage> {
                           key: _formKey,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Color(0xff2f9a8f).withOpacity(0.2), // Semi-transparent background
+                              color: Color(0xff414370).withOpacity(0.2), // Semi-transparent background
                               borderRadius: BorderRadius.circular(20), // Rounded corners
                               border: Border.all(
-                                color: const Color(0xff2f9a8f), // Frame border color
+                                color: const Color(0xff414370), // Frame border color
                                 width: 2, // Border width
                               ),
                               boxShadow: [

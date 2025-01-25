@@ -346,7 +346,7 @@ class _PatProfileState extends State<PatProfile> {
     if(kIsWeb){ return Scaffold(
       appBar: AppBar(
         title: const Text("Patient Profile"),
-        backgroundColor: const Color(0xff6be4d7),
+        backgroundColor: const Color(0xff414370),
         actions: [
           Stack(
             children: [
@@ -425,7 +425,7 @@ class _PatProfileState extends State<PatProfile> {
                 // Save Button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2f9a8f),
+                    backgroundColor: const Color(0xfff08486),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50, vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -456,14 +456,14 @@ class _PatProfileState extends State<PatProfile> {
     }else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Patient Profile"),
-          backgroundColor: const Color(0xff6be4d7),
+          title: const Text("Patient Profile",style: TextStyle(color: Colors.white70),),
+          backgroundColor: const Color(0xff414370),
 
           actions: [
             Stack(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.settings),
+                  icon: const Icon(Icons.settings,color: Colors.white70,size: 30,),
                   onPressed: () {
                     _showSettingsMenu(context, themeNotifier);
                   },
@@ -492,11 +492,14 @@ class _PatProfileState extends State<PatProfile> {
             : Stack(
           children: [
             // Background Image
-            Image.asset(
-              "images/pat.jpg",
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff6bc9ee), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
             ),
             // Profile Content
             Padding(
@@ -567,7 +570,7 @@ class _PatProfileState extends State<PatProfile> {
                     Center(
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff2f9a8f),
+                          backgroundColor:  Color(0xfff08486),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 40, vertical: 15),
                           shape: RoundedRectangleBorder(
@@ -581,8 +584,8 @@ class _PatProfileState extends State<PatProfile> {
                               _profileImage); // Pass the _profileImage to the update method
                         },
                         child: _isUpdating
-                            ? const CircularProgressIndicator(
-                            color: Color(0xff2f9a8f))
+                            ?  CircularProgressIndicator(
+                            color: Colors.deepPurple[400])
                             : const Text(
                           "Save Changes",
                           style: TextStyle(fontSize: 18, color: Colors.white),

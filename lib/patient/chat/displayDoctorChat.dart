@@ -127,12 +127,12 @@ class _DoctorsPageState extends State<DoctorsPage> {
     if(kIsWeb) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Messages'),
+          title: Text('Messages',style: TextStyle(color: Colors.white70),),
           centerTitle: true,
-          backgroundColor: Colors.tealAccent[200],
+          backgroundColor: Color(0xff414370),
           actions: [
             IconButton(
-              icon: Icon(Icons.refresh),
+              icon: Icon(Icons.refresh,color: Colors.white70,),
               onPressed: () {
                 setState(() {
                   _doctors = DoctorService().getDoctors();
@@ -146,12 +146,6 @@ class _DoctorsPageState extends State<DoctorsPage> {
               .of(context)
               .size
               .width * 0.2 : 0),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
           child: Column(
             children: [
               Padding(
@@ -159,7 +153,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search, color: Color(0xff2f9a8f)),
+                    prefixIcon: Icon(Icons.search, color: Color(0xff414370)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
                       borderSide: BorderSide.none,
@@ -170,7 +164,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                     hintStyle: TextStyle(
                       color: _searchController.text.isEmpty
                           ? Colors.grey
-                          : Color(0xff2f9a8f),
+                          : Color(0xff414370),
                     ),
                   ),
                 ),
@@ -235,6 +229,8 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
+                                  color:  Colors.grey[300], // Set the card's background color
+
                                   elevation: 5,
                                   child: ListTile(
                                     contentPadding: EdgeInsets.all(15),
@@ -286,7 +282,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                           padding: const EdgeInsets.only(
                                               right: 18.0),
                                           child: Icon(FontAwesomeIcons.comments,
-                                              color: Color(0xff2f9a8f)),
+                                              color: Color(0xfff08486)),
                                         ),
                                       ],
                                     ),
@@ -325,18 +321,18 @@ class _DoctorsPageState extends State<DoctorsPage> {
 else {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Messages'),
+          title: Text('Messages',style: TextStyle(color: Colors.white70),),
           centerTitle: true,
-          backgroundColor: Colors.tealAccent[200],
+          backgroundColor: Color(0xff414370),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back, color: Colors.white70),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.refresh),
+              icon: Icon(Icons.refresh,color: Colors.white70,),
               onPressed: () {
                 setState(() {
                   _doctors = DoctorService().getDoctors();
@@ -346,12 +342,7 @@ else {
           ],
         ),
         body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-              fit: BoxFit.cover,
-            ),
-          ),
+
           child: Column(
             children: [
               Padding(
@@ -359,13 +350,13 @@ else {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search, color: Color(0xff2f9a8f)),
+                    prefixIcon: Icon(Icons.search, color: Color(0xff414370)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
-                    fillColor: Colors.white70,
+                    fillColor: Colors.grey[300],
                     hintText: 'Enter doctor\'s name or specialization',
                     hintStyle: TextStyle(
                       color: _searchController.text.isEmpty
@@ -435,6 +426,8 @@ else {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
+                                  color:  Colors.grey[300], // Set the card's background color
+
                                   elevation: 5,
                                   child: ListTile(
                                     contentPadding: EdgeInsets.all(15),
@@ -486,7 +479,7 @@ else {
                                               right: 18.0),
                                           // Add space to the left of the icon
                                           child: Icon(FontAwesomeIcons.comments,
-                                              color: Color(0xff2f9a8f)),
+                                              color: Color(0xfff08486)),
                                         ),
                                       ],
                                     ),

@@ -354,7 +354,7 @@ if(kIsWeb){
   return Scaffold(
     appBar: AppBar(
       title: const Text("Search Medicine"),
-      backgroundColor: const Color(0xff6be4d7),
+      backgroundColor: const Color(0xff414370),
       actions: [
         IconButton(
           icon: const Icon(Icons.shopping_cart),
@@ -568,7 +568,7 @@ if(kIsWeb){
       return Scaffold(
         appBar: AppBar(
           title: const Text("Search Medicine"),
-          backgroundColor: const Color(0xff6be4d7),
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
               icon: const Icon(Icons.shopping_cart),

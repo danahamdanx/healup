@@ -159,29 +159,38 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     if(kIsWeb){return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff6be4d7),
-        title: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Colors.lightBlue, Colors.lightGreen],
+        backgroundColor: const Color(0xff414370),
+        title:  ShaderMask(
+          shaderCallback: (bounds) =>  LinearGradient(
+            colors: [
+              Color(0xfff08486), // Soft teal (primary color)
+              Colors.blue, // Soft blue (secondary color)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             tileMode: TileMode.clamp,
           ).createShader(bounds),
           child: const Text(
             'HealUp',
             style: TextStyle(
-              fontSize: 40,
+              fontSize: 55,
               fontFamily: 'Hello Valentina',
               fontWeight: FontWeight.bold,
-              color: Colors.lightBlue,
+              color: Colors.white, // Use white for better contrast with the gradient
             ),
           ),
         ),
+
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'images/pat.jpg',
-              fit: BoxFit.cover,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xff6bc9ee), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
           SingleChildScrollView(
@@ -510,9 +519,14 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
     );}else{return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff414370),
-        title: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Colors.lightBlue, Colors.lightGreen],
+        title:  ShaderMask(
+          shaderCallback: (bounds) =>  LinearGradient(
+            colors: [
+              Color(0xff6be4d7), // Soft teal (primary color)
+              Color(0xfff08486), // Soft blue (secondary color)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             tileMode: TileMode.clamp,
           ).createShader(bounds),
           child: const Text(
@@ -521,17 +535,21 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
               fontSize: 40,
               fontFamily: 'Hello Valentina',
               fontWeight: FontWeight.bold,
-              color: Colors.lightBlue,
+              color: Colors.white, // Use white for better contrast with the gradient
             ),
           ),
         ),
+
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'images/pat.jpg',
-              fit: BoxFit.cover,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xff6bc9ee), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
           SingleChildScrollView(
@@ -548,12 +566,12 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                         children: [
                           Text(
                             'Hi, $userName!',
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            style:  TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Color(0xfff08486)),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'How are you today?',
-                            style: TextStyle(fontSize: 18, color: Colors.grey[800]),
+                            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -562,7 +580,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.live_help_sharp, size: 33),
-                          color: Colors.black,
+                          color: Colors.grey[800],
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -577,9 +595,9 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                   ],
                 ),
                 const SizedBox(height: 20),
-                const Text(
+                 Text(
                   'Discounted Medications',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: TextStyle(color:Colors.grey[800],fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 medications.isEmpty
@@ -706,9 +724,9 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
+                 Text(
                   'Doctor Speciality',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: TextStyle(color:Colors.grey[800],fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
@@ -786,9 +804,9 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                     Text(
                       'Recommended Doctors',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: TextStyle(color:Colors.grey[800],fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     TextButton(
                       onPressed: () {
@@ -799,11 +817,11 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           ),
                         );
                       },
-                      child: const Text(
+                      child:  Text(
                         'See All',
                         style: TextStyle(
+                          color:Colors.grey[800],
                           fontSize: 16,
-                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -1008,7 +1026,7 @@ class DoctorSpecialityCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: const Color(0xff414370)),
+            Icon(icon, size: 40, color: const Color(0xfff08486 )),
             const SizedBox(height: 8),
             Text(title, textAlign: TextAlign.center),
           ],
