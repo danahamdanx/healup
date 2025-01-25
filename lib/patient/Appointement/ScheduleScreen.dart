@@ -455,7 +455,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       // Web-specific implementation with card-based grid layout
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Your Appointments (Web)"),
+          title: const Text("Your Appointments",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
           backgroundColor: const Color(0xff414370),
         ),
         body: Stack(
