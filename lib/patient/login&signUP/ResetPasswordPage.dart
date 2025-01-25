@@ -79,7 +79,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Reset Password'),
-        backgroundColor: const Color(0xff2f9a8f),
+        backgroundColor: const Color(0xff414370),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -95,7 +95,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff2f9a8f),
+                    color: Color(0xff414370),
                   ),
                 ),
               ),
@@ -105,7 +105,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'New Password',
-                  prefixIcon: const Icon(Icons.lock, color: Color(0xff2f9a8f)),
+                  prefixIcon: const Icon(Icons.lock, color: Color(0xff414370)),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -127,7 +127,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Confirm Password',
-                  prefixIcon: const Icon(Icons.lock, color: Color(0xff2f9a8f)),
+                  prefixIcon: const Icon(Icons.lock, color: Color(0xff414370)),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -147,7 +147,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               ElevatedButton(
                 onPressed: _resetPassword,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff2f9a8f),
+                  backgroundColor: const Color(0xff414370),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),

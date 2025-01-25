@@ -126,10 +126,11 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
             children: [
               // Background image
               Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/signlogin.jpg'),
-                    fit: BoxFit.cover,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xff6bc9ee), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
               ),
@@ -167,7 +168,7 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
                                   'Create a New Account',
                                   style: TextStyle(
                                     fontSize: 24,
-                                    color: Color(0xff2f9a8f),
+                                    color: Color(0xff414370),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -365,7 +366,7 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
                             Center(
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xff2f9a8f),
+                                  backgroundColor:  Colors.deepPurple[400],
                                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
@@ -426,10 +427,11 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
           child: Stack(
             children: [
               Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/signlogin.jpg'),
-                    fit: BoxFit.cover,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xff6bc9ee), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
               ),
@@ -441,7 +443,7 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Color(0xff2f9a8f), size: 30),
+                          icon:  Icon(Icons.arrow_back, color: Colors.deepPurple[300], size: 30),
                           onPressed: () => Navigator.pop(context),
                         ),
                         Center(
@@ -450,7 +452,7 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
                             child: Text(
                               'Create a New Account',
                               style: TextStyle(
-                                  fontSize: 24, color: Color(0xff2f9a8f)),
+                                  fontSize: 30, color: Color(0xff414370),fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -649,7 +651,7 @@ class _PatSignUpPageState extends State<PatSignUpPage> {
                         Center(
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff2f9a8f),
+                              backgroundColor:  Colors.deepPurple[400],
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 40, vertical: 15),
                               shape: RoundedRectangleBorder(

@@ -213,10 +213,11 @@ class _PatLoginPageState extends State<PatLoginPage> {
         children: [
           // Background image, set to cover the whole screen
           Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('images/signlogin.jpg'),
-                fit: BoxFit.cover, // Ensures the image fills the screen
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xff6bc9ee), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
@@ -234,7 +235,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                   alignment: Alignment.topLeft,
                   child: IconButton(
                     icon: const Icon(
-                        Icons.arrow_back, color: Color(0xff2f9a8f), size: 30),
+                        Icons.arrow_back, color: Color(0xff414370), size: 30),
                     onPressed: () =>
                         Navigator.of(context).pushReplacementNamed("welcomePage"),
                   ),
@@ -243,7 +244,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                 const Center(
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundImage: AssetImage('images/img_6.png'),
+                    backgroundImage: AssetImage('images/img_2.png'),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -254,21 +255,26 @@ class _PatLoginPageState extends State<PatLoginPage> {
                     child: Column(
                       children: [
                         ShaderMask(
-                          shaderCallback: (bounds) =>
-                              const LinearGradient(
-                                colors: [Colors.lightBlue, Colors.lightGreen],
-                                tileMode: TileMode.clamp,
-                              ).createShader(bounds),
+                          shaderCallback: (bounds) =>  LinearGradient(
+                            colors: [
+                              Color(0xff414370), // Soft teal (primary color)
+                              Colors.blue, // Soft blue (secondary color)
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            tileMode: TileMode.clamp,
+                          ).createShader(bounds),
                           child: const Text(
                             'Login',
                             style: TextStyle(
                               fontSize: 55,
                               fontFamily: 'Hello Valentina',
                               fontWeight: FontWeight.bold,
-                              color: Colors.lightBlue,
+                              color: Colors.white, // Use white for better contrast with the gradient
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 50),
                         // Email TextField
                         TextFormField(
@@ -337,7 +343,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                         ElevatedButton(
                           onPressed: _login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2f9a8f),
+                            backgroundColor: Colors.deepPurple[400],
                             padding: const EdgeInsets.symmetric(horizontal: 40,
                                 vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -385,10 +391,11 @@ class _PatLoginPageState extends State<PatLoginPage> {
             children: [
               // Background image
               Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/signlogin.jpg'),
-                    fit: BoxFit.cover,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xff6bc9ee), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
               ),
@@ -404,7 +411,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                       child: IconButton(
                         icon: const Icon(
                           Icons.arrow_back,
-                          color: Color(0xff2f9a8f),
+                          color: Color(0xff414370),
                           size: 30,
                         ),
                         onPressed: () =>
@@ -443,24 +450,26 @@ class _PatLoginPageState extends State<PatLoginPage> {
                                 const SizedBox(height: 25),
 
                                 ShaderMask(
-                                  shaderCallback: (bounds) =>
-                                      const LinearGradient(
-                                        colors: [
-                                          Colors.lightBlue,
-                                          Colors.lightGreen
-                                        ],
-                                        tileMode: TileMode.clamp,
-                                      ).createShader(bounds),
+                                  shaderCallback: (bounds) =>  LinearGradient(
+                                    colors: [
+                                      Color(0xff414370), // Soft teal (primary color)
+                                      Colors.blue, // Soft blue (secondary color)
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    tileMode: TileMode.clamp,
+                                  ).createShader(bounds),
                                   child: const Text(
                                     'Login',
                                     style: TextStyle(
-                                      fontSize: 50,
+                                      fontSize: 55,
                                       fontFamily: 'Hello Valentina',
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.lightBlue,
+                                      color: Colors.white, // Use white for better contrast with the gradient
                                     ),
                                   ),
                                 ),
+
                                 const SizedBox(height: 70),
                                 TextFormField(
                                   controller: _emailController,
@@ -527,7 +536,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                                 ElevatedButton(
                                   onPressed: _login,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xff2f9a8f),
+                                    backgroundColor:  Colors.deepPurple[400],
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 30, vertical: 12),
                                     shape: RoundedRectangleBorder(

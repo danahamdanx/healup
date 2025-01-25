@@ -115,6 +115,7 @@ flutter:
     - images/pat.jpg
     - images/med.png
     - images/paracetamol.jpg
+    - images/Screenshot 2025-01-25 215004.png
     - images/Aspirin.jpg
     - images/vitaminC.jpg
     - images/Digestive Health.jpg
@@ -138,6 +139,10 @@ flutter:
     - images/fatima.jpg
     - images/calcium-vitamin D.jpg
     - images/logo2.jpg
+    - images/img.png
+    - images/img_1.png
+    - images/img_2.png
+    - images/img_3.png
     - images/img_6.png
     - images/logo.jpg
     - images/logoo.png

@@ -49,10 +49,11 @@ class _WelcomePageState extends State<WelcomePage>
           children: [
             // Background image
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'), // Web background image
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff6bc9ee), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -87,16 +88,22 @@ class _WelcomePageState extends State<WelcomePage>
                         ),
                         const SizedBox(height: 20), // Reduce space below logo
                         ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [Colors.lightBlue, Colors.lightGreen],
+                          shaderCallback: (bounds) =>  LinearGradient(
+                            colors: [
+                              Color(0xff414370), // Soft teal (primary color)
+                              Colors.blue, // Soft blue (secondary color)
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            tileMode: TileMode.clamp,
                           ).createShader(bounds),
                           child: const Text(
                             'Welcome to HealUp',
                             style: TextStyle(
-                              fontSize: 40, // Adjust text size
+                              fontSize: 40,
                               fontFamily: 'Hello Valentina',
                               fontWeight: FontWeight.bold,
-                              color: Colors.lightBlue,
+                              color: Colors.white, // Use white for better contrast with the gradient
                             ),
                           ),
                         ),
@@ -130,15 +137,15 @@ class _WelcomePageState extends State<WelcomePage>
           children: [
             // Background image
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                      'images/back.jpg'),
-                  // Replace with your background image path
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff6bc9ee), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
+
             // Transparent overlay
             Container(
               color:
@@ -160,7 +167,7 @@ class _WelcomePageState extends State<WelcomePage>
 
                       radius: 73, // Adjust size as needed
                       backgroundImage: AssetImage(
-                          'images/img_6.png'), // Replace with your logo image path
+                          'images/img_2.png'), // Replace with your logo image path
                     ),
                   ),
                   const SizedBox(height: 80),
@@ -169,24 +176,22 @@ class _WelcomePageState extends State<WelcomePage>
                     child: Column(
                       children: [
                         ShaderMask(
-                          shaderCallback: (bounds) =>
-                              const LinearGradient(
-                                colors: [
-                                  Colors.lightBlue,
-                                  Colors.lightGreen
-                                ],
-                                // Use light blue and light green for the gradient
-                                tileMode: TileMode.clamp,
-                              ).createShader(bounds),
+                          shaderCallback: (bounds) =>  LinearGradient(
+                            colors: [
+                              Color(0xff414370), // Soft teal (primary color)
+                              Colors.blue, // Soft blue (secondary color)
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            tileMode: TileMode.clamp,
+                          ).createShader(bounds),
                           child: const Text(
                             'Welcome to HealUp',
                             style: TextStyle(
                               fontSize: 40,
                               fontFamily: 'Hello Valentina',
-                              fontWeight: FontWeight
-                                  .bold, // Optional: to make the text bold
-                              color: Colors
-                                  .lightBlue, // Use light blue and light green for the gradient
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white, // Use white for better contrast with the gradient
                             ),
                           ),
                         ),
@@ -204,7 +209,7 @@ class _WelcomePageState extends State<WelcomePage>
                   SlideTransition(
                     position: _offsetAnimation!,
                     child: buildSignUpButton(
-                        context, 'Doctor', Icons.local_hospital),
+                        context, 'A Doctor', Icons.local_hospital),
                   ),
                   SlideTransition(
                     position: _offsetAnimation!,
@@ -253,7 +258,7 @@ class _WelcomePageState extends State<WelcomePage>
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xff6be4d7),
+          backgroundColor: Color(0xff414370),
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
