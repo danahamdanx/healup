@@ -117,14 +117,14 @@ class _PatientPageState extends State<PatientPage> {
               ),
             ),
           ),
-          backgroundColor: const Color(0xff6be4d7), // App bar background color
+          backgroundColor: const Color(0xff414370), // App bar background color
         ),
         body: Row(
           children: [
             // Left Sidebar for Web navigation
             Container(
               width: 250, // Width of the sidebar
-              color: const Color(0xff6be4d7), // Background color for the rail
+              color: const Color(0xff414370), // Background color for the rail
               child: NavigationRail(
                 selectedIndex: _selectedIndex,
                 onDestinationSelected: _onItemTapped,
@@ -150,7 +150,7 @@ class _PatientPageState extends State<PatientPage> {
                     label: Text('Profile'),
                   ),
                 ],
-                backgroundColor: const Color(0xff6be4d7), // Same background color for the rail
+                backgroundColor: const Color(0xff414370), // Same background color for the rail
                 selectedLabelTextStyle: const TextStyle(
                   color: Colors.white, // White text for selected label
                   fontWeight: FontWeight.bold,
@@ -237,7 +237,7 @@ class _PatientPageState extends State<PatientPage> {
               currentIndex: _selectedIndex,
               selectedItemColor: Colors.white,
               unselectedItemColor: Colors.white,
-              backgroundColor: const Color(0xff6be4d7),
+              backgroundColor: const Color(0xff414370),
               onTap: _onItemTapped,
               type: BottomNavigationBarType.fixed,
             ),
@@ -267,7 +267,7 @@ class _PatientPageState extends State<PatientPage> {
                   child: const Padding(
                     padding: EdgeInsets.all(10.0),
                     child: Icon(
-                        Icons.search, size: 35, color: Color(0xff6be4d7)),
+                        Icons.search, size: 35, color: Color(0xff414370)),
                   ),
                 ),
               ),

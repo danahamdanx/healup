@@ -509,7 +509,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
       ),
     );}else{return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff6be4d7),
+        backgroundColor: const Color(0xff414370),
         title: ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
             colors: [Colors.lightBlue, Colors.lightGreen],
@@ -1008,7 +1008,7 @@ class DoctorSpecialityCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: const Color(0xff2f9a8f)),
+            Icon(icon, size: 40, color: const Color(0xff414370)),
             const SizedBox(height: 8),
             Text(title, textAlign: TextAlign.center),
           ],
