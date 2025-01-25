@@ -289,7 +289,7 @@ class _SearchMedicinePageState extends State<SearchMedicinePage> {
                             Navigator.pop(context);  // إغلاق Dialog
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff0C969C),
+                            backgroundColor: const Color(0xfff08486),
                           ),
                           child: const Text(
                             'Cancel',
@@ -303,7 +303,7 @@ class _SearchMedicinePageState extends State<SearchMedicinePage> {
                             _addToCart(medicine, _quantity);  // إضافة الدواء للعربة مع الكمية
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff0C969C),
+                            backgroundColor: const Color(0xfff08486),
                           ),
                           child: const Text(
                             'Add to Cart',
@@ -353,11 +353,11 @@ class _SearchMedicinePageState extends State<SearchMedicinePage> {
 if(kIsWeb){
   return Scaffold(
     appBar: AppBar(
-      title: const Text("Search Medicine"),
+      title: const Text("Search Medicine",style: TextStyle(color: Colors.white70),),
       backgroundColor: const Color(0xff414370),
       actions: [
         IconButton(
-          icon: const Icon(Icons.shopping_cart),
+          icon: const Icon(Icons.shopping_cart,color: Colors.white70,),
           onPressed: () {
             Navigator.push(
               context,
@@ -373,10 +373,11 @@ if(kIsWeb){
     body: Stack(
       children: [
         Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-              fit: BoxFit.cover,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.grey[400]!, Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
         ),
@@ -419,17 +420,18 @@ if(kIsWeb){
                         _selectedCategory = type;
                       });
                     },
-                    child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 15.0),
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.white : const Color(0xff2f9a8f),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: const Color(0xff2f9a8f), width: 2),
-                      ),
-                      child: Text(
+                  child: Container(
+                  margin: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(
+                  vertical: 10.0, horizontal: 15.0),
+                  decoration: BoxDecoration(
+                  color: isSelected ? Colors.white : const Color(
+                  0xfff08486),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                  color: const Color(0xff414370), width: 2),
+                  ),
+                  child: Text(
                         type,
                         style: TextStyle(
                           color: isSelected ? Colors.black : Colors.white,
@@ -589,7 +591,15 @@ if(kIsWeb){
         ),
         body: Stack(
           children: [
-
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.grey[400]!, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
             Column(
               children: [
                 Padding(

@@ -97,7 +97,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                       TextButton(
                         onPressed: () => Navigator.pop(context),
                         style: TextButton.styleFrom(
-                          backgroundColor: const Color(0xff2f9a8f), // Set background color
+                          backgroundColor: const Color(0xfff08486), // Set background color
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         ),
                         child: const Text(
@@ -138,7 +138,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                           //Navigator.pop(context); // Close the details page
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff2f9a8f), // Set background color
+                          backgroundColor: const Color(0xfff08486), // Set background color
                           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         ),
                         child: const Text(
@@ -275,87 +275,104 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
       // Web-specific layout adjustments
       return Scaffold(
         appBar: AppBar(
-          title: Text(widget.medicine.medication_name),
-          backgroundColor: const Color(0xff2f9a8f),
+          title: Text(widget.medicine.medication_name,style: TextStyle(color: Colors.white70),),
+          backgroundColor: const Color(0xff414370),
         ),
-        body: Center(  // This will center everything on the web screen
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),  // Add padding for web
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Center the image and make it smaller on web
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: SizedBox(
-                    height: 250, // Smaller height for the image on web
-                    child: Image.asset(
-                      widget.medicine.image,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+
+        body:Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.grey[400]!, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                const SizedBox(height: 20),  // Space between the image and content
-                // Medicine name
-                Text(
-                  widget.medicine.medication_name,
-                  style: const TextStyle(
-                    fontSize: 27,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                // Medicine description
-                Text(
-                  widget.medicine.description,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                // Medicine price
-                Text(
-                  "₪${widget.medicine.final_price.toStringAsFixed(2)}",
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Add to Cart button with larger size
-                ElevatedButton(
-                  onPressed: () {
-                    _addToCart(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2f9a8f),
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),  // Increased padding for a larger button
-                    textStyle: const TextStyle(fontSize: 24),  // Increased font size
-                  ),
-                  child: const Text(
-                    "Add to Cart",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,  // Increased font size for the button text
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+
+            Center(  // This will center everything on the web screen
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),  // Add padding for web
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Center the image and make it smaller on web
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: SizedBox(
+                        height: 250, // Smaller height for the image on web
+                        child: Image.asset(
+                          widget.medicine.image,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),  // Space between the image and content
+                    // Medicine name
+                    Text(
+                      widget.medicine.medication_name,
+                      style: const TextStyle(
+                        fontSize: 27,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Medicine description
+                    Text(
+                      widget.medicine.description,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Medicine price
+                    Text(
+                      "₪${widget.medicine.final_price.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Add to Cart button with larger size
+                    ElevatedButton(
+                      onPressed: () {
+                        _addToCart(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xfff08486),
+                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),  // Increased padding for a larger button
+                        textStyle: const TextStyle(fontSize: 24),  // Increased font size
+                      ),
+                      child: const Text(
+                        "Add to Cart",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,  // Increased font size for the button text
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+          ],
+        )
+
       );
     }  else {
       return Scaffold(
         appBar: AppBar(
-          title: Text(widget.medicine.medication_name),
-          backgroundColor: const Color(0xff2f9a8f), // تغيير اللون هنا
+          title: Text(widget.medicine.medication_name,style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+          backgroundColor: const Color(0xff414370), // تغيير اللون هنا
         ),
 
         body: Stack(
@@ -363,12 +380,14 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
             // Background image
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/pat.jpg'),
-                  fit: BoxFit.cover,
+                gradient: LinearGradient(
+                  colors: [Colors.grey[400]!, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
+
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -424,7 +443,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                           _addToCart(context);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff2f9a8f),
+                          backgroundColor: const Color(0xfff08486),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           textStyle: const TextStyle(fontSize: 18),
                         ),

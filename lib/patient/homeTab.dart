@@ -546,7 +546,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xff6bc9ee), Colors.white],
+                colors: [Colors.grey[400]!, Colors.white],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),

@@ -336,216 +336,230 @@ class CartPageState extends State<CartPage> {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Cart", style: TextStyle(fontSize: 24)),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           elevation: 4,
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 100.0, vertical: 20.0),  // Large padding for web
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Check if cart is empty
-              widget.cart.isEmpty
-                  ? const Center(
-                child: Text(
-                  "Your cart is empty.",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.grey[400]!, Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 100.0, vertical: 20.0),  // Large padding for web
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Check if cart is empty
+                widget.cart.isEmpty
+                    ? const Center(
+                  child: Text(
+                    "Your cart is empty.",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-              )
-                  : Expanded(
-                child: ListView.builder(
-                  itemCount: widget.cart.length,
-                  itemBuilder: (context, index) {
-                    final item = widget.cart[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(10.0),
-                        leading: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Checkbox(
-                              value: selectedItems[index] ?? false,
-                              onChanged: (bool? value) async {
-                                setState(() {
-                                  selectedItems[index] = value ?? false;
+                )
+                    : Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.cart.length,
+                    itemBuilder: (context, index) {
+                      final item = widget.cart[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(10.0),
+                          leading: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: selectedItems[index] ?? false,
+                                onChanged: (bool? value) async {
+                                  setState(() {
+                                    selectedItems[index] = value ?? false;
+
+                                    if (selectedItems[index] == true) {
+                                      selectedMedications.add(widget.cart[index]);
+                                    } else {
+                                      selectedMedications.removeWhere(
+                                            (item) =>
+                                        item['id'] == widget.cart[index]['id'],
+                                      );
+                                    }
+                                  });
 
                                   if (selectedItems[index] == true) {
-                                    selectedMedications.add(widget.cart[index]);
-                                  } else {
-                                    selectedMedications.removeWhere(
-                                          (item) =>
-                                      item['id'] == widget.cart[index]['id'],
-                                    );
+                                    await fetchMedicationDetails([item['id']]);
                                   }
-                                });
-
-                                if (selectedItems[index] == true) {
-                                  await fetchMedicationDetails([item['id']]);
-                                }
-                              },
-                              activeColor: const Color(0xff2f9a8f),
-                            ),
-                            item['image'].isNotEmpty
-                                ? Image.asset(
-                              item['image'],
-                              width: 70,
-                              height: 70,
-                              fit: BoxFit.cover,
-                            )
-                                : Image.asset(
-                              'images/default_medicine.png',
-                              width: 70,
-                              height: 70,
-                            ),
-                          ],
-                        ),
-                        title: Text(
-                          item['name'],
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("₪${(item['final_price'] * item['quantity']).toStringAsFixed(2)}"),
-                            Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.remove),
-                                  onPressed: () => decrementQuantity(index),
-                                ),
-                                Text("${item['quantity']}"),
-                                IconButton(
-                                  icon: const Icon(Icons.add),
-                                  onPressed: () => incrementQuantity(index),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => showDeleteConfirmationDialog(context, index),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              // Total Price and Confirmation Button
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Total Price:",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "₪${getTotalPrice().toStringAsFixed(2)}",
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16.0),
-                    ElevatedButton(
-                      onPressed: () async {
-                        List<Map<String, dynamic>> selectedMedicationsDetails = [];
-
-                        if (isAnyItemSelected()) {
-                          for (var selectedItem in selectedMedications) {
-                            String? medicationId = await fetchMedicationIdByName(selectedItem['name']);
-                            selectedMedicationsDetails.add({
-                              'name': selectedItem['name'],
-                              'quantity': selectedItem['quantity'],
-                              'id': medicationId,
-                            });
-                          }
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PaymentOptionsPage(
-                                totalPrice: getTotalPrice(),
-                                patientId: widget.patientId,
-                                selectedMedicationsDetails: selectedMedicationsDetails,
+                                },
+                                activeColor: const Color(0xff414370),
                               ),
+                              item['image'].isNotEmpty
+                                  ? Image.asset(
+                                item['image'],
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.cover,
+                              )
+                                  : Image.asset(
+                                'images/default_medicine.png',
+                                width: 70,
+                                height: 70,
+                              ),
+                            ],
+                          ),
+                          title: Text(
+                            item['name'],
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Please select at least one item to proceed."),
-                            ),
-                          );
-                        }
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f), // Customize button color
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("₪${(item['final_price'] * item['quantity']).toStringAsFixed(2)}"),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.remove),
+                                    onPressed: () => decrementQuantity(index),
+                                  ),
+                                  Text("${item['quantity']}"),
+                                  IconButton(
+                                    icon: const Icon(Icons.add),
+                                    onPressed: () => incrementQuantity(index),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => showDeleteConfirmationDialog(context, index),
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        "Confirm",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+                // Total Price and Confirmation Button
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Total Price:",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "₪${getTotalPrice().toStringAsFixed(2)}",
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16.0),
+                      ElevatedButton(
+                        onPressed: () async {
+                          List<Map<String, dynamic>> selectedMedicationsDetails = [];
+
+                          if (isAnyItemSelected()) {
+                            for (var selectedItem in selectedMedications) {
+                              String? medicationId = await fetchMedicationIdByName(selectedItem['name']);
+                              selectedMedicationsDetails.add({
+                                'name': selectedItem['name'],
+                                'quantity': selectedItem['quantity'],
+                                'id': medicationId,
+                              });
+                            }
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PaymentOptionsPage(
+                                  totalPrice: getTotalPrice(),
+                                  patientId: widget.patientId,
+                                  selectedMedicationsDetails: selectedMedicationsDetails,
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Please select at least one item to proceed."),
+                              ),
+                            );
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: const Color(0xff414370), // Customize button color
+                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: const Text(
+                          "Confirm",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
+
+        )
       );
     } else {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Cart"),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
         ),
         body: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'),
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.grey[400]!, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -609,7 +623,7 @@ class CartPageState extends State<CartPage> {
                                     print('Name: ${item['name']}');
                                   }
                                 },
-                                activeColor: const Color(0xff2f9a8f),
+                                activeColor: const Color(0xff414370),
                               ),
                               if (item['image'].isNotEmpty)
                                 Image.asset(
@@ -745,7 +759,7 @@ class CartPageState extends State<CartPage> {
                         },
                         style: TextButton.styleFrom(
                           backgroundColor: const Color(
-                              0xff2f9a8f), // Set the color for the text of the button
+                              0xff414370), // Set the color for the text of the button
                         ),
                         child: const Text(
                           "Confirm",
