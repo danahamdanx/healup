@@ -221,7 +221,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.live_help_sharp, size: 33),
-                          color: Colors.black,
+                          color: Color(0xff414370),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -298,7 +298,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                             width: 400, // Set a fixed width for the card
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Color(0xffb8e1f1),
+                              color:  Color(0xffd4dcee), // Set the card's background color
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.1),
@@ -522,7 +522,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
         title:  ShaderMask(
           shaderCallback: (bounds) =>  LinearGradient(
             colors: [
-              Color(0xff6be4d7), // Soft teal (primary color)
+              Color(0xffd4dcee), // Soft teal (primary color)
               Color(0xff414370), // Soft blue (secondary color)
             ],
             begin: Alignment.topLeft,
@@ -580,7 +580,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.live_help_sharp, size: 33),
-                          color: Colors.grey[800],
+                          color: Color(0xff414370),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -646,7 +646,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              color: Color(0xffb8e1f1),
+                              color: Color(0xffd4dcee),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.1),
@@ -927,7 +927,7 @@ class DoctorCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      color:  Color(0xffb8e1f1), // Set the card's background color
+      color:  Color(0xffd4dcee), // Set the card's background color
 
       elevation: 5,
       child: ListTile(
@@ -1022,7 +1022,7 @@ class DoctorSpecialityCard extends StatelessWidget {
         margin: const EdgeInsets.only(right: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xffb8e1f1),
+          color: const Color(0xffd4dcee),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
