@@ -232,7 +232,7 @@ class _SymptomChatScreenState extends State<SymptomChatScreen> {
         margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isBot ? Colors.grey[200] : Color(0xff2f9a8f),
+          color: isBot ? Colors.grey[200] : Color(0xff414370),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(12),
             topRight: Radius.circular(12),
@@ -314,7 +314,7 @@ class _SymptomChatScreenState extends State<SymptomChatScreen> {
           SizedBox(width: 10),
           CircleAvatar(
             radius: 25,
-            backgroundColor: Color(0xff2f9a8f),
+            backgroundColor: Color(0xff414370),
             child: IconButton(
               icon: Icon(Icons.send, color: Colors.white),
               onPressed: () {
@@ -347,7 +347,7 @@ class _SymptomChatScreenState extends State<SymptomChatScreen> {
               });
             },
             underline: Container(),
-            icon: Icon(Icons.arrow_drop_down, color: Color(0xff2f9a8f)),
+            icon: Icon(Icons.arrow_drop_down, color: Color(0xff414370)),
             style: TextStyle(fontSize: 16, color: Colors.black),
             dropdownColor: Colors.white,
           ),
@@ -377,8 +377,8 @@ class _SymptomChatScreenState extends State<SymptomChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Symptom Checker Chat'),
-        backgroundColor: Color(0xff2f9a8f),
+        title: Text('Symptom Checker Chat',style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+        backgroundColor: Color(0xff414370),
       ),
       body: Stack(
         children: [

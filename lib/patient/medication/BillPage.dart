@@ -115,6 +115,8 @@ class BillPage extends StatelessWidget {
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          color:  Color(0xffd4dcee), // Set the card's background color
+
                           elevation: 4,
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
@@ -313,7 +315,7 @@ class BillPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        color:  Color(0xffb8e1f1), // Set the card's background color
+                        color:  Color(0xffd4dcee), // Set the card's background color
 
                         elevation: 4,
                         child: Padding(
