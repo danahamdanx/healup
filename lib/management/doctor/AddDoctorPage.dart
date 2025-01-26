@@ -116,20 +116,25 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
       return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Add New Doctor",
-            style: TextStyle(fontSize: 24),
+            "Add New Doctor ",
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white70,
+              // fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
+            ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           padding: const EdgeInsets.all(16.0),
@@ -229,12 +234,12 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f),
+                        backgroundColor: const Color(0xff414370),
                         padding: EdgeInsets.symmetric(vertical: 15),
                       ),
                       child: Text(
                         'Add Doctor',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: TextStyle(color: Colors.white70, fontSize: 20),
                       ),
                     ),
                   ],
@@ -248,27 +253,26 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
     else{
       return Scaffold(
         appBar: AppBar(
-          //automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Add New Doctor",
+            "Add New Doctor ",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              //fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 24,
+              color: Colors.white70,
+             // fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-
-              //image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           padding: const EdgeInsets.all(16.0),
@@ -378,12 +382,12 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2f9a8f),
+                    backgroundColor: const Color(0xff414370),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: Text(
                     'Add Doctor',
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    style: TextStyle(color: Colors.white70, fontSize: 20),
                   ),
                 ),
               ],
@@ -413,17 +417,17 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           //prefixIcon: Icon(icon, color: const Color(0xff2f9a8f)),
-          prefixIcon: Icon(icon, color: Colors.black87),
+          prefixIcon: Icon(icon, color: Color(0xff414370)),
           labelText: label,
-          labelStyle: TextStyle(color:  Colors.black87, fontSize: 18),
+          labelStyle: TextStyle(color: Color(0xff414370), fontSize: 18),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color:  Colors.black87, width: 1),
+            borderSide: BorderSide(color:  Color(0xff414370), width: 1),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color:  Colors.black87, width: 2),
+            borderSide: BorderSide(color:  Color(0xff414370), width: 2),
           ),
         ),
-        style: TextStyle(color: Colors.black, fontSize: 18), // Text color set to black
+        style: TextStyle(color: Color(0xff414370), fontSize: 18), // Text color set to black
         validator: validator,
       ),
     );

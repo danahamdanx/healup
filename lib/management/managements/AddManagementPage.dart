@@ -95,19 +95,24 @@ class _AddManagementPageState extends State<AddManagementPage> {
         appBar: AppBar(
           title: const Text(
             "Add New Management",
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white70,
+              // fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
+            ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           padding: const EdgeInsets.all(16.0),
@@ -170,12 +175,12 @@ class _AddManagementPageState extends State<AddManagementPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f),
+                        backgroundColor: const Color(0xff414370),
                         padding: EdgeInsets.symmetric(vertical: 15),
                       ),
                       child: Text(
                         'Add Management',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: TextStyle(color: Colors.white70, fontSize: 20),
                       ),
                     ),
                   ],
@@ -185,125 +190,30 @@ class _AddManagementPageState extends State<AddManagementPage> {
           ),
         ),
       );
-  // @override
-  // Widget build(BuildContext context) {
-  //   if (kIsWeb) {
-  //     // تخصيص واجهة الويب هنا
-  //     return Scaffold(
-  //       appBar: AppBar(
-  //         title: const Text(
-  //           "Add New Management",
-  //           style: TextStyle(
-  //             fontSize: 24,
-  //           ),
-  //         ),
-  //         backgroundColor: const Color(0xff2f9a8f),
-  //       ),
-  //       body: Container(
-  //         decoration: BoxDecoration(
-  //           image: DecorationImage(
-  //             image: AssetImage('images/pat.jpg'),
-  //             fit: BoxFit.cover,
-  //             colorFilter: ColorFilter.mode(
-  //               Colors.black.withOpacity(0.3),
-  //               BlendMode.darken,
-  //             ),
-  //           ),
-  //         ),
-  //         padding: const EdgeInsets.all(16.0),
-  //         child: Form(
-  //           key: _formKey,
-  //           child: ListView(
-  //             children: [
-  //               // Name
-  //               _buildTextField(
-  //                 controller: _nameController,
-  //                 label: 'Name',
-  //                 icon: Icons.person,
-  //                 validator: (value) => value!.isEmpty ? 'Please enter name' : null,
-  //               ),
-  //               // Gender
-  //               _buildTextField(
-  //                 controller: _genderController,
-  //                 label: 'Gender',
-  //                 icon: Icons.person_outline,
-  //                 validator: (value) => value!.isEmpty ? 'Please enter gender' : null,
-  //               ),
-  //               // Phone
-  //               _buildTextField(
-  //                 controller: _phoneController,
-  //                 label: 'Phone',
-  //                 icon: Icons.phone,
-  //                 validator: (value) => value!.isEmpty ? 'Please enter phone number' : null,
-  //               ),
-  //               // Address
-  //               _buildTextField(
-  //                 controller: _addressController,
-  //                 label: 'Address',
-  //                 icon: Icons.location_on,
-  //                 validator: (value) => value!.isEmpty ? 'Please enter address' : null,
-  //               ),
-  //               // Email
-  //               _buildTextField(
-  //                 controller: _emailController,
-  //                 label: 'Email',
-  //                 icon: Icons.email,
-  //                 validator: (value) => value!.isEmpty ? 'Please enter email' : null,
-  //               ),
-  //               // Password
-  //               _buildTextField(
-  //                 controller: _passwordController,
-  //                 label: 'Password',
-  //                 icon: Icons.lock,
-  //                 validator: (value) => value!.isEmpty ? 'Please enter password' : null,
-  //               ),
-  //               SizedBox(height: 20),
-  //               // Add Management Button
-  //               ElevatedButton(
-  //                 onPressed: () {
-  //                   if (_formKey.currentState!.validate()) {
-  //                     _addManagement();
-  //                   }
-  //                 },
-  //                 style: ElevatedButton.styleFrom(
-  //                   backgroundColor: const Color(0xff2f9a8f),
-  //                   padding: EdgeInsets.symmetric(vertical: 15),
-  //                 ),
-  //                 child: Text(
-  //                   'Add Management',
-  //                   style: TextStyle(color: Colors.black, fontSize: 20),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     );
     }
     else{
       return Scaffold(
         appBar: AppBar(
-          //automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
             "Add New Management",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              //fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 24,
+              color: Colors.white70,
+              // fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-
-              //image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           padding: const EdgeInsets.all(16.0),
@@ -363,12 +273,12 @@ class _AddManagementPageState extends State<AddManagementPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2f9a8f),
+                    backgroundColor: const Color(0xff414370),
                     padding: EdgeInsets.symmetric(vertical: 15),
                   ),
                   child: Text(
                     'Add Management',
-                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    style: TextStyle(color: Colors.white70, fontSize: 20),
                   ),
                 ),
               ],
@@ -397,17 +307,17 @@ class _AddManagementPageState extends State<AddManagementPage> {
         obscureText: obscureText,
         keyboardType: keyboardType,
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.black87),
+          prefixIcon: Icon(icon, color: Color(0xff414370)),
           labelText: label,
-          labelStyle: TextStyle(color: Colors.black87, fontSize: 18),
+          labelStyle: TextStyle(color: Color(0xff414370), fontSize: 18),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black87, width: 1),
+            borderSide: BorderSide(color: Color(0xff414370), width: 1),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black87, width: 2),
+            borderSide: BorderSide(color: Color(0xff414370), width: 2),
           ),
         ),
-        style: TextStyle(color: Colors.black, fontSize: 18),
+        style: TextStyle(color: Color(0xff414370), fontSize: 18),
         validator: validator,
       ),
     );

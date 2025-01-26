@@ -179,9 +179,12 @@ class _ManagementListPageState extends State<ManagementListPage> {
                 Navigator.of(context).pop();
               },
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Cancel"),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -189,9 +192,12 @@ class _ManagementListPageState extends State<ManagementListPage> {
                 _deleteManagement(managementId);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Delete"),
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
           ],
         );
@@ -206,18 +212,19 @@ class _ManagementListPageState extends State<ManagementListPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Management List",
+            "Management List ",
             style: TextStyle(
-              fontSize: 28,  // زيادة حجم الخط
-              fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 28,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
-
+          backgroundColor: const Color(0xff414370),
           actions: [
             // أيقونة إضافة (Add)
             IconButton(
               icon: Icon(Icons.add),
+              color: Colors.white70,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -229,6 +236,7 @@ class _ManagementListPageState extends State<ManagementListPage> {
             ),
             IconButton(
               icon: Icon(Icons.exit_to_app),
+              color: Colors.white70,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -251,7 +259,7 @@ class _ManagementListPageState extends State<ManagementListPage> {
                 });
                 onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
               },
-              backgroundColor: const Color(0xff2f9a8f),
+              backgroundColor: const Color(0xff414370),
               selectedIconTheme: const IconThemeData(color: Colors.white),
               unselectedIconTheme: const IconThemeData(color: Colors.black54),
               selectedLabelTextStyle: const TextStyle(color: Colors.white),
@@ -284,13 +292,10 @@ class _ManagementListPageState extends State<ManagementListPage> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/back.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.3),
-                      BlendMode.darken,
-                    ),
+                  gradient: LinearGradient(
+                    colors: [Color(0xfff3efd9), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
                 child: Column(
@@ -346,6 +351,8 @@ class _ManagementListPageState extends State<ManagementListPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
+                              color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
@@ -405,18 +412,21 @@ class _ManagementListPageState extends State<ManagementListPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Management List",
+            "Management List ",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 28,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
 
           actions: [
             // أيقونة إضافة (Add)
             IconButton(
               icon: Icon(Icons.add),
+              color: Colors.white70,  // تغيير لون الأيقونة هنا
+
               onPressed: () {
                 Navigator.push(
                   context,
@@ -428,6 +438,8 @@ class _ManagementListPageState extends State<ManagementListPage> {
             ),
             IconButton(
               icon: Icon(Icons.exit_to_app),
+              color: Colors.white70,  // تغيير لون الأيقونة هنا
+
               onPressed: () {
                 Navigator.push(
                   context,
@@ -442,13 +454,10 @@ class _ManagementListPageState extends State<ManagementListPage> {
 
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: Column(
@@ -504,6 +513,7 @@ class _ManagementListPageState extends State<ManagementListPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
+                        color: Color(0xffd4dcee), // تغيير لون الكارد هنا
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
@@ -575,7 +585,7 @@ class _ManagementListPageState extends State<ManagementListPage> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           onTap: onTabTapped,
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.black54,
           items: const [

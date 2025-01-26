@@ -99,26 +99,26 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
-            color: Color(0xff2f9a8f),
+            color: Color(0xff414370),
             width: 3,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
-            color: Color(0xff2f9a8f),
+            color: Color(0xff414370),
             width: 3,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Color(0xff2f9a8f), width: 3),
+          borderSide: BorderSide(color: Color(0xff414370),width: 3),
         ),
         fillColor: Colors.white.withOpacity(0.8),
         filled: true,
       ),
       style: TextStyle(
-        color: Color(0xff2f9a8f),
+        color: Color(0xff414370),
         fontWeight: FontWeight.bold,
         fontSize: 20,
       ),
@@ -131,46 +131,28 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
       return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Medication Details",
-            style: TextStyle(fontSize: 28),
+            "Medication Details ",
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white70,
+              //fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
+            ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body: Row(
           children: [
-            // // القائمة الجانبية
-            // NavigationRail(
-            //   selectedIndex: _currentIndex,
-            //   onDestinationSelected: (int index) {
-            //     setState(() {
-            //       _currentIndex = index;
-            //     });
-            //     onTabTapped(index); // استدعاء الدالة للتنقل بين الصفحات
-            //   },
-            //   extended: true,
-            //   backgroundColor: const Color(0xff2f9a8f),
-            //   selectedIconTheme: const IconThemeData(color: Colors.white),
-            //   unselectedIconTheme: const IconThemeData(color: Colors.black54),
-            //   selectedLabelTextStyle: const TextStyle(color: Colors.white),
-            //   unselectedLabelTextStyle: const TextStyle(color: Colors.black54),
-            //   destinations: const [
-            //     NavigationRailDestination(
-            //       icon: Icon(Icons.medical_services),
-            //       label: Text("Medication Details"),
-            //     ),
-            //   ],
-            // ),
-            // const VerticalDivider(thickness: 1, width: 1),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/pat.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.3),
-                      BlendMode.darken,
-                    ),
+                  gradient: LinearGradient(
+                    colors: [Color(0xfff3efd9), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
                 child: medicationDetails.isEmpty
@@ -221,6 +203,8 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
                           _buildTextField("Description", medicationDetails['description']),
                           const SizedBox(height: 12),
                           _buildTextField("Type", medicationDetails['type']),
+                          const SizedBox(height: 10),
+                          _buildTextField("Dosage", medicationDetails['dosage']),
                           const SizedBox(height: 12),
                           _buildTextField("Price", medicationDetails['price']),
                         ],
@@ -238,25 +222,26 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
       return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Medication Details",
+            "Medication Details ",
             style: TextStyle(
               fontSize: 24,
+              color: Colors.white70,
+              //fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body:
         Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-
-              //image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: medicationDetails.isEmpty
@@ -302,6 +287,8 @@ class _MedicationDetailsPageState extends State<MedicationDetailsPage> {
                 _buildTextField("Description", medicationDetails['description']),
                 const SizedBox(height: 10),
                 _buildTextField("Type", medicationDetails['type']),
+                const SizedBox(height: 10),
+                _buildTextField("Dosage", medicationDetails['dosage']),
                 const SizedBox(height: 10),
                 _buildTextField("Price", medicationDetails['price']),
               ],

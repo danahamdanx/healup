@@ -115,10 +115,11 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
           children: [
             // خلفية الصورة
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'), // الصورة الخلفية
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff6bc9ee), Color(0xfff3efd9)], // تدرج لوني خفيف
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -130,16 +131,24 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
             SafeArea(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 400), // تقليص عرض المربع الأخضر
-                  child: Container(
-                    // إطار حول المحتوى
+                  constraints: const BoxConstraints(maxWidth: 400), // تقليص عرض المربع
+                  child:
+                  Container(
+                    // مربع خلفية حول المحتوى
                     decoration: BoxDecoration(
-                      color: Color(0xff2f9a8f).withOpacity(0.4), // خلفية شفافة بلون أخضر
+                      color: Color(0xff414370).withOpacity(0.2), // خلفية شفافة بلون مائل للرمادي
                       borderRadius: BorderRadius.circular(25), // زوايا دائرية
                       border: Border.all(
                         color: Colors.grey.withOpacity(0.5), // لون الحدود
                         width: 2, // عرض الحدود
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10, // شعاع الظل
+                          offset: const Offset(0, 5), // مكان الظل
+                        ),
+                      ],
                     ),
                     padding: const EdgeInsets.all(24), // تحديد المسافة داخل الإطار
                     height: 600, // تقليص الارتفاع ليصبح أرفع
@@ -148,7 +157,7 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                       children: [
                         const CircleAvatar(
                           radius: 60, // تقليل حجم الشعار
-                          backgroundImage: AssetImage('images/img_6.png'),
+                          backgroundImage: AssetImage('images/img_2.png'),
                         ),
                         const SizedBox(height: 20),
                         ShaderMask(
@@ -234,7 +243,7 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                                 ElevatedButton(
                                   onPressed: _login,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xff2f9a8f),
+                                    backgroundColor: const Color(0xff414370),
                                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30),
@@ -265,10 +274,11 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
         body: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/signlogin.jpg'),
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff6bc9ee), Color(0xfff3efd9)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -287,7 +297,7 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                     const Center(
                       child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: AssetImage('images/img_6.png'), // Replace with your image
+                        backgroundImage: AssetImage('images/img_2.png'), // Replace with your image
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -298,8 +308,13 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                         child: Column(
                           children: [
                             ShaderMask(
-                              shaderCallback: (bounds) => const LinearGradient(
-                                colors: [Colors.lightBlue, Colors.lightGreen],
+                              shaderCallback: (bounds) =>  LinearGradient(
+                                colors: [
+                                  Color(0xff414370), // Soft teal (primary color)
+                                  Colors.blue, // Soft blue (secondary color)
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                                 tileMode: TileMode.clamp,
                               ).createShader(bounds),
                               child: const Text(
@@ -308,7 +323,7 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                                   fontSize: 55,
                                   fontFamily: 'Hello Valentina',
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.lightBlue,
+                                  color: Colors.white, // Use white for better contrast with the gradient
                                 ),
                               ),
                             ),
@@ -371,11 +386,13 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                             ),
                             const SizedBox(height: 20),
                             // Login Button
+
                             ElevatedButton(
                               onPressed: _login,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff2f9a8f),
-                                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                                backgroundColor: Color(0xff414370),
+                                padding: const EdgeInsets.symmetric(horizontal: 40,
+                                    vertical: 15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),

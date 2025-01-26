@@ -262,15 +262,18 @@ class _OrderListPageState extends State<OrderListPage> {
     if (kIsWeb) {
       return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false, // لإزالة سهم التراجع
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
             "Order List ",
             style: TextStyle(
-              fontSize: 24, // زيادة حجم الخط
-              fontWeight: FontWeight.bold, // جعل الخط عريض
+              fontSize: 28,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+              backgroundColor: const Color(0xff414370),
+
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
         ),
         body: Row(
           children: [
@@ -283,7 +286,7 @@ class _OrderListPageState extends State<OrderListPage> {
                 });
                 onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
               },
-              backgroundColor: const Color(0xff2f9a8f),
+              backgroundColor: const Color(0xff414370),
               selectedIconTheme: const IconThemeData(color: Colors.white),
               unselectedIconTheme: const IconThemeData(color: Colors.black54),
               selectedLabelTextStyle: const TextStyle(color: Colors.white),
@@ -316,13 +319,10 @@ class _OrderListPageState extends State<OrderListPage> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/back.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.3),
-                      BlendMode.darken,
-                    ),
+                  gradient: LinearGradient(
+                    colors: [Color(0xfff3efd9), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
                 child: Center( // محاذاة المحتوى في الوسط
@@ -381,6 +381,8 @@ class _OrderListPageState extends State<OrderListPage> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
+                                  color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                                   child: Padding(
                                     padding: const EdgeInsets.all(12.0),
                                     child: Row(
@@ -446,24 +448,21 @@ class _OrderListPageState extends State<OrderListPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Order List",
+            "Order List ",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 28,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
-
+          backgroundColor: const Color(0xff414370),
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: Column(
@@ -519,6 +518,8 @@ class _OrderListPageState extends State<OrderListPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
+                        color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
@@ -582,7 +583,7 @@ class _OrderListPageState extends State<OrderListPage> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           onTap: onTabTapped,
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.black54,
           items: const [

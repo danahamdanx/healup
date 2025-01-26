@@ -18,9 +18,43 @@ class MedicationListPage extends StatefulWidget {
 class _MedicationListPageState extends State<MedicationListPage> {
   List<Map<String, dynamic>> medications = [];
   List<Map<String, dynamic>> filteredMedications = [];
-  int _currentIndex = 2; // Set to index 2 for "Medication"
   String _searchText = '';
-  String selectedCategory = 'All'; // Default category
+  String _selectedCategory = "All";
+  String _selectedOtcType = "All"; // Default selected OTC type
+  int _currentIndex = 2; // Define the initial index for BottomNavigationBar
+
+
+  final List<String> categories = [
+    "All",
+    "OTC Medication",
+    "Discount List"
+  ];
+
+  final List<String> otcTypes = [
+    "All",
+    "ALLERGY & CONGESTION",
+    "ANTACIDS & ACID REDUCERS",
+    "ANTIBACTERIALS, TOPICAL",
+    "COUGH & COLD",
+    "DIABETES - INSULINS",
+    "DIABETES - SUPPLIES",
+    "EYE CARE",
+    "GAS RELIEVERS, LAXATIVES & STOOL SOFTENERS",
+    "ANTIDIARRHEALS",
+    "ANTIEMETIC",
+    "ANTIFUNGALS, TOPICAL",
+    "ANTIFUNGALS, VAGINAL",
+    "ANTI-ITCH LOTIONS & CREAMS",
+    "CONTRACEPTIVES",
+    "CONTRACEPTIVES - EMERGENCY",
+    "MEDICAL SUPPLIES",
+    "OVERACTIVE BLADDER",
+    "PAIN & INFLAMMATION",
+    "TOPICAL, MISCELLANEOUS",
+    "VITAMINS/MINERALS",
+    "MISCELLANEOUS"
+  ];
+
 
   // Fetch medications from the API
   Future<void> fetchMedications() async {
@@ -59,6 +93,8 @@ class _MedicationListPageState extends State<MedicationListPage> {
           SnackBar(content: Text("An error occurred: $error")),
         );
       }
+
+
 
     }
     else{
@@ -100,8 +136,6 @@ class _MedicationListPageState extends State<MedicationListPage> {
     }
 
   }
-
-  // Fetch OTC medications
   Future<void> fetchOTCMedications() async {
     if(kIsWeb){
       try {
@@ -110,39 +144,29 @@ class _MedicationListPageState extends State<MedicationListPage> {
         );
 
         if (response.statusCode == 200) {
-          Map<String, dynamic> data = jsonDecode(response.body);
-          if (data['medications'] != null) {
-            List<dynamic> medicationsData = data['medications'];
-            setState(() {
-              medications = medicationsData.map((medication) {
-                return {
-                  'id': medication['_id'],
-                  'name': medication['scientific_name'] ?? 'No name provided',
-                  'medication_name': medication['medication_name'] ?? 'No name provided',
-                  'stock_quantity': medication['stock_quantity'].toString(), // Ensure it's a string
-
-                  //'stock_quantity': medication['stock_quantity'] ?? 'No quantity provided',
-                  'type': 'OTC', // Ensure that all these medications are classified as OTC
-                  'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
-
-                  //'pic': medication['photo'] ?? 'images/default_medication.png',
-                };
-              }).toList();
-              filteredMedications = List.from(medications);
-            });
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("No OTC medications found.")),
-            );
-          }
+          final data = jsonDecode(response.body);
+          List<dynamic> medicationsData = data['medications'];
+          setState(() {
+            medications = medicationsData.map((medication) {
+              return {
+                'id': medication['_id'],
+                'name': medication['scientific_name'] ?? 'No name provided',
+                'medication_name': medication['medication_name'] ?? 'No name provided',
+                'type': medication['type'] ?? 'Miscellaneous',
+                'stock_quantity': medication['stock_quantity'].toString(),
+                'pic': medication['image'] ?? 'images/default_medication.png',
+              };
+            }).toList();
+            filteredMedications = List.from(medications);
+          });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to fetch OTC medications: ${response.reasonPhrase}")),
+            SnackBar(content: Text("Failed to fetch OTC medications")),
           );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("An error occurred while fetching OTC medications: $error")),
+          SnackBar(content: Text("An error occurred: $error")),
         );
       }
 
@@ -154,45 +178,37 @@ class _MedicationListPageState extends State<MedicationListPage> {
         );
 
         if (response.statusCode == 200) {
-          Map<String, dynamic> data = jsonDecode(response.body);
-          if (data['medications'] != null) {
-            List<dynamic> medicationsData = data['medications'];
-            setState(() {
-              medications = medicationsData.map((medication) {
-                return {
-                  'id': medication['_id'],
-                  'name': medication['scientific_name'] ?? 'No name provided',
-                  'medication_name': medication['medication_name'] ?? 'No name provided',
-                  'stock_quantity': medication['stock_quantity'].toString(), // Ensure it's a string
-
-                  //'stock_quantity': medication['stock_quantity'] ?? 'No quantity provided',
-                  'type': 'OTC', // Ensure that all these medications are classified as OTC
-                  'pic': medication['image'] ?? 'images/default_medication.png', // Default if no image
-
-                  //'pic': medication['photo'] ?? 'images/default_medication.png',
-                };
-              }).toList();
-              filteredMedications = List.from(medications);
-            });
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("No OTC medications found.")),
-            );
-          }
+          final data = jsonDecode(response.body);
+          List<dynamic> medicationsData = data['medications'];
+          setState(() {
+            medications = medicationsData.map((medication) {
+              return {
+                'id': medication['_id'],
+                'name': medication['scientific_name'] ?? 'No name provided',
+                'medication_name': medication['medication_name'] ?? 'No name provided',
+                'type': medication['type'] ?? 'Miscellaneous',
+                'stock_quantity': medication['stock_quantity'].toString(),
+                'pic': medication['image'] ?? 'images/default_medication.png',
+              };
+            }).toList();
+            filteredMedications = List.from(medications);
+          });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Failed to fetch OTC medications: ${response.reasonPhrase}")),
+            SnackBar(content: Text("Failed to fetch OTC medications")),
           );
         }
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("An error occurred while fetching OTC medications: $error")),
+          SnackBar(content: Text("An error occurred: $error")),
         );
       }
 
     }
-
   }
+
+
+
   // Fetch discounted medications from the API
   Future<void> fetchDiscountedMedications() async {
     if(kIsWeb){
@@ -329,23 +345,24 @@ class _MedicationListPageState extends State<MedicationListPage> {
 
   void _filterMedications() {
     setState(() {
-      if (_searchText.isEmpty && selectedCategory == 'All') {
-        filteredMedications = List.from(medications);
-      } else {
-        filteredMedications = medications.where((medication) {
-          final matchesSearch = medication['name']
-              .toLowerCase()
-              .contains(_searchText.toLowerCase());
-
-          // فلتر حسب الفئة المختارة (All أو OTC)
-          final matchesCategory = selectedCategory == 'All' ||
-              (selectedCategory == 'OTC Medication' && medication['type'] == 'OTC');
-
-          return matchesSearch && matchesCategory;
-        }).toList();
+      if (_selectedCategory == "All") {
+        filteredMedications = medications;
+      } else if (_selectedCategory == "Discount List") {
+        filteredMedications = medications
+            .where((med) => med['discount'] > 0)
+            .toList();
+      } else if (_selectedCategory == "OTC Medication") {
+        if (_selectedOtcType == "All") {
+          filteredMedications = medications;
+        } else {
+          filteredMedications = medications
+              .where((med) => med['type'] == _selectedOtcType)
+              .toList();
+        }
       }
     });
   }
+
 
   void _deleteMedication(String medicationId) async {
     if(kIsWeb){
@@ -416,9 +433,12 @@ class _MedicationListPageState extends State<MedicationListPage> {
                 Navigator.of(context).pop(); // Close the dialog
               },
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Cancel"),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -426,25 +446,37 @@ class _MedicationListPageState extends State<MedicationListPage> {
                 _deleteMedication(medicationId); // Delete medication
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Delete"),
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
           ],
         );
       },
     );
   }
-
-
   void _showDiscountDialog(String medicationId, String medicationName) {
     TextEditingController discountController = TextEditingController();
 
     // Fetch the medication details from the API
     _fetchMedicationDetails(medicationId).then((medication) {
       if (medication != null) {
+        // Get the discount percentage from the medication data
+        dynamic discountValue = medication['discount_percentage'];
+        double discountPercentage = (discountValue is int)
+            ? (discountValue as int).toDouble()
+            : (discountValue is double)
+            ? discountValue as double
+            : 0.0;  // Default to 0.0 if the value is null or incorrect
+
+        // Debug log to ensure the value is correct
+        print("Fetched Discount: $discountPercentage");
+
         // Pre-fill the discount field with the current discount percentage
-        discountController.text = medication['discount_percentage'].toString();
+        discountController.text = discountPercentage.toStringAsFixed(2); // Ensure two decimal points for clarity
 
         showDialog(
           context: context,
@@ -454,9 +486,9 @@ class _MedicationListPageState extends State<MedicationListPage> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text("Current Discount: ${medication['discount_percentage']}%"),
+                  // Display the current discount percentage
+                  Text("Current Discount: ${discountPercentage.toStringAsFixed(0)}%"),
                   SizedBox(height: 10),
-                  //Text("Enter the new discount percentage for $medicationName:"),
                   TextField(
                     controller: discountController,
                     keyboardType: TextInputType.number,
@@ -470,15 +502,21 @@ class _MedicationListPageState extends State<MedicationListPage> {
                     Navigator.of(context).pop(); // Close the dialog
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xff2f9a8f),
+                    backgroundColor: const Color(0xff414370),
                   ),
-                  child: const Text("Cancel"),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
                     Navigator.of(context).pop(); // Close the dialog
                     String discountStr = discountController.text;
-                    double discountPercentage = double.tryParse(discountStr) ?? 0;
+                    double discountPercentage = double.tryParse(discountStr) ?? 0.0;
+
+                    // Debug log to ensure the input is correct
+                    print("Confirmed Discount: $discountPercentage");
 
                     // Ensure the discount percentage is within a valid range
                     if (discountPercentage < 0 || discountPercentage > 100) {
@@ -489,14 +527,19 @@ class _MedicationListPageState extends State<MedicationListPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2f9a8f),
+                    backgroundColor: const Color(0xff414370),
                   ),
-                  child: const Text("Confirm"),
+                  child: const Text(
+                    "Confirm",
+                    style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+                  ),
                 ),
               ],
             );
           },
         );
+      } else {
+        _showErrorDialog("Unable to fetch medication details.");
       }
     });
   }
@@ -508,8 +551,11 @@ class _MedicationListPageState extends State<MedicationListPage> {
       try {
         final response = await http.get(url);
         if (response.statusCode == 200) {
+          // Debugging the entire response body
+          print("Response Body: ${response.body}");
+
           // If the request was successful, parse the response and return the medication details
-          return json.decode(response.body);
+          return json.decode(response.body)['medication'];
         } else {
           throw Exception("Failed to load medication details");
         }
@@ -525,8 +571,11 @@ class _MedicationListPageState extends State<MedicationListPage> {
       try {
         final response = await http.get(url);
         if (response.statusCode == 200) {
+          // Debugging the entire response body
+          print("Response Body: ${response.body}");
+
           // If the request was successful, parse the response and return the medication details
-          return json.decode(response.body);
+          return json.decode(response.body)['medication'];
         } else {
           throw Exception("Failed to load medication details");
         }
@@ -536,7 +585,6 @@ class _MedicationListPageState extends State<MedicationListPage> {
       }
 
     }
-
   }
 
 
@@ -634,25 +682,26 @@ class _MedicationListPageState extends State<MedicationListPage> {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
       return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false, // لإزالة سهم التراجع
-
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Medication List",
+            "Medication List ",
             style: TextStyle(
-              fontSize: 24,  // Increased font size for better readability on larger screens
-              fontWeight: FontWeight.bold,  // Make the title bold
+              fontSize: 28,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+              backgroundColor: const Color(0xff414370),
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
               icon: Icon(Icons.add),
+              color: Colors.white70,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -666,6 +715,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
         ),
         body: Row(
           children: [
+            // القائمة الجانبية
             NavigationRail(
               selectedIndex: _currentIndex,
               onDestinationSelected: (int index) {
@@ -674,7 +724,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
                 });
                 onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
               },
-              backgroundColor: const Color(0xff2f9a8f),
+              backgroundColor: const Color(0xff414370),
               selectedIconTheme: const IconThemeData(color: Colors.white),
               unselectedIconTheme: const IconThemeData(color: Colors.black54),
               selectedLabelTextStyle: const TextStyle(color: Colors.white),
@@ -703,22 +753,20 @@ class _MedicationListPageState extends State<MedicationListPage> {
                 ),
               ],
             ),
-            const VerticalDivider(thickness: 1, width: 1), // Divider line
+            const VerticalDivider(thickness: 1, width: 1), // خط فاصل
+            // الجزء الرئيسي للمحتوى
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/back.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.3),
-                      BlendMode.darken,
-                    ),
+                  gradient: LinearGradient(
+                    colors: [Color(0xfff3efd9), Colors.white],  // التدرج اللوني
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
                 child: Column(
                   children: [
+                    // Search Bar
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: TextField(
@@ -730,7 +778,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
                         },
                         decoration: InputDecoration(
                           hintText: "Search for medication",
-                          prefixIcon: const Icon(Icons.search),
+                          prefixIcon: Icon(Icons.search),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
                           ),
@@ -743,34 +791,34 @@ class _MedicationListPageState extends State<MedicationListPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
+                        scrollDirection: Axis.horizontal,  // تمكين التمرير الأفقي
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,  // محاذاة الأزرار للبداية
                           children: [
                             ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  selectedCategory = 'All';
+                                  _selectedCategory = 'All';
                                 });
-                                fetchMedications();
+                                fetchMedications(); // جلب الأدوية بناءً على الفئة
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: selectedCategory == 'All'
+                                backgroundColor: _selectedCategory == 'All'
                                     ? Colors.white
-                                    : const Color(0xff2f9a8f),
-                                foregroundColor: selectedCategory == 'All'
+                                    : const Color(0xff414370),
+                                foregroundColor: _selectedCategory == 'All'
                                     ? Colors.black
-                                    : Colors.black,
+                                    : Colors.white70,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25.0),
                                   side: BorderSide(
-                                    color: selectedCategory == 'All'
-                                        ? const Color(0xff2f9a8f)
+                                    color: _selectedCategory == 'All'
+                                        ? const Color(0xff414370)
                                         : Colors.transparent,
                                     width: 4.0,
                                   ),
                                 ),
-                                minimumSize: Size(150, 60),
+                                minimumSize: Size(130, 60),
                               ),
                               child: const Text(
                                 'All',
@@ -779,31 +827,31 @@ class _MedicationListPageState extends State<MedicationListPage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: 4), // مسافة صغيرة بين الأزرار
                             ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  selectedCategory = 'OTC Medication';
+                                  _selectedCategory = 'OTC Medication';
                                 });
-                                fetchOTCMedications();
+                                fetchOTCMedications(); // جلب الأدوية الـ OTC
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: selectedCategory == 'OTC Medication'
+                                backgroundColor: _selectedCategory == 'OTC Medication'
                                     ? Colors.white
-                                    : const Color(0xff2f9a8f),
-                                foregroundColor: selectedCategory == 'OTC Medication'
+                                    : const Color(0xff414370),
+                                foregroundColor: _selectedCategory == 'OTC Medication'
                                     ? Colors.black
-                                    : Colors.black,
+                                    : Colors.white70,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25.0),
                                   side: BorderSide(
-                                    color: selectedCategory == 'OTC Medication'
-                                        ? const Color(0xff2f9a8f)
+                                    color: _selectedCategory == 'OTC Medication'
+                                        ? const Color(0xff414370)
                                         : Colors.transparent,
                                     width: 4.0,
                                   ),
                                 ),
-                                minimumSize: Size(150, 60),
+                                minimumSize: Size(130, 60),
                               ),
                               child: const Text(
                                 'OTC Medication',
@@ -812,31 +860,31 @@ class _MedicationListPageState extends State<MedicationListPage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: 4), // مسافة صغيرة بين الأزرار
                             ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  selectedCategory = 'Discount List';
+                                  _selectedCategory = 'Discount List';
                                 });
-                                fetchDiscountedMedications();
+                                fetchDiscountedMedications(); // جلب الأدوية المخفضة
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: selectedCategory == 'Discount List'
+                                backgroundColor: _selectedCategory == 'Discount List'
                                     ? Colors.white
-                                    : const Color(0xff2f9a8f),
-                                foregroundColor: selectedCategory == 'Discount List'
+                                    : const Color(0xff414370),
+                                foregroundColor: _selectedCategory == 'Discount List'
                                     ? Colors.black
-                                    : Colors.black,
+                                    : Colors.white70,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(25.0),
                                   side: BorderSide(
-                                    color: selectedCategory == 'Discount List'
-                                        ? const Color(0xff2f9a8f)
+                                    color: _selectedCategory == 'Discount List'
+                                        ? const Color(0xff414370)
                                         : Colors.transparent,
                                     width: 4.0,
                                   ),
                                 ),
-                                minimumSize: Size(150, 60),
+                                minimumSize: Size(130, 60),
                               ),
                               child: const Text(
                                 'Discount List',
@@ -849,53 +897,85 @@ class _MedicationListPageState extends State<MedicationListPage> {
                         ),
                       ),
                     ),
-                    medications.isEmpty
-                        ? const Center(
-                      child: Text(
-                        "No medications found.",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+
+                    // OTC Types (if OTC category is selected)
+                    if (_selectedCategory == "OTC Medication")
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 8.0),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: otcTypes.map((type) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8.0), // إضافة فراغ بين الكبسات
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedOtcType = type;
+                                    });
+                                    _filterMedications(); // تصفية الأدوية حسب النوع المحدد
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _selectedOtcType == type
+                                        ? Colors.white
+                                        : const Color(0xff414370),
+                                    foregroundColor: _selectedOtcType == type
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
+                                  child: Text(
+                                    type,
+                                    style: TextStyle(
+                                      fontSize: 18, // حجم الخط تم زيادته هنا
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
-                    )
-                        : Expanded(
-                      child: ListView.builder(
+
+                    // Medication List
+                    Expanded(
+                      child: medications.isEmpty
+                          ? Center(child: Text("No medications found."))
+                          : ListView.builder(
                         itemCount: filteredMedications.length,
                         itemBuilder: (context, index) {
                           final medication = filteredMedications[index];
                           return GestureDetector(
                             onTap: () {
+                              // التوجه إلى صفحة التفاصيل عند الضغط
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      MedicationDetailsPage(
-                                          medicationId: medication['id']),
+                                  builder: (context) => MedicationDetailsPage(
+                                    medicationId: medication['id'], // تمرير ID الدواء
+                                  ),
                                 ),
                               );
                             },
                             child: Card(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16.0),
+                              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
+                              color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(
                                   children: [
+                                    // عرض صورة الدواء بدلاً من الأيقونة
                                     CircleAvatar(
                                       radius: 35,
-                                      backgroundImage:
-                                      AssetImage(medication['pic']),
+                                      backgroundImage: AssetImage(medication['pic']),
                                     ),
                                     const SizedBox(width: 16.0),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             medication['name'],
@@ -905,59 +985,40 @@ class _MedicationListPageState extends State<MedicationListPage> {
                                             ),
                                           ),
                                           Text(
-                                            "name: ${medication['medication_name']}",
+                                            "Medication: ${medication['medication_name']}",
                                             style: const TextStyle(
                                               fontSize: 16,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          Text(
-                                            "stock_quantity: ${medication['stock_quantity'].toString()}",
-                                            style: const TextStyle(
-                                              fontSize: 14,
                                               color: Colors.grey,
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit,
-                                              color: Colors.yellowAccent),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditMedicationPage(
-                                                      medicationId:
-                                                      medication['id'],
-                                                    ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete,
-                                              color: Colors.red),
-                                          onPressed: () {
-                                            _showDeleteDialog(
-                                                medication['id'],
-                                                medication['name']);
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.discount,
-                                              color: Colors.green),
-                                          onPressed: () {
-                                            _showDiscountDialog(
-                                                medication['id'],
-                                                medication['name']);
-                                          },
-                                        ),
-                                      ],
+                                    IconButton(
+                                      icon: const Icon(Icons.edit, color: Colors.yellowAccent),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => EditMedicationPage(
+                                              medicationId: medication['id'],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () {
+                                        _showDeleteDialog(medication['id'], medication['name']);
+                                      },
+                                    ),
+                                    // Discount Icon
+                                    IconButton(
+                                      icon: const Icon(Icons.discount, color: Colors.green),
+                                      onPressed: () {
+                                        _showDiscountDialog(medication['id'], medication['name']);
+                                      },
                                     ),
                                   ],
                                 ),
@@ -980,17 +1041,19 @@ class _MedicationListPageState extends State<MedicationListPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Medication List",
+            "Medication List ",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 28,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+              backgroundColor: const Color(0xff414370),
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
-
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
               icon: Icon(Icons.add),
+              color: Colors.white70,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -1004,17 +1067,15 @@ class _MedicationListPageState extends State<MedicationListPage> {
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],  // التدرج اللوني
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: Column(
             children: [
+              // Search Bar
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
@@ -1026,7 +1087,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
                   },
                   decoration: InputDecoration(
                     hintText: "Search for medication",
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25.0),
                     ),
@@ -1036,37 +1097,38 @@ class _MedicationListPageState extends State<MedicationListPage> {
                 ),
               ),
               // Category Buttons
+              // Category Buttons
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,  // Enable horizontal scrolling
+                  scrollDirection: Axis.horizontal,  // تمكين التمرير الأفقي
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,  // Align buttons to the start
+                    mainAxisAlignment: MainAxisAlignment.start,  // محاذاة الأزرار للبداية
                     children: [
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            selectedCategory = 'All';
+                            _selectedCategory = 'All';
                           });
-                          fetchMedications(); // Fetch medications based on the category
+                          fetchMedications(); // جلب الأدوية بناءً على الفئة
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: selectedCategory == 'All'
+                          backgroundColor: _selectedCategory == 'All'
                               ? Colors.white
-                              : const Color(0xff2f9a8f),
-                          foregroundColor: selectedCategory == 'All'
+                              : const Color(0xff414370),
+                          foregroundColor: _selectedCategory == 'All'
                               ? Colors.black
-                              : Colors.black,
+                              : Colors.white70,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             side: BorderSide(
-                              color: selectedCategory == 'All'
-                                  ? const Color(0xff2f9a8f)
+                              color: _selectedCategory == 'All'
+                                  ? const Color(0xff414370)
                                   : Colors.transparent,
                               width: 4.0,
                             ),
                           ),
-                          minimumSize: Size(150, 60),
+                          minimumSize: Size(130, 60),
                         ),
                         child: const Text(
                           'All',
@@ -1075,31 +1137,31 @@ class _MedicationListPageState extends State<MedicationListPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 4), // Small space between buttons
+                      const SizedBox(width: 4), // مسافة صغيرة بين الأزرار
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            selectedCategory = 'OTC Medication';
+                            _selectedCategory = 'OTC Medication';
                           });
-                          fetchOTCMedications(); // Fetch OTC medications
+                          fetchOTCMedications(); // جلب الأدوية الـ OTC
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: selectedCategory == 'OTC Medication'
+                          backgroundColor: _selectedCategory == 'OTC Medication'
                               ? Colors.white
-                              : const Color(0xff2f9a8f),
-                          foregroundColor: selectedCategory == 'OTC Medication'
+                              : const Color(0xff414370),
+                          foregroundColor: _selectedCategory == 'OTC Medication'
                               ? Colors.black
-                              : Colors.black,
+                              : Colors.white70,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             side: BorderSide(
-                              color: selectedCategory == 'OTC Medication'
-                                  ? const Color(0xff2f9a8f)
+                              color: _selectedCategory == 'OTC Medication'
+                                  ? const Color(0xff414370)
                                   : Colors.transparent,
                               width: 4.0,
                             ),
                           ),
-                          minimumSize: Size(150, 60),
+                          minimumSize: Size(130, 60),
                         ),
                         child: const Text(
                           'OTC Medication',
@@ -1108,32 +1170,31 @@ class _MedicationListPageState extends State<MedicationListPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 4), // Small space between buttons
+                      const SizedBox(width: 4), // مسافة صغيرة بين الأزرار
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            selectedCategory = 'Discount List';
+                            _selectedCategory = 'Discount List';
                           });
-                          fetchDiscountedMedications();
-                          //fetchMedications(); // Fetch medications based on the category
+                          fetchDiscountedMedications(); // جلب الأدوية المخفضة
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: selectedCategory == 'Discount List'
+                          backgroundColor: _selectedCategory == 'Discount List'
                               ? Colors.white
-                              : const Color(0xff2f9a8f),
-                          foregroundColor: selectedCategory == 'Discount List'
+                              : const Color(0xff414370),
+                          foregroundColor: _selectedCategory == 'Discount List'
                               ? Colors.black
-                              : Colors.black,
+                              : Colors.white70,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25.0),
                             side: BorderSide(
-                              color: selectedCategory == 'Discount List'
-                                  ? const Color(0xff2f9a8f)
+                              color: _selectedCategory == 'Discount List'
+                                  ? const Color(0xff414370)
                                   : Colors.transparent,
                               width: 4.0,
                             ),
                           ),
-                          minimumSize: Size(150, 60),
+                          minimumSize: Size(130, 60),
                         ),
                         child: const Text(
                           'Discount List',
@@ -1147,46 +1208,79 @@ class _MedicationListPageState extends State<MedicationListPage> {
                 ),
               ),
 
-              medications.isEmpty
-                  ? const Center(
-                child: Text(
-                  "No medications found.",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+// OTC Types (if OTC category is selected)
+              if (_selectedCategory == "OTC Medication")
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 8.0),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: otcTypes.map((type) {
+                        return Padding(
+                            padding: const EdgeInsets.only(right: 8.0), // إضافة فراغ بين الكبسات
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedOtcType = type;
+                            });
+                            _filterMedications(); // تصفية الأدوية حسب النوع المحدد
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _selectedOtcType == type
+                                ? Colors.white
+                                : const Color(0xff414370),
+                            foregroundColor: _selectedOtcType == type
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                          child: Text(
+                            type,
+                            style: TextStyle(
+                              fontSize: 18, // حجم الخط تم زيادته هنا
+                            ),
+                          ),
+                        ),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
-              )
-                  :Expanded(
-                child: ListView.builder(
+              // Medication List
+              Expanded(
+                child: medications.isEmpty
+                    ? Center(child: Text("No medications found."))
+                    : ListView.builder(
                   itemCount: filteredMedications.length,
                   itemBuilder: (context, index) {
                     final medication = filteredMedications[index];
                     return GestureDetector(
                       onTap: () {
+                        // التوجه إلى صفحة التفاصيل عند الضغط
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MedicationDetailsPage(medicationId: medication['id']),
+                            builder: (context) => MedicationDetailsPage(
+                              medicationId: medication['id'], // تمرير ID الدواء
+                            ),
                           ),
                         );
                       },
                       child: Card(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16.0,
-                        ),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
+                        color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
                             children: [
+                              // عرض صورة الدواء بدلاً من الأيقونة
                               CircleAvatar(
                                 radius: 35,
-                                backgroundImage: AssetImage(medication['pic']),
+                                backgroundImage:
+                                AssetImage(medication['pic']),
                               ),
                               const SizedBox(width: 16.0),
                               Expanded(
@@ -1201,57 +1295,49 @@ class _MedicationListPageState extends State<MedicationListPage> {
                                       ),
                                     ),
                                     Text(
-                                      "name: ${medication['medication_name']}",
+                                      "Medication: ${medication['medication_name']}",
                                       style: const TextStyle(
                                         fontSize: 16,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    Text(
-                                      "stock_quantity: ${medication['stock_quantity'].toString()}",
-                                      style: const TextStyle(
-                                        fontSize: 14,
                                         color: Colors.grey,
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  // Edit Icon
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, color: Colors.yellowAccent),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => EditMedicationPage(
-                                            medicationId: medication['id'],
+                              IconButton(
+                                icon: const Icon(Icons.edit,
+                                    color: Colors.yellowAccent),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditMedicationPage(
+                                            medicationId:
+                                            medication['id'],
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-
-                                  // Delete Icon
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () {
-                                      _showDeleteDialog(medication['id'], medication['name']);
-                                    },
-                                  ),
-
-                                  // Discount Icon
-                                  IconButton(
-                                    icon: const Icon(Icons.discount, color: Colors.green),
-                                    onPressed: () {
-                                      _showDiscountDialog(medication['id'], medication['name']);
-                                      // Implement the discount action here
-                                      //_applyDiscount(medication['id']);
-                                    },
-                                  ),
-                                ],
+                                    ),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete,
+                                    color: Colors.red),
+                                onPressed: () {
+                                  _showDeleteDialog(
+                                      medication['id'],
+                                      medication['name']);
+                                },
+                              ),
+                              // Discount Icon
+                              IconButton(
+                                icon: const Icon(Icons.discount,
+                                    color: Colors.green),
+                                onPressed: () {
+                                  _showDiscountDialog(
+                                      medication['id'],
+                                      medication['name']);
+                                },
                               ),
                             ],
                           ),
@@ -1268,7 +1354,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           onTap: onTabTapped,
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.black54,
           items: const [
@@ -1295,8 +1381,10 @@ class _MedicationListPageState extends State<MedicationListPage> {
           ],
         ),
       );
+
     }
 
   }
 }
+
 

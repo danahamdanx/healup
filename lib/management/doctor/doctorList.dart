@@ -219,9 +219,12 @@ class _DoctorListPageState extends State<DoctorListPage> {
                 Navigator.of(context).pop(); // Close the dialog
               },
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Cancel"),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -229,9 +232,12 @@ class _DoctorListPageState extends State<DoctorListPage> {
                 _deleteDoctor(doctorId); // Delete doctor
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Delete"),
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
           ],
         );
@@ -244,17 +250,22 @@ class _DoctorListPageState extends State<DoctorListPage> {
     if (kIsWeb) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
             "Doctor List ",
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 28,
+              color: Colors.white70,
               fontWeight: FontWeight.bold,
+              backgroundColor: const Color(0xff414370),
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+
           actions: [
             IconButton(
               icon: const Icon(Icons.add),
+              color: Colors.white70,  // تغيير لون الأيقونة هنا
               onPressed: () {
                 Navigator.push(
                   context,
@@ -276,7 +287,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                 });
                 onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
               },
-              backgroundColor: const Color(0xff2f9a8f),
+              backgroundColor: const Color(0xff414370),
               selectedIconTheme: const IconThemeData(color: Colors.white),
               unselectedIconTheme: const IconThemeData(color: Colors.black54),
               selectedLabelTextStyle: const TextStyle(color: Colors.white),
@@ -309,13 +320,10 @@ class _DoctorListPageState extends State<DoctorListPage> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/back.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.3),
-                      BlendMode.darken,
-                    ),
+                  gradient: LinearGradient(
+                    colors: [Color(0xfff3efd9), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
                 child: Column(
@@ -376,6 +384,8 @@ class _DoctorListPageState extends State<DoctorListPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
+                              color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Column(
@@ -439,21 +449,20 @@ class _DoctorListPageState extends State<DoctorListPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Doctor List",
+            "Doctor List ",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 28,
+              color: Colors.white70,
+              fontWeight: FontWeight.bold,
+              backgroundColor: const Color(0xff414370),
+
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
-
-          // return Scaffold(
-          //   appBar: AppBar(
-          //     title: const Text("Doctor List"),
-          //     backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
               icon: Icon(Icons.add),
+              color: Colors.white70,  // تغيير لون الأيقونة هنا
               onPressed: () {
                 Navigator.push(
                   context,
@@ -467,13 +476,10 @@ class _DoctorListPageState extends State<DoctorListPage> {
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: Column(
@@ -529,6 +535,8 @@ class _DoctorListPageState extends State<DoctorListPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
+                        color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
@@ -587,7 +595,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           onTap: onTabTapped,  // Handle navigation here
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.black54,
           items: const [
@@ -616,7 +624,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
       );
     }
 
-    }
+  }
 
 }
 

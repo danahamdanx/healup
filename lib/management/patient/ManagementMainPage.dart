@@ -225,9 +225,12 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
                 Navigator.of(context).pop(); // Close the dialog
               },
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Cancel"),
+              child: const Text(
+                "Cancel",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -235,9 +238,12 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
                 _deletePatient(patientId); // Delete patient
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff2f9a8f),
+                backgroundColor: const Color(0xff414370),
               ),
-              child: const Text("Delete"),
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.white70), // تغيير لون الكتابة
+              ),
             ),
           ],
         );
@@ -250,14 +256,14 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
     if (kIsWeb) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
             "Patient List",
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          backgroundColor: const Color(0xff2f9a8f),
+                fontSize: 28,  // زيادة حجم الخط
+                color: Colors.white70,
+                fontWeight: FontWeight.bold),),
+          backgroundColor: const Color(0xff414370),
         ),
         body: Row(
           children: [
@@ -269,7 +275,7 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
                 });
                 onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
               },
-              backgroundColor: const Color(0xff2f9a8f),
+              backgroundColor: const Color(0xff414370),
               selectedIconTheme: const IconThemeData(color: Colors.white),
               unselectedIconTheme: const IconThemeData(color: Colors.black54),
               selectedLabelTextStyle: const TextStyle(color: Colors.white),
@@ -360,6 +366,8 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),
+                            color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                             child: Padding(
                               padding: const EdgeInsets.all(12.0),
                               child: Column(
@@ -404,184 +412,28 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
           ],
         ),
       );
-  // @override
-  // Widget build(BuildContext context) {
-  //   if (kIsWeb) {
-  //     return Scaffold(
-  //       appBar: AppBar(
-  //         title: const Text(
-  //           "Patient List",
-  //           style: TextStyle(
-  //             fontSize: 24,
-  //             fontWeight: FontWeight.bold,
-  //           ),
-  //         ),
-  //         backgroundColor: const Color(0xff2f9a8f),
-  //       ),
-  //       body: Row(
-  //         children: [
-  //           NavigationRail(
-  //             selectedIndex: _currentIndex,
-  //             onDestinationSelected: (int index) {
-  //               setState(() {
-  //                 _currentIndex = index;
-  //               });
-  //               onTabTapped(index); // استدعاء الدالة لتحديث الواجهة
-  //             },
-  //             backgroundColor: const Color(0xff2f9a8f),
-  //             selectedIconTheme: const IconThemeData(color: Colors.white),
-  //             unselectedIconTheme: const IconThemeData(color: Colors.black54),
-  //             selectedLabelTextStyle: const TextStyle(color: Colors.white),
-  //             unselectedLabelTextStyle: const TextStyle(color: Colors.black54),
-  //             extended: true, // لتوسيع القائمة وعرض النص بجانب الأيقونة
-  //             destinations: const [
-  //               NavigationRailDestination(
-  //                 icon: Icon(Icons.person),
-  //                 label: Text("Patient List"),
-  //               ),
-  //               NavigationRailDestination(
-  //                 icon: Icon(Icons.medical_services),
-  //                 label: Text("Doctor List"),
-  //               ),
-  //               NavigationRailDestination(
-  //                 icon: Icon(Icons.local_pharmacy),
-  //                 label: Text("Medication List"),
-  //               ),
-  //               NavigationRailDestination(
-  //                 icon: Icon(Icons.shopping_cart),
-  //                 label: Text("Order List"),
-  //               ),
-  //               NavigationRailDestination(
-  //                 icon: Icon(Icons.admin_panel_settings),
-  //                 label: Text("Management List"),
-  //               ),
-  //             ],
-  //           ),
-  //           const VerticalDivider(thickness: 1, width: 1), // خط فاصل بين القائمة والمحتوى
-  //           Expanded(
-  //             child: Column(
-  //               children: [
-  //                 Padding(
-  //                   padding: const EdgeInsets.all(16.0),
-  //                   child: TextField(
-  //                     onChanged: (value) {
-  //                       setState(() {
-  //                         _searchText = value;
-  //                       });
-  //                       _filterPatients(); // تحديث الفلاتر عند تغيير النص
-  //                     },
-  //                     decoration: InputDecoration(
-  //                       hintText: "Search for patient",
-  //                       prefixIcon: const Icon(Icons.search),
-  //                       border: OutlineInputBorder(
-  //                         borderRadius: BorderRadius.circular(25.0),
-  //                       ),
-  //                       filled: true,
-  //                       fillColor: Colors.white.withOpacity(0.7),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 patients.isEmpty
-  //                     ? const Center(
-  //                   child: Text(
-  //                     "No patients found.",
-  //                     style: TextStyle(
-  //                       fontSize: 18,
-  //                       fontWeight: FontWeight.bold,
-  //                       color: Colors.black,
-  //                     ),
-  //                   ),
-  //                 )
-  //                     : Expanded(
-  //                   child: GridView.builder(
-  //                     padding: const EdgeInsets.all(16.0),
-  //                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //                       crossAxisCount: 4,
-  //                       childAspectRatio: 3 / 2,
-  //                       crossAxisSpacing: 16,
-  //                       mainAxisSpacing: 16,
-  //                     ),
-  //                     itemCount: filteredPatients.length,
-  //                     itemBuilder: (context, index) {
-  //                       final patient = filteredPatients[index];
-  //                       return GestureDetector(
-  //                         onTap: () {
-  //                           Navigator.push(
-  //                             context,
-  //                             MaterialPageRoute(
-  //                               builder: (context) =>
-  //                                   PatientDetailsPage(patientId: patient['id']),
-  //                             ),
-  //                           );
-  //                         },
-  //                         child: Card(
-  //                           shape: RoundedRectangleBorder(
-  //                             borderRadius: BorderRadius.circular(12.0),
-  //                           ),
-  //                           child: Padding(
-  //                             padding: const EdgeInsets.all(12.0),
-  //                             child: Column(
-  //                               mainAxisAlignment: MainAxisAlignment.center,
-  //                               children: [
-  //                                 CircleAvatar(
-  //                                   radius: 40,
-  //                                   backgroundImage: AssetImage(patient['pic']),
-  //                                 ),
-  //                                 const SizedBox(height: 12.0),
-  //                                 Text(
-  //                                   "${patient['name']}",
-  //                                   style: const TextStyle(
-  //                                     fontSize: 18,
-  //                                     fontWeight: FontWeight.bold,
-  //                                   ),
-  //                                 ),
-  //                                 Text(
-  //                                   "Age: ${patient['age']}",
-  //                                   style: const TextStyle(
-  //                                     fontSize: 14,
-  //                                     color: Colors.grey,
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       );
-  //                     },
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     );
     }
 
     else{
       return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,  // لإزالة سهم التراجع
+            automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
             "Patient List",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              fontWeight: FontWeight.bold,  // جعل الخط عريض
-            ),
-          ),
-          backgroundColor: const Color(0xff2f9a8f),
-        ),
+                fontSize: 28,  // زيادة حجم الخط
+                color: Colors.white70,
+                fontWeight: FontWeight.bold),),
+          backgroundColor: const Color(0xff414370),
+         ),
         body: Stack(
           children: [
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.3),
-                    BlendMode.darken,
-                  ),
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -639,6 +491,8 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
+                          color: Color(0xffd4dcee), // تغيير لون الكارد هنا
+
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Row(
@@ -691,7 +545,7 @@ class _ManagementMainPageState extends State<ManagementMainPage> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _currentIndex,
           onTap: onTabTapped,  // Handle navigation here
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.black54,
           items: const [

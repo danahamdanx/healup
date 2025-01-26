@@ -135,26 +135,26 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
-            color: Color(0xff2f9a8f),
+            color: Color(0xff414370),
             width: 3,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
-            color: Color(0xff2f9a8f),
+            color: Color(0xff414370),
             width: 3,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Color(0xff2f9a8f), width: 3),
+          borderSide: BorderSide(color: Color(0xff414370), width: 3),
         ),
         fillColor: Colors.white.withOpacity(0.8),
         filled: true,
       ),
       style: TextStyle(
-        color: Color(0xff2f9a8f),
+        color: Color(0xff414370),
         fontWeight: FontWeight.bold,
         fontSize: 20,
       ),
@@ -168,61 +168,27 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
         appBar: AppBar(
           title: const Text(
             "Doctor Details ",
-            style: TextStyle(fontSize: 28),
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white70,
+              //fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
+            ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body: Row(
           children: [
-            // // القائمة الجانبية
-            // NavigationRail(
-            //   selectedIndex: _currentIndex,
-            //   onDestinationSelected: (int index) {
-            //     setState(() {
-            //       _currentIndex = index;
-            //     });
-            //     onTabTapped(index); // استدعاء الدالة للتنقل بين الصفحات
-            //   },
-            //   extended: true,
-            //   backgroundColor: const Color(0xff2f9a8f),
-            //   selectedIconTheme: const IconThemeData(color: Colors.white),
-            //   unselectedIconTheme: const IconThemeData(color: Colors.black54),
-            //   selectedLabelTextStyle: const TextStyle(color: Colors.white),
-            //   unselectedLabelTextStyle: const TextStyle(color: Colors.black54),
-            //   destinations: const [
-            //     NavigationRailDestination(
-            //       icon: Icon(Icons.person),
-            //       label: Text("Patient List"),
-            //     ),
-            //     NavigationRailDestination(
-            //       icon: Icon(Icons.medical_services),
-            //       label: Text("Doctor List"),
-            //     ),
-            //     NavigationRailDestination(
-            //       icon: Icon(Icons.local_pharmacy),
-            //       label: Text("Medication List"),
-            //     ),
-            //     NavigationRailDestination(
-            //       icon: Icon(Icons.shopping_cart),
-            //       label: Text("Order List"),
-            //     ),
-            //     NavigationRailDestination(
-            //       icon: Icon(Icons.admin_panel_settings),
-            //       label: Text("Management List"),
-            //     ),
-            //   ],
-            // ),
-            // const VerticalDivider(thickness: 1, width: 1),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/pat.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.3),
-                      BlendMode.darken,
-                    ),
+                  gradient: LinearGradient(
+                    colors: [Color(0xfff3efd9), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                 ),
                 child: doctorDetails.isEmpty
@@ -301,27 +267,26 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
     else{
       return Scaffold(
         appBar: AppBar(
-          //automaticallyImplyLeading: false,  // لإزالة سهم التراجع
           title: const Text(
-            "Doctor Details",
+            "Doctor Details ",
             style: TextStyle(
-              fontSize: 24,  // زيادة حجم الخط
-              //fontWeight: FontWeight.bold,  // جعل الخط عريض
+              fontSize: 24,
+              color: Colors.white70,
+              //fontWeight: FontWeight.bold,
+              backgroundColor: Color(0xff414370),
             ),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
+          iconTheme: const IconThemeData(
+            color: Colors.white70,  // تغيير لون سهم التراجع
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/pat.jpg'),
-
-              //image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.3),
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: doctorDetails.isEmpty
@@ -344,7 +309,7 @@ class _DoctorDetailsPageState extends State<DoctorDetailsPage> {
                 // إضافة خط أبيض تحت الصورة
                 Container(
                   height: 3,
-                  color: Colors.white, // تحديد اللون الأبيض للخط
+                  color: Color(0xff414370), // تحديد اللون الأبيض للخط
                 ),
                 const SizedBox(height: 20),
 
