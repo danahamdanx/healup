@@ -6,6 +6,8 @@ class Medicine {
   final double price;
   final double final_price;
   final String type;
+  final String dosage;  // إضافة dosage
+
   int quantity; // Add quantity to track the number of units
 
   Medicine({
@@ -16,6 +18,7 @@ class Medicine {
     required this.price,
     required this.final_price,
     required this.type,
+    required this.dosage,  // إضافة dosage لل constructor
     this.quantity = 1,  // Default quantity is 1
   });
 
@@ -28,6 +31,7 @@ class Medicine {
       price: json['price'].toDouble(),
       final_price: json['final_price'].toDouble(),
       type: json['type'] ?? 'Unknown',
+      dosage: json['dosage'] ?? 'Not specified',  // التعامل مع dosage من JSON
       quantity: json['quantity'] ?? 1,  // You may receive quantity from the server if it's saved
     );
   }
@@ -39,6 +43,8 @@ class Medicine {
       'image': image,
       'price': final_price,
       'quantity': quantity, // Include quantity in the request when sending it to the backend
+      'dosage': dosage,  // تضمين dosage عند إرسال البيانات للخادم
+
     };
   }
 }

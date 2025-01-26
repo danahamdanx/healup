@@ -157,7 +157,7 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                       children: [
                         const CircleAvatar(
                           radius: 60, // تقليل حجم الشعار
-                          backgroundImage: AssetImage('images/img_2.png'),
+                          backgroundImage: AssetImage('images/img_7.png'),
                         ),
                         const SizedBox(height: 20),
                         ShaderMask(
@@ -297,7 +297,7 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                     const Center(
                       child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: AssetImage('images/img_2.png'), // Replace with your image
+                        backgroundImage: AssetImage('images/img_7.png'), // Replace with your image
                       ),
                     ),
                     const SizedBox(height: 30),

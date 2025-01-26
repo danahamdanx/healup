@@ -330,6 +330,16 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    // عرض dosage بعد الوصف
+                    Text(
+                      "Dosage: ${widget.medicine.dosage}",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     // Medicine price
                     Text(
                       "₪${widget.medicine.final_price.toStringAsFixed(2)}",
@@ -420,6 +430,16 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                       // Medicine description
                       Text(
                         widget.medicine.description,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey[700],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      // عرض dosage بعد الوصف
+                      Text(
+                        "Dosage: ${widget.medicine.dosage}",
                         style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[700],

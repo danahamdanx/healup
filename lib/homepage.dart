@@ -165,7 +165,7 @@ class _WelcomePageState extends State<WelcomePage>
                       children: [
                         Center(
                           child: SizedBox(
-                            width: 300, // Constrain the width of the HandwrittenText
+                            width: 280, // Constrain the width of the HandwrittenText
                             height: 100, // Constrain the height of the HandwrittenText
                             child: HandwrittenText(
                               text: 'Welcome to HealUp',
