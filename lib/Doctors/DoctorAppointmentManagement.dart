@@ -297,12 +297,14 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
       // تصميم واجهة المستخدم لمستخدمي الويب
       return Scaffold(
         body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
-          ),
+
           child: Stack(
             children: [
               // Overlay الشفاف فوق الخلفية
@@ -394,18 +396,17 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
       return Scaffold(
         body: Stack(
           children: [
-            // الخلفية مع الطبقة الشفافة
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'),
-                  fit: BoxFit.cover,
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
-              child: Container(
-                color: Colors.black.withOpacity(0.3), // التغطية الشفافة
-              ),
             ),
+            // الخلفية مع الطبقة الشفافة
+
             // واجهة إدارة المواعيد
             SafeArea(
               child: SingleChildScrollView(
@@ -509,13 +510,13 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff2f9a8f),
+                    color: Color(0xff414370),
                   ),
                 ),
                 Icon(
                   isVisible ? Icons.keyboard_arrow_up : Icons
                       .keyboard_arrow_down,
-                  color: const Color(0xff2f9a8f),
+                  color: const Color(0xff414370),
                 ),
               ],
             ),
@@ -557,6 +558,8 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
+          color: Color(0xffcbdbfe),
+
           child: ListTile(
             leading: CircleAvatar(
               backgroundImage: patientImage.isNotEmpty
