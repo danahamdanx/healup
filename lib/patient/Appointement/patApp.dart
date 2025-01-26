@@ -914,11 +914,11 @@ class _PatAppState extends State<PatApp> {
               : (isReserved
               ? Color(0xff800020) // Red for reserved times
               : (isSelected
-              ? const Color(0xff8aa2d4) // Highlight color for selected time
+              ? const Color(0xffd4dcee) // Highlight color for selected time
               : Colors.white)), // Default white for unselected time
           borderRadius: BorderRadius.circular(25), // Oval shape
           border: Border.all(
-            color: isReserved ? Color(0xff8aa2d4) : (isSelected
+            color: isReserved ? Color(0xffd4dcee) : (isSelected
                 ? Colors.black
                 : Colors.grey), // Black edges for selected time
             width: isSelected ? 2 : 1, // Thicker edges for selected time
