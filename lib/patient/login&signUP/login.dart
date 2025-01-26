@@ -260,9 +260,9 @@ class _PatLoginPageState extends State<PatLoginPage> {
                               Color(0xffb25dcc), // Soft teal (primary color)
                               Color(0xfff08486), // Soft blue (secondary color)
                             ],
-                            begin: Alignment.topLeft,
+                            begin: Alignment.bottomLeft,
                             end: Alignment.bottomRight,
-                            tileMode: TileMode.clamp,
+                            tileMode: TileMode.repeated,
                           ).createShader(bounds),
                           child: const Text(
                             'Login',
@@ -461,7 +461,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                                       Color(0xffb25dcc), // Soft teal (primary color)
                                       Color(0xfff08486), // Soft blue (secondary color)
                                     ],
-                                    begin: Alignment.topLeft,
+                                    begin: Alignment.bottomLeft,
                                     end: Alignment.bottomRight,
                                     tileMode: TileMode.clamp,
                                   ).createShader(bounds),
