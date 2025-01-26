@@ -163,8 +163,8 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
         title:  ShaderMask(
           shaderCallback: (bounds) =>  LinearGradient(
             colors: [
-              Color(0xff414370), // Soft teal (primary color)
-              Colors.blue, // Soft blue (secondary color)
+              Color(0xfff08486), // Soft teal (primary color)
+            Color(0xff9bb8f5), // Soft blue (secondary color)
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -522,8 +522,8 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
         title:  ShaderMask(
           shaderCallback: (bounds) =>  LinearGradient(
             colors: [
-              Color(0xffd4dcee), // Soft teal (primary color)
-              Color(0xff414370), // Soft blue (secondary color)
+              Color(0xfff08486), // Soft teal (primary color)
+              Color(0xff9bb8f5), // Soft blue (secondary color)
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
