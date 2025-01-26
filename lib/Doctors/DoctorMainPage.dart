@@ -38,25 +38,25 @@ class _MainPageState extends State<MainPage> {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedPageIndex, // Highlight the selected index
           onTap: _onPageSelected, // Handle tap on the bottom navigation items
-          selectedItemColor: Color(0xff2f9a8f),  // Set selected item icon color to white
+          selectedItemColor: Color(0xff414370),  // Set selected item icon color to white
           unselectedItemColor: Colors.grey[500],  // Set unselected item icon color to grey
-          backgroundColor: Color(0xff6be4d7),  // Set the background color here
+          backgroundColor: Color(0xff414370),  // Set the background color here
 
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
+              icon: Icon(Icons.calendar_today,size: 25,),
               label: "Appointments",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search),
+              icon: Icon(Icons.search,size: 25,),
               label: "EHR Search",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.chat), // Chat icon
+              icon: Icon(Icons.chat,size: 25,), // Chat icon
               label: "Chat",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.person,size: 25,),
               label: "Profile",
             ),
           ],
@@ -67,32 +67,35 @@ class _MainPageState extends State<MainPage> {
     else{
       return Scaffold(
         body: _pages[_selectedPageIndex], // Display the selected page
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedPageIndex, // Highlight the selected index
-          onTap: _onPageSelected, // Handle tap on the bottom navigation items
-          selectedItemColor: Color(0xff2f9a8f), // Set selected item color
-          unselectedItemColor: Colors.grey[500], // Set unselected item icon color
-          backgroundColor: Color(0xff6be4d7), // Set background color explicitly
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: "Appointments",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: "EHR Search",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat), // Chat icon
-              label: "Chat",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Profile",
-            ),
-          ],
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: Color(0xff414370), // Set the background color here
+          ),
+          child: BottomNavigationBar(
+            currentIndex: _selectedPageIndex, // Highlight the selected index
+            onTap: _onPageSelected, // Handle tap on the bottom navigation items
+            selectedItemColor: Colors.white,  // Set selected item icon color to white
+            unselectedItemColor: Colors.grey[500],  // Set unselected item icon color to grey
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today,size: 25,),
+                label: "Appointments",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search,size: 25,),
+                label: "EHR Search",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat,size: 25,), // Chat icon
+                label: "Chat",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person,size: 25,),
+                label: "Profile",
+              ),
+            ],
+          ),
         ),
-
       );
     }
     }
