@@ -290,7 +290,7 @@ class _ManagementLoginPageState extends State<ManagementLoginPage> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Color(0xff2f9a8f), size: 30),
+                        icon: const Icon(Icons.arrow_back, color: Color(0xff414370), size: 30),
                         onPressed: () => Navigator.of(context).pushReplacementNamed("welcomePage"),
                       ),
                     ),
