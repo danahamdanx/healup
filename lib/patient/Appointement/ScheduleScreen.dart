@@ -494,7 +494,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       : null;
 
                   return Card(
-                    color:  Color(0xffb8e1f1), // Set the card's background color
+                    color:  Color(0xffd4dcee), // Set the card's background color
 
                     elevation: 4.0,
                     shape: RoundedRectangleBorder(
@@ -645,7 +645,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
             return Card(
               margin: const EdgeInsets.all(8.0),
-              color:  Color(0xffb8e1f1), // Set the card's background color
+              color:  Color(0xffd4dcee), // Set the card's background color
 
               elevation: 5.0,
               child: ListTile(
