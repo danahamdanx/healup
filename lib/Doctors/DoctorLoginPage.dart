@@ -152,7 +152,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                       children: [
                         const CircleAvatar(
                           radius: 75, // تقليل حجم الشعار
-                          backgroundImage: AssetImage('images/img_2.png'), // صورة الشعار
+                          backgroundImage: AssetImage('images/img_7.png'), // صورة الشعار
                         ),
                         const SizedBox(height: 20),
                         ShaderMask(
@@ -297,7 +297,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                     const Center(
                       child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: AssetImage('images/img_2.png'), // Replace with your image
+                        backgroundImage: AssetImage('images/img_7.png'), // Replace with your image
                       ),
                     ),
                     const SizedBox(height: 30),
