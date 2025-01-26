@@ -288,7 +288,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
             width: 2,
           ),
         ),
-        fillColor: Color(0xffcbdbfe), // Fill color of the text field
+        fillColor: Color(0xffd4dcee), // Fill color of the text field
         filled: true, // Enable fill color
       ),
       style: TextStyle(
