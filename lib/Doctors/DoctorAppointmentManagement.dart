@@ -510,14 +510,14 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff414370), // Text color
+                    color: Colors.white70, // Text color
                   ),
                 ),
                 Icon(
                   isVisible ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                  color: const Color(0xff414370), // Icon color
+                  color:  Colors.white70, // Icon color
                 ),
               ],
             ),
