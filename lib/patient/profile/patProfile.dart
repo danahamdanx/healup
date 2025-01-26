@@ -350,6 +350,15 @@ class _PatProfileState extends State<PatProfile> {
         actions: [
           Stack(
             children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xfff3efd9), Colors.white],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () {

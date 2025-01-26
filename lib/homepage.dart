@@ -84,7 +84,7 @@ class _WelcomePageState extends State<WelcomePage>
                       children: [
                         const CircleAvatar(
                           radius: 70, // Adjust logo size
-                          backgroundImage: AssetImage('images/img_4.png'),
+                          backgroundImage: AssetImage('images/img_2.png'),
                         ),
                         const SizedBox(height: 20), // Reduce space below logo
                         ShaderMask(

@@ -540,7 +540,7 @@ if(kIsWeb){
                               ElevatedButton(
                                 onPressed: () => _selectQuantity(medicine),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xff0C969C),
+                                  backgroundColor: const Color(0xff414370),
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 10.0, horizontal: 20.0),
                                 ),

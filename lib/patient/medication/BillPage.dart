@@ -89,31 +89,9 @@ class BillPage extends StatelessWidget {
                       children: [
                         Text(
                           'Date: ${billing['billingDate'] ?? "N/A"}',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            // Tracking Order Button
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OrderTrackingPage(patientAddress: patientAddress),
-                              ),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            backgroundColor: const Color(0xff414370),
-                          ),
-                          child: const Text(
-                            "Track Order",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+
                       ],
                     ),
                     const SizedBox(height: 20),

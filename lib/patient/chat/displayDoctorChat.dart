@@ -224,12 +224,15 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                   }
                                 }
 
-                                return Card(
+                                return SizedBox(
+                                    width: double.infinity, // Set the width to take the full screen width
+                                    child:Card(
                                   margin: EdgeInsets.symmetric(vertical: 8),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  color:  Colors.grey[300], // Set the card's background color
+                                  color:  Colors.grey[300],
+                                  // Set the card's background color
 
                                   elevation: 5,
                                   child: ListTile(
@@ -303,6 +306,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                       );
                                     },
                                   ),
+                                )
                                 );
                               },
                             );

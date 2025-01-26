@@ -350,266 +350,278 @@ class _PatAppState extends State<PatApp> {
           title: Text(widget.name),
           backgroundColor: const Color(0xff414370),
         ),
-        body: Container(
-          color: const Color(0xfff0f0f0), // Set the color of the background here
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0), // Padding around the content
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Doctor Info Section
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage(widget.photo),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.name,
-                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Color(0xff414370)),
-                            ),
-                            Text(
-                              widget.specialization,
-                              style:  TextStyle(fontSize: 20, color: Colors.grey,fontWeight: FontWeight.bold),
-                            ),
-                            Text('${widget.yearsOfExperience} years Experience',style: TextStyle(color: Color(0xff414370),)),
-                            const SizedBox(height: 8), // Add some space
-                            // Wrap the Rating Row with GestureDetector
-                            GestureDetector(
-                              onTap: () {
-                                _showRatingDialog(context); // Call the dialog when tapped
-                              },
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.star, color: Colors.amber, size: 20), // Star Icon
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    '${widget.rating.toStringAsFixed(1)} (${widget.reviews} reviews)',
-                                    style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370)),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-
-                            Text('\₪${widget.price}/hr', style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370))),
-
-                            // Hospital Address with Location Icon
-                            const SizedBox(height: 8), // Adding some space between price and address
-                            // Address Section with Location Icon
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: Colors.red, // Red color for location icon
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 8), // Space between icon and address text
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      // Get the coordinates of the address
-                                      LatLng coordinates = await _getCoordinates(widget.hospital);
-                                      // Navigate to MapScreen with the address and location
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => MapScreen(
-                                            address: widget.hospital,
-                                            location: coordinates,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(
-                                      widget.hospital,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Color(0xff414370), // Address text color
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      overflow: TextOverflow.ellipsis, // To avoid text overflow
-                                      maxLines: 1, // To display address on a single line
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  // Month Navigation
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: currentMonth.isAfter(DateTime.now())
-                            ? () {
-                          setState(() {
-                            currentMonth = DateTime(
-                              currentMonth.year,
-                              currentMonth.month - 1,
-                            );
-                          });
-                        }
-                            : null,
-                      ),
-                      Text(
-                        DateFormat('MMMM yyyy').format(currentMonth),
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.arrow_forward),
-                        onPressed: () {
-                          setState(() {
-                            currentMonth = DateTime(
-                              currentMonth.year,
-                              currentMonth.month + 1,
-                            );
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  // Days of the Month
-                  const SizedBox(height: 30), // Increased space before the days section
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: List.generate(_daysInMonth(currentMonth), (index) {
-                        final day = index + 1;
-                        final date = DateTime(currentMonth.year, currentMonth.month, day);
-                        final isPast = date.isBefore(DateTime.now());
-                        final isSelected = selectedDate == DateFormat('yyyy-MM-dd').format(date);
-
-                        return GestureDetector(
-                          onTap: !isPast
-                              ? () {
-                            setState(() {
-                              selectedDate = DateFormat('yyyy-MM-dd').format(date);
-                            });
-                          }
-                              : null,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 6.0),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: isSelected ? const Color(0xff8aa2d4) : Colors.white,
-                              borderRadius: BorderRadius.circular(25),
-                              border: Border.all(
-                                color: isPast ? Colors.grey : Colors.black,
-                                width: isSelected ? 2 : 1,
-                              ),
-                            ),
-                            child: Text(
-                              '$day',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: isPast ? Colors.grey : Colors.black,
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Time Slots Section
-                  Text('Time Slots', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 10),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: generateTimeIntervals(widget.availability,widget.duration)
-                          .map((time) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: _buildTimeButton(time),
-                      ))
-                          .toList(),
-                    ),
-                  ),
-                  const SizedBox(height: 80),
-
-            // Book Now Button
-            Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
-                child: ElevatedButton(
-                  onPressed: selectedDate != null && selectedTime != null
-                      ? () => bookAppointmentToBackend(selectedDate, selectedTime)
-                      : () {
-                    // Display Snackbar if date or time is not selected
-                    final snackBar = SnackBar(
-                      content: Text(
-                        selectedDate == null
-                            ? 'Please select a date.'
-                            : 'Please select a time.',
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: Colors.redAccent,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff414370),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  ),
-                  child: const Text(
-                    'Book Now',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-                  // Add this container under the Book Now button with the same color
-                  Container(
-                    color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        // Your additional content here, for example:
-                        Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
-                        ),),                      ],
-                    ),
-                  ),
-                  Container(
-                    color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        // Your additional content here, for example:
-                        Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
-                        ),),                      ],
-                    ),
-                  ),
-                  Container(
-                    color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        // Your additional content here, for example:
-                        Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
-                        ),),
-                      ],
-                    ),
-                  ),
-                ],
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
-        ),
+
+          Container(
+            color: const Color(0xfff0f0f0), // Set the color of the background here
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0), // Padding around the content
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Doctor Info Section
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: AssetImage(widget.photo),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.name,
+                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Color(0xff414370)),
+                              ),
+                              Text(
+                                widget.specialization,
+                                style:  TextStyle(fontSize: 20, color: Colors.grey,fontWeight: FontWeight.bold),
+                              ),
+                              Text('${widget.yearsOfExperience} years Experience',style: TextStyle(color: Color(0xff414370),)),
+                              const SizedBox(height: 8), // Add some space
+                              // Wrap the Rating Row with GestureDetector
+                              GestureDetector(
+                                onTap: () {
+                                  _showRatingDialog(context); // Call the dialog when tapped
+                                },
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.star, color: Colors.amber, size: 20), // Star Icon
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '${widget.rating.toStringAsFixed(1)} (${widget.reviews} reviews)',
+                                      style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+
+                              Text('\₪${widget.price}/hr', style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370))),
+
+                              // Hospital Address with Location Icon
+                              const SizedBox(height: 8), // Adding some space between price and address
+                              // Address Section with Location Icon
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: Colors.red, // Red color for location icon
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8), // Space between icon and address text
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        // Get the coordinates of the address
+                                        LatLng coordinates = await _getCoordinates(widget.hospital);
+                                        // Navigate to MapScreen with the address and location
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => MapScreen(
+                                              address: widget.hospital,
+                                              location: coordinates,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        widget.hospital,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Color(0xff414370), // Address text color
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis, // To avoid text overflow
+                                        maxLines: 1, // To display address on a single line
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Month Navigation
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: currentMonth.isAfter(DateTime.now())
+                              ? () {
+                            setState(() {
+                              currentMonth = DateTime(
+                                currentMonth.year,
+                                currentMonth.month - 1,
+                              );
+                            });
+                          }
+                              : null,
+                        ),
+                        Text(
+                          DateFormat('MMMM yyyy').format(currentMonth),
+                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward),
+                          onPressed: () {
+                            setState(() {
+                              currentMonth = DateTime(
+                                currentMonth.year,
+                                currentMonth.month + 1,
+                              );
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // Days of the Month
+                    const SizedBox(height: 30), // Increased space before the days section
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(_daysInMonth(currentMonth), (index) {
+                          final day = index + 1;
+                          final date = DateTime(currentMonth.year, currentMonth.month, day);
+                          final isPast = date.isBefore(DateTime.now());
+                          final isSelected = selectedDate == DateFormat('yyyy-MM-dd').format(date);
+
+                          return GestureDetector(
+                            onTap: !isPast
+                                ? () {
+                              setState(() {
+                                selectedDate = DateFormat('yyyy-MM-dd').format(date);
+                              });
+                            }
+                                : null,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: isSelected ? const Color(0xff8aa2d4) : Colors.white,
+                                borderRadius: BorderRadius.circular(25),
+                                border: Border.all(
+                                  color: isPast ? Colors.grey : Colors.black,
+                                  width: isSelected ? 2 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                '$day',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isPast ? Colors.grey : Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Time Slots Section
+                    Text('Time Slots', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: generateTimeIntervals(widget.availability,widget.duration)
+                            .map((time) => Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          child: _buildTimeButton(time),
+                        ))
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 80),
+
+                    // Book Now Button
+                    Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8, // 80% of screen width
+                        child: ElevatedButton(
+                          onPressed: selectedDate != null && selectedTime != null
+                              ? () => bookAppointmentToBackend(selectedDate, selectedTime)
+                              : () {
+                            // Display Snackbar if date or time is not selected
+                            final snackBar = SnackBar(
+                              content: Text(
+                                selectedDate == null
+                                    ? 'Please select a date.'
+                                    : 'Please select a time.',
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                              backgroundColor: Colors.redAccent,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff414370),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          ),
+                          child: const Text(
+                            'Book Now',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Add this container under the Book Now button with the same color
+                    Container(
+                      color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          // Your additional content here, for example:
+                          Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
+                          ),),                      ],
+                      ),
+                    ),
+                    Container(
+                      color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          // Your additional content here, for example:
+                          Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
+                          ),),                      ],
+                      ),
+                    ),
+                    Container(
+                      color: const Color(0xfff0f0f0), // Make sure it matches the rest of the background
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          // Your additional content here, for example:
+                          Text('Some other content under the button',style: TextStyle(          color: const Color(0xfff0f0f0), // Set the color of the background here
+                          ),),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],)
       );
     }
 

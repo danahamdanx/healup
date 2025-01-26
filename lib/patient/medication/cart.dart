@@ -536,7 +536,7 @@ class CartPageState extends State<CartPage> {
                         child: const Text(
                           "Confirm",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.white70,
                             fontSize: 20,
                           ),
                         ),

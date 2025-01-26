@@ -118,10 +118,11 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
           children: [
             // خلفية الصورة
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'), // الصورة الخلفية
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff6bc9ee), Color(0xfff3efd9)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -137,7 +138,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                   child: Container(
                     // إطار حول المحتوى
                     decoration: BoxDecoration(
-                      color: Color(0xff2f9a8f).withOpacity(0.4), // خلفية شفافة بلون أخضر
+                      color: Color(0xff414370).withOpacity(0.4), // خلفية شفافة بلون أخضر
                       borderRadius: BorderRadius.circular(25), // زوايا دائرية
                       border: Border.all(
                         color: Colors.grey.withOpacity(0.5), // لون الحدود
@@ -151,20 +152,26 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                       children: [
                         const CircleAvatar(
                           radius: 75, // تقليل حجم الشعار
-                          backgroundImage: AssetImage('images/img_6.png'), // صورة الشعار
+                          backgroundImage: AssetImage('images/img_2.png'), // صورة الشعار
                         ),
                         const SizedBox(height: 20),
                         ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [Colors.lightBlue, Colors.lightGreen],
+                          shaderCallback: (bounds) =>  LinearGradient(
+                            colors: [
+                              Color(0xff414370), // Soft teal (primary color)
+                              Colors.blue, // Soft blue (secondary color)
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            tileMode: TileMode.clamp,
                           ).createShader(bounds),
                           child: const Text(
                             'Login',
                             style: TextStyle(
-                              fontSize: 35, // تقليص حجم النص
+                              fontSize: 55,
                               fontFamily: 'Hello Valentina',
                               fontWeight: FontWeight.bold,
-                              color: Colors.lightBlue,
+                              color: Colors.white, // Use white for better contrast with the gradient
                             ),
                           ),
                         ),
@@ -237,7 +244,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                                 ElevatedButton(
                                   onPressed: _login,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xff2f9a8f),
+                                    backgroundColor: const Color(0xff414370),
                                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30),
@@ -267,10 +274,11 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
         body: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/signlogin.jpg'),
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xff6bc9ee), Color(0xfff3efd9)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -281,7 +289,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Color(0xff2f9a8f), size: 30),
+                        icon: const Icon(Icons.arrow_back, color: Color(0xff414370), size: 30),
                         onPressed: () => Navigator.of(context).pushReplacementNamed("welcomePage"),
                       ),
                     ),
@@ -289,7 +297,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                     const Center(
                       child: CircleAvatar(
                         radius: 70,
-                        backgroundImage: AssetImage('images/img_6.png'), // Replace with your image
+                        backgroundImage: AssetImage('images/img_2.png'), // Replace with your image
                       ),
                     ),
                     const SizedBox(height: 30),
@@ -300,8 +308,13 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                         child: Column(
                           children: [
                             ShaderMask(
-                              shaderCallback: (bounds) => const LinearGradient(
-                                colors: [Colors.lightBlue, Colors.lightGreen],
+                              shaderCallback: (bounds) =>  LinearGradient(
+                                colors: [
+                                  Color(0xff414370), // Soft teal (primary color)
+                                  Colors.blue, // Soft blue (secondary color)
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                                 tileMode: TileMode.clamp,
                               ).createShader(bounds),
                               child: const Text(
@@ -310,7 +323,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                                   fontSize: 55,
                                   fontFamily: 'Hello Valentina',
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.lightBlue,
+                                  color: Colors.white, // Use white for better contrast with the gradient
                                 ),
                               ),
                             ),
@@ -376,7 +389,7 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                             ElevatedButton(
                               onPressed: _login,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff2f9a8f),
+                                backgroundColor: const Color(0xff414370),
                                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),

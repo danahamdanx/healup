@@ -376,7 +376,7 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
     if(kIsWeb){return Scaffold(
       appBar: AppBar(
         title: const Text("Confirm order"),
-        backgroundColor: const Color(0xff2f9a8f),
+        backgroundColor: const Color(0xff414370),
       ),
       body: Stack(
         children: [

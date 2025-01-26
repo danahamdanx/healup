@@ -336,7 +336,7 @@ class _MedicineDetailPageState extends State<MedicineDetailPage> {
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Color(0xff800020),
                       ),
                     ),
                     const SizedBox(height: 20),
