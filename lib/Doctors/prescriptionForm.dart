@@ -392,7 +392,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                 },
                 child: Text(
                   'Update',
-                  style: TextStyle(color: Color(0xff2f9a8f)),
+                  style: TextStyle(color: Color(0xff414370)),
                 ),
               ),
               // Cancel Button
@@ -402,7 +402,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                 },
                 child: Text(
                   'Cancel',
-                  style: TextStyle(color: Color(0xff2f9a8f)),
+                  style: TextStyle(color: Color(0xff414370)),
                 ),
               ),
             ],
@@ -490,7 +490,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                 },
                 child: Text(
                   'Update',
-                  style: TextStyle(color: Color(0xff2f9a8f)),
+                  style: TextStyle(color: Color(0xff414370)),
                 ),
               ),
               // Cancel Button
@@ -500,7 +500,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                 },
                 child: Text(
                   'Cancel',
-                  style: TextStyle(color: Color(0xff2f9a8f)),
+                  style: TextStyle(color: Color(0xff414370)),
                 ),
               ),
             ],
@@ -612,7 +612,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                     onPressed: () {
                       Navigator.pop(context); // Close the dialog without adding the medication
                     },
-                    child: Text('OK', style: TextStyle(color: Color(0xff2f9a8f))),
+                    child: Text('OK', style: TextStyle(color: Color(0xff414370))),
                   ),
                 ],
               );
@@ -658,7 +658,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                     onPressed: () {
                       Navigator.pop(context); // Close the dialog without adding the medication
                     },
-                    child: Text('OK', style: TextStyle(color: Color(0xff2f9a8f))),
+                    child: Text('OK', style: TextStyle(color: Color(0xff414370))),
                   ),
                 ],
               );
@@ -752,11 +752,11 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                       labelText: "Medication Name",
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                            color: Color(0xff2f9a8f), width: 2.0),
+                            color: Color(0xff414370), width: 2.0),
                       ),
                       labelStyle: TextStyle(
                         color: _medicationFocusNode.hasFocus
-                            ? const Color(0xff2f9a8f)
+                            ? const Color(0xff414370)
                             : Colors.black,
                       ),
                     ),
@@ -778,11 +778,11 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                       labelText: "Quantity",
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                            color: Color(0xff2f9a8f), width: 2.0),
+                            color: Color(0xff414370), width: 2.0),
                       ),
                       labelStyle: TextStyle(
                         color: _quantityFocusNode.hasFocus
-                            ? const Color(0xff2f9a8f)
+                            ? const Color(0xff414370)
                             : Colors.black,
                       ),
                     ),
@@ -808,11 +808,11 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                       labelText: "Dosage",
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                            color: Color(0xff2f9a8f), width: 2.0),
+                            color: Color(0xff414370), width: 2.0),
                       ),
                       labelStyle: TextStyle(
                         color: _dosageFocusNode.hasFocus
-                            ? const Color(0xff2f9a8f)
+                            ? const Color(0xff414370)
                             : Colors.black,
                       ),
                     ),
@@ -854,7 +854,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.teal),
+                              color: Color(0xff414370)),
                         ),
                         ListView.builder(
                           shrinkWrap: true,
@@ -915,7 +915,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                                   },
                                   child: const Text(
                                     'Yes',
-                                    style: TextStyle(color: Color(0xff2f9a8f)),
+                                    style: TextStyle(color: Color(0xff414370)),
                                   ),
                                 ),
                                 TextButton(
@@ -924,7 +924,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                                   },
                                   child: const Text(
                                     'No',
-                                    style: TextStyle(color: Color(0xff2f9a8f)),
+                                    style: TextStyle(color: Color(0xff414370)),
                                   ),
                                 ),
                               ],
@@ -934,7 +934,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f),
+                        backgroundColor: const Color(0xff414370),
                       ),
                       child: _isSubmitting
                           ? CircularProgressIndicator(
@@ -1014,11 +1014,11 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                       labelText: "Medication Name",
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                            color: Color(0xff2f9a8f), width: 2.0),
+                            color: Color(0xff414370), width: 2.0),
                       ),
                       labelStyle: TextStyle(
                         color: _medicationFocusNode.hasFocus
-                            ? const Color(0xff2f9a8f)
+                            ? const Color(0xff414370)
                             : Colors.black,
                       ),
                     ),
@@ -1040,11 +1040,11 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                       labelText: "Quantity",
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                            color: Color(0xff2f9a8f), width: 2.0),
+                            color: Color(0xff414370), width: 2.0),
                       ),
                       labelStyle: TextStyle(
                         color: _quantityFocusNode.hasFocus
-                            ? const Color(0xff2f9a8f)
+                            ? const Color(0xff414370)
                             : Colors.black,
                       ),
                     ),
@@ -1070,11 +1070,11 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                       labelText: "Dosage",
                       focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(
-                            color: Color(0xff2f9a8f), width: 2.0),
+                            color: Color(0xff414370), width: 2.0),
                       ),
                       labelStyle: TextStyle(
                         color: _dosageFocusNode.hasFocus
-                            ? const Color(0xff2f9a8f)
+                            ? const Color(0xff414370)
                             : Colors.black,
                       ),
                     ),
@@ -1093,7 +1093,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                     child: ElevatedButton(
                       onPressed: _addMedication,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f),
+                        backgroundColor: const Color(0xff414370),
                       ),
                       child: const Text(
                         "Add Medication",
@@ -1116,7 +1116,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.teal),
+                              color: Color(0xff414370)),
                         ),
                         ListView.builder(
                           shrinkWrap: true,
@@ -1177,7 +1177,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                                   },
                                   child: const Text(
                                     'Yes',
-                                    style: TextStyle(color: Color(0xff2f9a8f)),
+                                    style: TextStyle(color: Color(0xff414370)),
                                   ),
                                 ),
                                 TextButton(
@@ -1186,7 +1186,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                                   },
                                   child: const Text(
                                     'No',
-                                    style: TextStyle(color: Color(0xff2f9a8f)),
+                                    style: TextStyle(color: Color(0xff414370)),
                                   ),
                                 ),
                               ],
@@ -1196,7 +1196,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f),
+                        backgroundColor: const Color(0xff414370),
                       ),
                       child: _isSubmitting
                           ? CircularProgressIndicator(

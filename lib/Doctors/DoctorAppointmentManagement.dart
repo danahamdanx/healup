@@ -558,7 +558,7 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          color: Color(0xffcbdbfe),
+          color: Color(0xffd4dcee),
 
           child: ListTile(
             leading: CircleAvatar(
