@@ -311,12 +311,12 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
 
           title: Text(
             "Doctor Profile",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
           ),
           backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
+              icon: Icon(Icons.settings, color: Colors.white70),
               onPressed: () => _showSettingsMenu(context, themeNotifier),
             ),
           ],
@@ -400,12 +400,12 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
 
           title: Text(
             "Doctor Profile",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold),
           ),
           backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
+              icon: Icon(Icons.settings, color: Colors.white70),
               onPressed: () => _showSettingsMenu(context, themeNotifier),
             ),
           ],
