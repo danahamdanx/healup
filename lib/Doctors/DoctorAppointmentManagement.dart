@@ -362,7 +362,7 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                               "Confirmed",
                               false,
                             ),
-                            Divider(height: 32, color: Colors.white.withOpacity(0.5)),
+                            Divider(height: 32, color: Colors.white70.withOpacity(0.5)),
                             _buildCollapsibleSection(
                               "Past Appointments",
                               showPast,
@@ -449,7 +449,7 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                       "Confirmed",
                       false,
                     ),
-                    Divider(height: 32, color: Colors.white.withOpacity(0.5)),
+                    Divider(height: 32, color: Colors.white70.withOpacity(0.5)),
                     _buildCollapsibleSection(
                       "Past Appointments",
                       showPast,
@@ -492,11 +492,11 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white70.withOpacity(0.5),
               borderRadius: BorderRadius.circular(25),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.white70.withOpacity(0.2),
                   blurRadius: 10,
                   offset: Offset(0, 5),
                 ),
