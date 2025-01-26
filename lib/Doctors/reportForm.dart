@@ -240,7 +240,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
   Widget build(BuildContext context) {
     if(kIsWeb){
       return Scaffold(
-        appBar: AppBar(title: const Text("Report Form")),
+        appBar: AppBar(title: const Text("Report Form",style: TextStyle(color: Color(0xff414370)),)),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -256,12 +256,12 @@ class _ReportFormPageState extends State<ReportFormPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
                           const SizedBox(height: 8),
-                          Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16)),
-                          Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16)),
-                          Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16)),
-                          Text("Address: ${widget.doctorHospital}", style: TextStyle(fontSize: 16)),
+                          Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Address: ${widget.doctorHospital}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
                         ],
                       ),
                     ),
@@ -271,11 +271,11 @@ class _ReportFormPageState extends State<ReportFormPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
                           const SizedBox(height: 8),
-                          Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 16)),
-                          Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16)),
-                          Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16)),
+                          Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 1,color: Color(0xff414370))),
+                          Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
                         ],
                       ),
                     ),
@@ -291,6 +291,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 TextFormField(
                   controller: _medicalHistoryController,
                   decoration: InputDecoration(
+                    fillColor: Color(0xff414370),
                     labelText: "Medical History",
                     border: OutlineInputBorder(),
                   ),
@@ -303,6 +304,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 TextFormField(
                   controller: _allergiesController,
                   decoration: InputDecoration(
+                    fillColor:  Color(0xff414370),
                     labelText: "Allergies (comma-separated)",
                     border: OutlineInputBorder(),
                   ),
@@ -316,6 +318,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 TextFormField(
                   controller: _resultController,
                   decoration: InputDecoration(
+                    fillColor: Color(0xff414370),
                     labelText: "Result",
                     border: OutlineInputBorder(),
                   ),
@@ -337,7 +340,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                   ),
                   style: TextStyle(
                     fontFamily: 'Rockybilly',  // Apply the font family to the text in the field
-                    height: 5,  // Adjust the line height for the text inside the field
+                    height: 5, color: Color(0xff414370)// Adjust the line height for the text inside the field
                   ),
                   readOnly: true,
                 ),
@@ -349,7 +352,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                   child: ElevatedButton(
                     onPressed: _showConfirmationDialog, // Trigger the confirmation dialog
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff2f9a8f),
+                      backgroundColor: Color(0xff414370),
                     ),
                     child: const Text(
                       "Submit Report",
@@ -368,7 +371,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
     }
     else{
       return Scaffold(
-        appBar: AppBar(title: const Text("Report Form")),
+        appBar: AppBar(title: const Text("Report Form",style: TextStyle(color: Color(0xff414370)),)),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: SingleChildScrollView(
@@ -384,12 +387,12 @@ class _ReportFormPageState extends State<ReportFormPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
                           const SizedBox(height: 8),
-                          Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16)),
-                          Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16)),
-                          Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16)),
-                          Text("Address: ${widget.doctorHospital}", style: TextStyle(fontSize: 16)),
+                          Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Address: ${widget.doctorHospital}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
                         ],
                       ),
                     ),
@@ -399,11 +402,11 @@ class _ReportFormPageState extends State<ReportFormPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
                           const SizedBox(height: 8),
-                          Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 16)),
-                          Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16)),
-                          Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16)),
+                          Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
                         ],
                       ),
                     ),
@@ -419,6 +422,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 TextFormField(
                   controller: _medicalHistoryController,
                   decoration: InputDecoration(
+                    fillColor:Color(0xff414370),
                     labelText: "Medical History",
                     border: OutlineInputBorder(),
                   ),
@@ -431,6 +435,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 TextFormField(
                   controller: _allergiesController,
                   decoration: InputDecoration(
+                    fillColor: Color(0xff414370),
                     labelText: "Allergies (comma-separated)",
                     border: OutlineInputBorder(),
                   ),
@@ -444,6 +449,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                 TextFormField(
                   controller: _resultController,
                   decoration: InputDecoration(
+                    fillColor:  Color(0xff414370),
                     labelText: "Result",
                     border: OutlineInputBorder(),
                   ),
@@ -465,7 +471,8 @@ class _ReportFormPageState extends State<ReportFormPage> {
                   ),
                   style: TextStyle(
                     fontFamily: 'Rockybilly',  // Apply the font family to the text in the field
-                    height: 5,  // Adjust the line height for the text inside the field
+                    height: 5,
+                      color: Color(0xff414370)// Adjust the line height for the text inside the field
                   ),
                   readOnly: true,
                 ),
@@ -477,7 +484,7 @@ class _ReportFormPageState extends State<ReportFormPage> {
                   child: ElevatedButton(
                     onPressed: _showConfirmationDialog, // Trigger the confirmation dialog
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff2f9a8f),
+                      backgroundColor: Color(0xff414370),
                     ),
                     child: const Text(
                       "Submit Report",
