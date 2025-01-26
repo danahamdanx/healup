@@ -180,7 +180,7 @@ class EHRDetailPage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           title: const Text("EHR Details (Web)"),
-          backgroundColor: const Color(0xff6be4d7),
+          backgroundColor: const Color(0xff414370),
           actions: [
             // Save Button in the AppBar
             IconButton(
@@ -214,17 +214,17 @@ class EHRDetailPage extends StatelessWidget {
                             const Text(
                               "Doctor Information",
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370)),
                             ),
                             const SizedBox(height: 8),
                             Text("Doctor Name: ${ehr['doctor_name']}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370))),
                             Text("Specialization: ${ehr['specialization']}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370))),
                             Text("Phone: ${ehr['phone']}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370))),
                             Text("Hospital: ${ehr['hospital']}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370))),
                           ],
                         ),
                       ),
@@ -244,15 +244,15 @@ class EHRDetailPage extends StatelessWidget {
                             const Text(
                               "Patient Information",
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370)),
                             ),
                             const SizedBox(height: 8),
                             Text("Patient Name: ${ehr['patient_name']}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370))),
                             Text("Age: ${ehr['patient_age']}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370))),
                             Text("Appointment Date: ${ehr['appointment_date']}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370))),
                           ],
                         ),
                       ),
@@ -267,24 +267,24 @@ class EHRDetailPage extends StatelessWidget {
               // Medical History Section
               const Text(
                 'Medical History:',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370)),
               ),
               ehr['medical_history'] != null &&
                   ehr['medical_history'].isNotEmpty
                   ? Text(
                 '${ehr['medical_history']}',
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18,color: Color(0xff414370)),
               )
                   : const Text(
                 'No medical history recorded',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(fontSize: 18,color: Color(0xff414370)),
               ),
               const SizedBox(height: 20),
 
               // Allergies Section
               const Text(
                 'Allergies:',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370)),
               ),
               ehr['allergies'] != null && ehr['allergies'].isNotEmpty
                   ? Text(
@@ -293,23 +293,23 @@ class EHRDetailPage extends StatelessWidget {
               )
                   : const Text(
                 'No allergies recorded',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(fontSize: 18,color: Color(0xff414370)),
               ),
               const SizedBox(height: 20),
 
               // Result Section
               const Text(
                 'Result:',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370)),
               ),
               ehr['result'] != null && ehr['result'].isNotEmpty
                   ? Text(
                 '${ehr['result']}',
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18,color: Color(0xff414370)),
               )
                   : const Text(
                 'No result available',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(fontSize: 18,color: Color(0xff414370)),
               ),
               const SizedBox(height: 15),
 
@@ -319,7 +319,7 @@ class EHRDetailPage extends StatelessWidget {
                 children: [
                   const Text(
                     'Signature:',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370)),
                   ),
                   const SizedBox(height: 40),
                   ehr['seal'] != null && ehr['seal'].isNotEmpty
@@ -328,12 +328,13 @@ class EHRDetailPage extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 18,
                       fontFamily: 'Rockybilly',
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold
+                        ,color: Color(0xff414370)
                     ),
                   )
                       : const Text(
                     'No seal available',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18,color: Color(0xff414370)),
                   ),
                 ],
               ),
@@ -344,11 +345,12 @@ class EHRDetailPage extends StatelessWidget {
     }else {
       return Scaffold(
         appBar: AppBar(
-          title: Text('EHR Details'),
+          title: Text('EHR Details',style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+          backgroundColor: const Color(0xff414370),
           actions: [
             // Save Button in the AppBar
             IconButton(
-              icon: Icon(Icons.save),
+              icon: Icon(Icons.save,color: Colors.white70,),
               onPressed: () {
                 // Call the save function to store EHR data as PDF, passing context
                 saveEHRDataAsPDF(ehr, context);
@@ -356,123 +358,138 @@ class EHRDetailPage extends StatelessWidget {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // EHR Data
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Doctor's Details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Doctor Information", style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 8),
-                        Text("Doctor Name: ${ehr['doctor_name']}",
-                            style: TextStyle(fontSize: 16)),
-                        Text('Specialization:${ehr['specialization']}',
-                            style: TextStyle(fontSize: 16)),
-                        Text('Phone:${ehr['phone']} ',
-                            style: TextStyle(fontSize: 16)),
-                        Text('Hospital:${ehr['hospital']} ',
-                            style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  // Patient's Details
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Patient Information", style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 8),
-                        Text('Patient Name: ${ehr['patient_name']}',
-                            style: TextStyle(fontSize: 16)),
-                        Text("Age: ${ehr['patient_age']}",
-                            style: TextStyle(fontSize: 16)),
-                        Text('Appointment Date: ${ehr['appointment_date']}',
-                            style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                  ),
-                ],
+        body: Stack(children: [
+
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-
-
-              const SizedBox(height: 20),
-              // Adds space
-              Divider(color: Colors.black, thickness: 2,),
-              // Divider between sections
-
-              // Medical History Section
-              Text('Medical History:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ehr['medical_history'] != null &&
-                  ehr['medical_history'].isNotEmpty
-                  ? Text(
-                  '${ehr['medical_history']}', style: TextStyle(fontSize: 18))
-                  : Text('No medical history recorded',
-                  style: TextStyle(fontSize: 18, color: Colors.grey)),
-              SizedBox(height: 20),
-              // Adds space before the next section
-
-              // Allergies Section
-              Text('Allergies:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ehr['allergies'] != null && ehr['allergies'].isNotEmpty
-                  ? Text('${ehr['allergies'].join(', ')}',
-                  style: TextStyle(fontSize: 18))
-                  : Text('No allergies recorded',
-                  style: TextStyle(fontSize: 18, color: Colors.grey)),
-
-              SizedBox(height: 20),
-              // Adds space before the next section
-
-              // Result Section
-              Text('Result:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ehr['result'] != null && ehr['result'].isNotEmpty
-                  ? Text('${ehr['result']}', style: TextStyle(fontSize: 18))
-                  : Text('No result available',
-                  style: TextStyle(fontSize: 18, color: Colors.grey)),
-
-              SizedBox(height: 15),
-              // Adds space before the next section
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Signature:',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 40), // Adjust this height value as needed
-
-                  ehr['seal'] != null && ehr['seal'].isNotEmpty
-                      ? Text(
-                    '${ehr['seal']}',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Rockybilly',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                      : Text(
-                    'No seal available',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
-        ),
+
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // EHR Data
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Doctor's Details
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Doctor Information", style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
+                          SizedBox(height: 8),
+                          Text("Doctor Name: ${ehr['doctor_name']}",
+                              style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text('Specialization:${ehr['specialization']}',
+                              style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text('Phone:${ehr['phone']} ',
+                              style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text('Hospital:${ehr['hospital']} ',
+                              style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    // Patient's Details
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Patient Information", style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
+                          SizedBox(height: 8),
+                          Text('Patient Name: ${ehr['patient_name']}',
+                              style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text("Age: ${ehr['patient_age']}",
+                              style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                          Text('Appointment Date: ${ehr['appointment_date']}',
+                              style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+
+                const SizedBox(height: 20),
+                // Adds space
+                Divider(color: Colors.black, thickness: 2,),
+                // Divider between sections
+
+                // Medical History Section
+                Text('Medical History:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370))),
+                ehr['medical_history'] != null &&
+                    ehr['medical_history'].isNotEmpty
+                    ? Text(
+                    '${ehr['medical_history']}', style: TextStyle(fontSize: 18))
+                    : Text('No medical history recorded',
+                    style: TextStyle(fontSize: 18, color: Color(0xff414370))),
+                SizedBox(height: 20),
+                // Adds space before the next section
+
+                // Allergies Section
+                Text('Allergies:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370))),
+                ehr['allergies'] != null && ehr['allergies'].isNotEmpty
+                    ? Text('${ehr['allergies'].join(', ')}',
+                    style: TextStyle(fontSize: 18,color: Color(0xff414370)))
+                    : Text('No allergies recorded',
+                    style: TextStyle(fontSize: 18,color: Color(0xff414370))),
+
+                SizedBox(height: 20),
+                // Adds space before the next section
+
+                // Result Section
+                Text('Result:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370))),
+                ehr['result'] != null && ehr['result'].isNotEmpty
+                    ? Text('${ehr['result']}', style: TextStyle(fontSize: 18,color: Color(0xff414370)))
+                    : Text('No result available',
+                    style: TextStyle(fontSize: 18,color: Color(0xff414370))),
+
+                SizedBox(height: 15),
+                // Adds space before the next section
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Signature:',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Color(0xff414370)),
+                    ),
+                    SizedBox(height: 40), // Adjust this height value as needed
+
+                    ehr['seal'] != null && ehr['seal'].isNotEmpty
+                        ? Text(
+                      '${ehr['seal']}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Rockybilly',
+                        fontWeight: FontWeight.bold
+                          ,color: Color(0xff414370)
+                      ),
+                    )
+                        : Text(
+                      'No seal available',
+                      style: TextStyle(fontSize: 18,color: Color(0xff414370)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],)
+
       );
     }
   }
