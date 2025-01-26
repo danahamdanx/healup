@@ -488,7 +488,7 @@ if(kIsWeb){
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color:  Color(0xffb8e1f1), // Set the card's background color
+                            color:  Color(0xffd4dcee), // Set the card's background color
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
@@ -699,7 +699,7 @@ if(kIsWeb){
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color:  Color(0xffb8e1f1), // Set the card's background color
+                            color:  Color(0xffd4dcee), // Set the card's background color
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
