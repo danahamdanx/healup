@@ -393,7 +393,7 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
             child: Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color:  Color(0xffe5eeff), // Set the card's background color
+                color:  Color(0xffd4dcee), // Set the card's background color
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
@@ -568,7 +568,7 @@ class _PaymentOptionsPageState extends State<PaymentOptionsPage> {
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color:  Color(0xffe5eeff), // Set the card's background color
+                  color:  Color(0xffd4dcee), // Set the card's background color
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(

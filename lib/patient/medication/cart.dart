@@ -377,7 +377,7 @@ class CartPageState extends State<CartPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        color:  Color(0xffe5eeff), // Set the card's background color
+                        color:  Color(0xffd4dcee), // Set the card's background color
 
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(10.0),
@@ -536,7 +536,7 @@ class CartPageState extends State<CartPage> {
                         child: const Text(
                           "Confirm",
                           style: TextStyle(
-                            color: Colors.white70,
+                            color: Colors.white,
                             fontSize: 20,
                           ),
                         ),
@@ -589,7 +589,7 @@ class CartPageState extends State<CartPage> {
                       return Card(
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
-                        color:  Color(0xffe5eeff), // Set the card's background color
+                        color:  Color(0xffd4dcee), // Set the card's background color
 
                         child: ListTile(
                           leading: Row(
@@ -778,7 +778,7 @@ class CartPageState extends State<CartPage> {
                         child: const Text(
                           "Confirm",
                           style: TextStyle(
-                            color: Colors.white70,
+                            color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold
                           ),
