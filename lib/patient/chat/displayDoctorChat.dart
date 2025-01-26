@@ -231,7 +231,7 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  color:  Colors.grey[300],
+                                      color:  Color(0xffd4dcee), // Set the card's background color
                                   // Set the card's background color
 
                                   elevation: 5,
@@ -437,7 +437,7 @@ else {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  color:  Color(0xffe5eeff), // Set the card's background color
+                                  color:  Color(0xffd4dcee), // Set the card's background color
 
                                   elevation: 5,
                                   child: ListTile(
