@@ -43,7 +43,10 @@ class BillPage extends StatelessWidget {
     if (kIsWeb) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Bill Details",style: TextStyle(color: Colors.white70,fontSize: 25,fontWeight: FontWeight.bold),),
+          title: const Text("Bill Details", style: TextStyle(
+              color: Colors.white70,
+              fontSize: 25,
+              fontWeight: FontWeight.bold),),
           backgroundColor: const Color(0xff414370),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
@@ -62,7 +65,8 @@ class BillPage extends StatelessWidget {
             }
 
             final billing = snapshot.data!;
-            final medicationList = billing['medicationList'] as List<dynamic>? ?? [];
+            final medicationList = billing['medicationList'] as List<
+                dynamic>? ?? [];
             final totalAmount = billing['amount'] ?? 0;
 
             return Padding(
@@ -89,7 +93,8 @@ class BillPage extends StatelessWidget {
                       children: [
                         Text(
                           'Date: ${billing['billingDate'] ?? "N/A"}',
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
 
                       ],
@@ -100,7 +105,8 @@ class BillPage extends StatelessWidget {
                     Center(
                       child: Text(
                         'Medications',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.blueGrey[800]),
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight
+                            .bold, color: Colors.blueGrey[800]),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -108,14 +114,18 @@ class BillPage extends StatelessWidget {
                         ? const Text('No medications found.')
                         : Column(
                       children: medicationList.map((med) {
-                        final medicationName = med['medicationName'] ?? 'Unknown';
+                        final medicationName = med['medicationName'] ??
+                            'Unknown';
                         final quantity = med['quantity'] ?? 0;
-                        final price = med.containsKey('price') ? (med['price'] * quantity).toStringAsFixed(2) : 'N/A';
+                        final price = med.containsKey('price') ? (med['price'] *
+                            quantity).toStringAsFixed(2) : 'N/A';
 
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          color:  Color(0xffd4dcee), // Set the card's background color
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          color: Color(0xffd4dcee),
+                          // Set the card's background color
 
                           elevation: 4,
                           child: Padding(
@@ -125,15 +135,19 @@ class BillPage extends StatelessWidget {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
                                     children: [
                                       Text(
                                         medicationName,
-                                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(fontSize: 20,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(height: 8),
-                                      Text("Quantity: $quantity", style: const TextStyle(fontSize: 16)),
-                                      Text("Price: ₪$price", style: const TextStyle(fontSize: 16)),
+                                      Text("Quantity: $quantity",
+                                          style: const TextStyle(fontSize: 16)),
+                                      Text("Price: ₪$price",
+                                          style: const TextStyle(fontSize: 16)),
                                     ],
                                   ),
                                 ),
@@ -154,7 +168,9 @@ class BillPage extends StatelessWidget {
                       child: Center(
                         child: Text(
                           'Total Amount: ₪${totalAmount.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
+                          style: const TextStyle(fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white70),
                         ),
                       ),
 
@@ -180,7 +196,8 @@ class BillPage extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         backgroundColor: const Color(0xff414370),
                         disabledBackgroundColor: Colors.white,
-                        minimumSize: const Size(200, 50), // Set the minimum width and height
+                        minimumSize: const Size(
+                            200, 50), // Set the minimum width and height
 
                       ),
                       child: const Text(
@@ -199,228 +216,228 @@ class BillPage extends StatelessWidget {
           },
         ),
       );
-    } else {
+    }
+
+    else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Bill Details",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+          title: const Text(
+            "Bill Details",
+            style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+                fontSize: 25),
+          ),
           backgroundColor: const Color(0xff414370),
         ),
-        body: Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xfff3efd9), Colors.white],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+        body: Stack(
+          children: [
+            // Background Gradient
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
             ),
-          ),
+            // Main Content
+            FutureBuilder<Map<String, dynamic>>(
+              future: fetchBillingDetails(billingId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
 
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return const Center(child: Text('No billing details available.'));
+                }
 
-          FutureBuilder<Map<String, dynamic>>(
-          future: fetchBillingDetails(billingId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+                final billing = snapshot.data!;
+                final medicationList = billing['medicationList'] as List<dynamic>? ?? [];
+                final totalAmount = billing['amount'] ?? 0;
 
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-
-            if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(child: Text('No billing details available.'));
-            }
-
-            final billing = snapshot.data!;
-            final medicationList = billing['medicationList'] as List<
-                dynamic>? ??
-                [];
-            final totalAmount = billing['amount'] ?? 0;
-
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title - healup
-                  Center(
-                    child: Text(
-                      'healup',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
-                        color: Color(0xff414370),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // Space between date and button
-                    children: [
-                      Text(
-                        ' Date: ${billing['billingDate'] ?? "N/A"}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xff414370),
-                        ),
-                      ),
-                      // Tracking Order Button
-
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Divider to separate the Billing Date and Medications section
-                  const Divider(
-                    color: Colors.black, // Color of the line
-                    thickness: 1, // Thickness of the line
-                    indent: 0, // Indentation from the start
-                    endIndent: 0, // Indentation from the end
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // Medications Section - White Card Style
-                  Center(
-                    child: Text(
-                      'Medications',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey[800],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Display medications as cards
-                  medicationList.isEmpty
-                      ? const Text('No medications found.')
-                      : Column(
-                    children: medicationList.map((med) {
-                      final medicationName = med['medicationName'] ?? 'Unknown';
-                      final quantity = med['quantity'] ?? 0;
-                      final price = med.containsKey('price')
-                          ? (med['price'] * quantity).toStringAsFixed(2)
-                          : 'N/A';
-
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        color:  Color(0xffd4dcee), // Set the card's background color
-
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Removed the image section, no longer showing image
-                              const SizedBox(width: 16),
-
-                              // Medication info on the right
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      medicationName,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      "Quantity: $quantity",
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    Text(
-                                      "Price: ₪$price",
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                  ],
+                return Column(
+                  children: [
+                    // Scrollable content (Medications and others)
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Title - healup
+                            Center(
+                              child: Text(
+                                'healup',
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  fontStyle: FontStyle.italic,
+                                  color: Color(0xff414370),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                            ),
+                            const SizedBox(height: 20),
 
-                  const SizedBox(height: 20),
-                  const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  ' Date: ${billing['billingDate'] ?? "N/A"}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xff414370),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
 
-                  // Total Amount in a Box at the Bottom
-                  Container(
+                            const Divider(
+                              color: Colors.black,
+                              thickness: 1,
+                            ),
 
-                    padding: const EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff414370),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Total Amount: ₪${totalAmount.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white70,
+                            const SizedBox(height: 10),
+
+                            // Medications Section - White Card Style
+                            Center(
+                              child: Text(
+                                'Medications',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueGrey[800],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+
+                            // Display medications as cards
+                            medicationList.isEmpty
+                                ? const Text('No medications found.')
+                                : Column(
+                              children: medicationList.map((med) {
+                                final medicationName = med['medicationName'] ?? 'Unknown';
+                                final quantity = med['quantity'] ?? 0;
+                                final price = med.containsKey('price')
+                                    ? (med['price'] * quantity).toStringAsFixed(2)
+                                    : 'N/A';
+
+                                return Card(
+                                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  color: Color(0xffd4dcee),
+                                  elevation: 4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                medicationName,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                "Quantity: $quantity",
+                                                style: const TextStyle(fontSize: 16),
+                                              ),
+                                              Text(
+                                                "Price: ₪$price",
+                                                style: const TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 180),
-                  const Divider(),
-Center(child: TextButton(
 
-  onPressed: () {
-    // Add the tracking functionality here
-    print("Tracking Order Button Pressed");
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            OrderTrackingPage(
-                patientAddress: patientAddress), // تم تمرير العنوان
-      ),
-    );
-    // You can navigate to a tracking page or handle the tracking logic
-  },
-  style: TextButton.styleFrom(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    backgroundColor: const Color(0xff414370),
-    disabledBackgroundColor: Colors.white,
-    minimumSize: const Size(200, 50), // Set the minimum width and height
+                    // Total Amount Box - Fixed at the Bottom
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff414370),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Total Amount: ₪${totalAmount.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ),
+                    ),
 
-  ),
-  child: const Text(
-    "Track Order",
-    style: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      color: Colors.white70, // Set text color to black here
-    ),
-  ),
-),)
+                    const SizedBox(height: 10),
 
-
-                ],
-              ),
-            );
-          },
-        ),],)
+                    // Track Order Button - Fixed at the Bottom
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextButton(
+                        onPressed: () {
+                          // Add the tracking functionality here
+                          print("Tracking Order Button Pressed");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderTrackingPage(patientAddress: patientAddress),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          backgroundColor: const Color(0xff414370),
+                          minimumSize: const Size(200, 50),
+                        ),
+                        child: const Text(
+                          "Track Order",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
       );
+
     }
   }
 }
