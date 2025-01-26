@@ -51,7 +51,7 @@ class _WelcomePageState extends State<WelcomePage>
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xff6bc9ee), Colors.white],
+                  colors: [Color(0xff6bc9ee), Color(0xfff3efd9)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -139,7 +139,7 @@ class _WelcomePageState extends State<WelcomePage>
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xff6bc9ee), Colors.white],
+                  colors: [Color(0xff6bc9ee), Color(0xfff3efd9)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -237,7 +237,7 @@ class _WelcomePageState extends State<WelcomePage>
           if (role == 'Patient') {
             Navigator.of(context).pushReplacementNamed("login");
 
-          }  else if (role == 'Doctor') {
+          }  else if (role == 'A Doctor') {
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => DoctorLoginPage(), // Navigates to DoctorLoginPage
             ));

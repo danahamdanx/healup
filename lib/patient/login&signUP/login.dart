@@ -215,7 +215,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xff6bc9ee), Colors.white],
+                colors: [Color(0xff6bc9ee), Color(0xfff3efd9)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -393,7 +393,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xff6bc9ee), Colors.white],
+                    colors: [Color(0xff6bc9ee), Color(0xfff3efd9)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),

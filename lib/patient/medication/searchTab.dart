@@ -396,7 +396,7 @@ if(kIsWeb){
                   hintText: "Search for medicine",
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.camera_alt, color: Colors.black),
+                    icon: const Icon(Icons.camera_alt,color: Color(0xff414370)),
                     onPressed: _scanImage,
                   ),
                   border: OutlineInputBorder(
@@ -616,7 +616,7 @@ if(kIsWeb){
                       hintText: "Search for medicine",
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: IconButton(
-                        icon: const Icon(Icons.camera_alt, color: Colors.black),
+                        icon: const Icon(Icons.camera_alt,color: Color(0xff414370)),
                         onPressed: _scanImage,
                       ),
                       border: OutlineInputBorder(
