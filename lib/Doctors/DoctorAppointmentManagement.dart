@@ -478,12 +478,14 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
   }
 
 // وظيفة إنشاء الأقسام القابلة للطي مع التحريك
-  Widget _buildCollapsibleSection(String title,
+  Widget _buildCollapsibleSection(
+      String title,
       bool isVisible,
       VoidCallback toggleVisibility,
       List<Map<String, dynamic>> appointments,
       String status,
-      bool showActions,) {
+      bool showActions,
+      ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -492,11 +494,11 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white70.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(25),
+              color: Color(0xff626499), // Set the background color here
+              borderRadius: BorderRadius.circular(25), // Rounded corners
               boxShadow: [
                 BoxShadow(
-                  color: Colors.white70.withOpacity(0.2),
+                  color: Colors.grey.withOpacity(0.2), // Subtle shadow
                   blurRadius: 10,
                   offset: Offset(0, 5),
                 ),
@@ -510,13 +512,12 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xff414370),
+                    color: Color(0xff414370), // Text color
                   ),
                 ),
                 Icon(
-                  isVisible ? Icons.keyboard_arrow_up : Icons
-                      .keyboard_arrow_down,
-                  color: const Color(0xff414370),
+                  isVisible ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: const Color(0xff414370), // Icon color
                 ),
               ],
             ),
