@@ -272,6 +272,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           onTap: () {
                             final description = medication['description'] ?? 'No description available';
                             final type = medication['type'] ?? 'Unknown';
+                            final dosage = medication['dosage'] ?? 'Not specified'; // Get the dosage here
                             final selectedMedicine = Medicine(
                               id: medication['_id'] ?? '',
                               medication_name: medicationName,
@@ -280,6 +281,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                               price: price,
                               final_price: finalPrice,
                               type: type,
+                              dosage: dosage,  // Pass the dosage here
                               quantity: 1,
                             );
 
@@ -516,7 +518,9 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
           ),
         ],
       ),
-    );}else{return Scaffold(
+    );}
+    else{
+      return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff414370),
         title:  ShaderMask(
@@ -612,8 +616,10 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       final medicationName = medication['name'] ?? 'Unknown Medication';
                       final imageUrl = medication['image'] ?? 'images/default_image.jpg';
                       final discount = medication['discount'] ?? 0;
+                      // final price = medication['price'] ?? 0.0;
+                      // final finalPrice = medication['final_price'] ?? price;
                       final price = medication['price'] ?? 0.0;
-                      final finalPrice = medication['final_price'] ?? price;
+                      final finalPrice = (medication['final_price'] ?? price).toDouble();
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -621,6 +627,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                           onTap: () {
                             final description = medication['description'] ?? 'No description available';
                             final type = medication['type'] ?? 'Unknown';
+                            final dosage = medication['dosage'] ?? 'Not specified'; // Get the dosage here
                             final selectedMedicine = Medicine(
                               id: medication['_id'] ?? '',
                               medication_name: medicationName,
@@ -629,6 +636,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                               price: price,
                               final_price: finalPrice,
                               type: type,
+                              dosage: dosage,  // Pass the dosage here
                               quantity: 1,
                             );
 
