@@ -124,13 +124,10 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'), // Your image path here
-              fit: BoxFit.cover, // This ensures the image covers the entire screen
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.2), // Adjust opacity here (0.0 to 1.0)
-                BlendMode.darken,
-              ),
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
           child: Padding(
@@ -171,7 +168,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           );
                         }).toList(),
                         dropdownColor: Color(0xff414370),
-                        iconEnabledColor: Colors.white,
+                        iconEnabledColor: Colors.white70,
                         style: TextStyle(color: Color(0xff414370)),
                         borderRadius: BorderRadius.circular(30),
                         underline: SizedBox.shrink(),
@@ -186,7 +183,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         decoration: InputDecoration(
                           labelText: 'Enter search term',
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.9),
+                          fillColor: Colors.grey[400]!.withOpacity(0.9),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
@@ -233,7 +230,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         child: Text(
                           'Search',
-                          style: TextStyle(color: Colors.white, fontSize: 22),
+                          style: TextStyle(color: Colors.white70, fontSize: 22),
                         ),
                       ),
                     ),
@@ -244,7 +241,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         padding: const EdgeInsets.only(top: 16),
                         child: Text(
                           _errorMessage,
-                          style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Color(0xff800020), fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -271,13 +268,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                color: Colors.white,
+                                color: Colors.white70,
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     backgroundColor: Color(0xff414370),
                                     child: Text(
                                       ehr['patient_name'][0].toUpperCase(),
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: Colors.white70),
                                     ),
                                   ),
                                   title: Text(
@@ -314,7 +311,13 @@ class _SearchScreenState extends State<SearchScreen> {
           elevation: 6,
         ),
         body: Container(
-
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -426,7 +429,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     padding: const EdgeInsets.only(top: 16),
                     child: Text(
                       _errorMessage,
-                      style: TextStyle(color: Colors.red, fontSize: 16,fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Color(0xff800020), fontSize: 16,fontWeight: FontWeight.bold),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -453,7 +456,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            color: Colors.white70,
+                            color: Color(0xffd4dcee),
                             child: ListTile(
                               leading: CircleAvatar(
                                 backgroundColor: Color(0xff414370),
