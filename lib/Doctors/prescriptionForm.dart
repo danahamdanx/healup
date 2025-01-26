@@ -713,12 +713,12 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
                             const SizedBox(height: 8),
-                            Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16)),
-                            Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16)),
-                            Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16)),
-                            Text("Hospital: ${widget.doctorHospital}", style: TextStyle(fontSize: 16)),
+                            Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                            Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                            Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                            Text("Hospital: ${widget.doctorHospital}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
                           ],
                         ),
                       ),
@@ -728,11 +728,11 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
                             const SizedBox(height: 8),
-                            Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 16)),
-                            Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16)),
-                            Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16)),
+                            Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                            Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                            Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
                           ],
                         ),
                       ),
@@ -831,7 +831,7 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
                     child: ElevatedButton(
                       onPressed: _addMedication,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2f9a8f),
+                        backgroundColor: Color(0xff414370),
                       ),
                       child: const Text(
                         "Add Medication",
@@ -959,262 +959,276 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
     else{
       return Scaffold(
         appBar: AppBar(title: const Text("Prescription Form")),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Doctor's Details (Left Side)
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 8),
-                            Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16)),
-                            Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16)),
-                            Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16)),
-                            Text("Hospital: ${widget.doctorHospital}", style: TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16), // Space between the columns
-                      // Patient Info
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 8),
-                            Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 16)),
-                            Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16)),
-                            Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16), // Add padding between the doctor and patient details
-                  const Divider(
-                    thickness: 0.7,color: Colors.black,
-                  ), // Divider between Doctor and Patient Details
-                  const SizedBox(height: 25), // Padding after the divider
-
-                  // Medication Name Field
-                  TextFormField(
-                    controller: _medicationController,
-                    focusNode: _medicationFocusNode,
-                    decoration: InputDecoration(
-                      labelText: "Medication Name",
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color(0xff414370), width: 2.0),
-                      ),
-                      labelStyle: TextStyle(
-                        color: _medicationFocusNode.hasFocus
-                            ? const Color(0xff414370)
-                            : Colors.black,
-                      ),
-                    ),
-                    onChanged: (value) => _medicationName = value,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Medication Name is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Quantity Field
-                  TextFormField(
-                    controller: _quantityController,
-                    focusNode: _quantityFocusNode,
-                    decoration: InputDecoration(
-                      labelText: "Quantity",
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color(0xff414370), width: 2.0),
-                      ),
-                      labelStyle: TextStyle(
-                        color: _quantityFocusNode.hasFocus
-                            ? const Color(0xff414370)
-                            : Colors.black,
-                      ),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onChanged: (value) => _quantity = int.tryParse(value),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Quantity is required";
-                      }
-                      if (int.tryParse(value) == null) {
-                        return "Enter a valid quantity";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-
-                  // Dosage Field
-                  TextFormField(
-                    controller: _dosageController,
-                    focusNode: _dosageFocusNode,
-                    decoration: InputDecoration(
-                      labelText: "Dosage",
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                            color: Color(0xff414370), width: 2.0),
-                      ),
-                      labelStyle: TextStyle(
-                        color: _dosageFocusNode.hasFocus
-                            ? const Color(0xff414370)
-                            : Colors.black,
-                      ),
-                    ),
-                    onChanged: (value) => _dosage = value,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Dosage is required";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Add Medication Button
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: _addMedication,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff414370),
-                      ),
-                      child: const Text(
-                        "Add Medication",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Display added medications
-                  if (_medications.isNotEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Added Medications:",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff414370)),
-                        ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: _medications.length,
-                          itemBuilder: (context, index) {
-                            final medication = _medications[index];
-                            return ListTile(
-                              title: Text(medication['medication_name']),
-                              subtitle: Text(
-                                "Quantity: ${medication['quantity']}\nDosage: ${medication['dosage']}\nMedication ID: ${medication['medication_id']}",
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, color: Colors.blue),
-                                    onPressed: () => _updateMedication(index),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () => _deleteMedication(index),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  const SizedBox(height: 20),
-
-                  // Submit Prescription Button
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: _isSubmitting
-                          ? null
-                          : () {
-                        // Show confirmation dialog
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Confirm Submission"),
-                              content: const Text(
-                                  "Are you sure you want to submit the prescription?"),
-                              actions: [
-                                TextButton(
-                                  onPressed: _isSubmitting
-                                      ? null
-                                      : () {
-                                    // Ensure the prescription is submitted with the correct parameters
-                                    setState(() {
-                                      _isSubmitting = true; // Prevent further clicks
-                                    });
-                                    Navigator.pop(context); // Close the dialog
-                                    _submitForm(widget.appointmentId, _medications); // Pass the required arguments
-                                  },
-                                  child: const Text(
-                                    'Yes',
-                                    style: TextStyle(color: Color(0xff414370)),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context); // Close the dialog without submitting
-                                  },
-                                  child: const Text(
-                                    'No',
-                                    style: TextStyle(color: Color(0xff414370)),
-                                  ),
-                                ),
-                              ],
-                            );
-
-                          },
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff414370),
-                      ),
-                      child: _isSubmitting
-                          ? CircularProgressIndicator(
-                        color: Colors.white,
-                      )
-                          : const Text(
-                        "Submit Prescription",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    ),
-
-                  ),
-                ],
+        backgroundColor: Color(0xff414370),
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
             ),
           ),
-        ),
+
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Doctor's Details (Left Side)
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Doctor Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
+                              const SizedBox(height: 8),
+                              Text("Name: ${widget.doctorName}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                              Text("Specialization: ${widget.doctorSpeclization}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                              Text("Phone: ${widget.doctorPhone}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                              Text("Hospital: ${widget.doctorHospital}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16), // Space between the columns
+                        // Patient Info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Patient Information", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370))),
+                              const SizedBox(height: 8),
+                              Text("Name: ${widget.patientName}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                              Text("Age: ${widget.patientAge}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                              Text("Appointment Date: ${widget.appointmentDate}", style: TextStyle(fontSize: 16,color: Color(0xff414370))),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16), // Add padding between the doctor and patient details
+                    const Divider(
+                      thickness: 0.7,color: Colors.black,
+                    ), // Divider between Doctor and Patient Details
+                    const SizedBox(height: 25), // Padding after the divider
+
+                    // Medication Name Field
+                    TextFormField(
+                      controller: _medicationController,
+                      focusNode: _medicationFocusNode,
+                      decoration: InputDecoration(
+                        labelText: "Medication Name",
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                          color: Color(0xff414370), width: 2.0),
+                        ),
+                        labelStyle: TextStyle(
+                          color: _medicationFocusNode.hasFocus
+                              ? const Color(0xff414370)
+                              : Colors.black,
+                        ),
+                      ),
+                      onChanged: (value) => _medicationName = value,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Medication Name is required";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Quantity Field
+                    TextFormField(
+                      controller: _quantityController,
+                      focusNode: _quantityFocusNode,
+                      decoration: InputDecoration(
+                        labelText: "Quantity",
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                          color: Color(0xff414370), width: 2.0),
+                        ),
+                        labelStyle: TextStyle(
+                          color: _quantityFocusNode.hasFocus
+                              ? const Color(0xff414370)
+                              : Colors.black,
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) => _quantity = int.tryParse(value),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Quantity is required";
+                        }
+                        if (int.tryParse(value) == null) {
+                          return "Enter a valid quantity";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+
+                    // Dosage Field
+                    TextFormField(
+                      controller: _dosageController,
+                      focusNode: _dosageFocusNode,
+                      decoration: InputDecoration(
+                        labelText: "Dosage",
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Color(0xff414370), width: 2.0),
+                        ),
+                        labelStyle: TextStyle(
+                          color: _dosageFocusNode.hasFocus
+                              ? const Color(0xff414370)
+                              : Colors.black,
+                        ),
+                      ),
+                      onChanged: (value) => _dosage = value,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Dosage is required";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Add Medication Button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _addMedication,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff414370),
+                        ),
+                        child: const Text(
+                          "Add Medication",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Display added medications
+                    if (_medications.isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Added Medications:",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff414370)),
+                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _medications.length,
+                            itemBuilder: (context, index) {
+                              final medication = _medications[index];
+                              return ListTile(
+                                title: Text(medication['medication_name']),
+                                subtitle: Text(
+                                  "Quantity: ${medication['quantity']}\nDosage: ${medication['dosage']}\nMedication ID: ${medication['medication_id']}",
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit, color: Colors.blue),
+                                      onPressed: () => _updateMedication(index),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () => _deleteMedication(index),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: 20),
+
+                    // Submit Prescription Button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _isSubmitting
+                            ? null
+                            : () {
+                          // Show confirmation dialog
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Confirm Submission"),
+                                content: const Text(
+                                    "Are you sure you want to submit the prescription?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: _isSubmitting
+                                        ? null
+                                        : () {
+                                      // Ensure the prescription is submitted with the correct parameters
+                                      setState(() {
+                                        _isSubmitting = true; // Prevent further clicks
+                                      });
+                                      Navigator.pop(context); // Close the dialog
+                                      _submitForm(widget.appointmentId, _medications); // Pass the required arguments
+                                    },
+                                    child: const Text(
+                                      'Yes',
+                                      style: TextStyle(color: Color(0xff414370)),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context); // Close the dialog without submitting
+                                    },
+                                    child: const Text(
+                                      'No',
+                                      style: TextStyle(color: Color(0xff414370)),
+                                    ),
+                                  ),
+                                ],
+                              );
+
+                            },
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff414370),
+                        ),
+                        child: _isSubmitting
+                            ? CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                            : const Text(
+                          "Submit Prescription",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ),
+
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],)
+
       );
 
     }
