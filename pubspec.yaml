@@ -65,6 +65,7 @@ dependencies:
   html: ^0.15.0
   webview_flutter: ^4.10.0
   flutter_inappwebview: ^5.8.0
+  animated_text_kit: ^4.2.3
 
 
 

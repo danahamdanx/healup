@@ -3,7 +3,7 @@ import 'patient/login&signUP/login.dart'; // Import the LoginSignupPage
 import 'Doctors/DoctorLoginPage.dart';
 import 'management/ManagementLogin.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
-
+import 'services/animation.dart';
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
@@ -69,7 +69,6 @@ class _WelcomePageState extends State<WelcomePage>
                   child: Container(
                     // Frame around the entire content
                     decoration: BoxDecoration(
-
                       color: Color(0xff2f9a8f).withOpacity(0.4), // Semi-transparent background
                       borderRadius: BorderRadius.circular(25), // Rounded corners
                       border: Border.all(
@@ -87,27 +86,16 @@ class _WelcomePageState extends State<WelcomePage>
                           backgroundImage: AssetImage('images/img_7.png'),
                         ),
                         const SizedBox(height: 20), // Reduce space below logo
-                        ShaderMask(
-                          shaderCallback: (bounds) =>  LinearGradient(
-                            colors: [
-                              Color(0xff414370), // Soft teal (primary color)
-                              Colors.blue, // Soft blue (secondary color)
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            tileMode: TileMode.clamp,
-                          ).createShader(bounds),
-                          child: const Text(
-                            'Welcome to HealUp',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Hello Valentina',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white, // Use white for better contrast with the gradient
+                        Center(
+                          child: SizedBox(
+                            width: 300, // Constrain the width of the HandwrittenText
+                            height: 100, // Constrain the height of the HandwrittenText
+                            child: HandwrittenText(
+                              text: 'Welcome to HealUp',
+                              duration: Duration(milliseconds: 1800), // Adjust the duration as needed
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
                         Text(
                           'Please select your role to get started.',
                           style: TextStyle(fontSize: 20, color: Colors.grey[700]),
@@ -175,23 +163,13 @@ class _WelcomePageState extends State<WelcomePage>
                     position: _offsetAnimation!,
                     child: Column(
                       children: [
-                        ShaderMask(
-                          shaderCallback: (bounds) =>  LinearGradient(
-                            colors: [
-                              Color(0xff414370), // Soft teal (primary color)
-                              Colors.blue, // Soft blue (secondary color)
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            tileMode: TileMode.clamp,
-                          ).createShader(bounds),
-                          child: const Text(
-                            'Welcome to HealUp',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontFamily: 'Hello Valentina',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white, // Use white for better contrast with the gradient
+                        Center(
+                          child: SizedBox(
+                            width: 300, // Constrain the width of the HandwrittenText
+                            height: 100, // Constrain the height of the HandwrittenText
+                            child: HandwrittenText(
+                              text: 'Welcome to HealUp',
+                              duration: Duration(milliseconds: 1000), // Adjust the duration as needed
                             ),
                           ),
                         ),
