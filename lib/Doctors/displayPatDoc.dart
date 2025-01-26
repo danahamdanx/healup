@@ -196,17 +196,17 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
                   children: [
                     Text(
                       doctor.name,
-                      style: TextStyle(fontWeight: isRead ? FontWeight.normal : FontWeight.bold),
+                      style: TextStyle(fontSize: 18,fontWeight: isRead ? FontWeight.normal : FontWeight.bold),
                     ),
                     SizedBox(height: 4),
-                    Text(
-                      doctor.specialization,
-                      style: TextStyle(fontSize: 15, color: Colors.grey[800]),
-                    ),
+                    // Text(
+                    //   doctor.specialization,
+                    //   style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+                    // ),
                     SizedBox(height: 8),
                     Text(
                       'Last Message: $lastMessage',
-                      style: TextStyle(fontWeight: isRead ? FontWeight.normal : FontWeight.bold),
+                      style: TextStyle(fontSize: 14,fontWeight: isRead ? FontWeight.w400 : FontWeight.bold),
                     ),
                   ],
                 ),
@@ -272,11 +272,14 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
         return Card(
           elevation: 3,
           margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          color: Color(0xffd4dcee),
+
           child: Stack(
             children: [
               ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10), // Adjust padding for centering
                 leading: CircleAvatar(
+                  radius: 25,
                   backgroundImage: patient.pic.isNotEmpty
                       ? AssetImage(patient.pic)
                       : null,
@@ -289,7 +292,7 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
                   children: [
                     Text(
                       patient.username,
-                      style: TextStyle(fontWeight: isRead ? FontWeight.normal : FontWeight.bold),
+                      style: TextStyle(fontSize: 18,fontWeight: isRead ? FontWeight.normal : FontWeight.bold),
                     ),
                     SizedBox(height: 4),
                     Text(
