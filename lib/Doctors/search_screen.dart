@@ -119,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
           automaticallyImplyLeading: false,  // لإزالة سهم التراجع
 
           title: Text('Search EHR Records',style: TextStyle(color: Colors.white70),),
-          backgroundColor: Color(0xff2f9a8f),
+          backgroundColor: Color(0xff414370),
           elevation: 6,
         ),
         body: Container(
@@ -145,7 +145,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     Container(
                       margin: EdgeInsets.only(bottom: 20),
                       decoration: BoxDecoration(
-                        color: Color(0xff2b888d), // Set background color to the desired color
+                        color: Color(0xff414370), // Set background color to the desired color
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: DropdownButton<String>(
@@ -170,9 +170,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           );
                         }).toList(),
-                        dropdownColor: Color(0xff2b888d),
+                        dropdownColor: Color(0xff414370),
                         iconEnabledColor: Colors.white,
-                        style: TextStyle(color: Color(0xff2b888d)),
+                        style: TextStyle(color: Color(0xff414370)),
                         borderRadius: BorderRadius.circular(30),
                         underline: SizedBox.shrink(),
                       ),
@@ -191,10 +191,10 @@ class _SearchScreenState extends State<SearchScreen> {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          suffixIcon: Icon(Icons.search, color: Color(0xff2b888d)),
+                          suffixIcon: Icon(Icons.search, color: Color(0xff414370)),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Color(0xff2b888d),
+                              color: Color(0xff414370),
                               width: 2.0,
                             ),
                             borderRadius: BorderRadius.circular(30),
@@ -214,7 +214,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     // Search Button
                     _isLoading
                         ? Center(
-                      child: CircularProgressIndicator(color: Color(0xff2b888d)),
+                      child: CircularProgressIndicator(color: Color(0xff414370)),
                     )
                         : SizedBox(
                       width: 200,
@@ -227,8 +227,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          backgroundColor: Color(0xff2b888d),
-                          shadowColor: Color(0xff2b888d).withOpacity(0.6),
+                          backgroundColor: Color(0xff414370),
+                          shadowColor: Color(0xff414370).withOpacity(0.6),
                           elevation: 6,
                         ),
                         child: Text(
@@ -274,7 +274,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 color: Colors.white,
                                 child: ListTile(
                                   leading: CircleAvatar(
-                                    backgroundColor: Color(0xff2f9a8f),
+                                    backgroundColor: Color(0xff414370),
                                     child: Text(
                                       ehr['patient_name'][0].toUpperCase(),
                                       style: TextStyle(color: Colors.white),
@@ -309,21 +309,12 @@ class _SearchScreenState extends State<SearchScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,  // لإزالة سهم التراجع
 
-          title: Text('Search EHR Records',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
-          backgroundColor: Color(0xff2f9a8f),
+          title: Text('Search EHR Records',style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold)),
+          backgroundColor: Color(0xff414370),
           elevation: 6,
         ),
         body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'), // Your image path here
-              fit: BoxFit.cover, // This ensures the image covers the entire screen
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.2), // Adjust opacity here (0.0 to 1.0)
-                BlendMode.darken,
-              ),
-            ),
-          ),
+
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -333,7 +324,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
-                    color: Color(0xff2b888d), // Set background color to the desired color
+                    color: Color(0xff414370), // Set background color to the desired color
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: DropdownButton<String>(
@@ -352,15 +343,15 @@ class _SearchScreenState extends State<SearchScreen> {
                             value.replaceAll('_', ' ').toUpperCase(),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.white70,
                             ),
                           ),
                         ),
                       );
                     }).toList(),
-                    dropdownColor: Color(0xff2b888d),
-                    iconEnabledColor: Colors.white,
-                    style: TextStyle(color: Color(0xff2b888d)),
+                    dropdownColor: Color(0xff414370),
+                    iconEnabledColor: Colors.white70,
+                    style: TextStyle(color: Color(0xff414370)),
                     borderRadius: BorderRadius.circular(30),
                     underline: SizedBox.shrink(),
                   ),
@@ -374,16 +365,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     decoration: InputDecoration(
                       labelText: 'Enter search term',
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.9),
+                      fillColor: Colors.grey[400]!.withOpacity(0.9),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      suffixIcon: Icon(Icons.search, color: Color(0xff2b888d)),
+                      suffixIcon: Icon(Icons.search, color: Color(0xff414370)),
                       // Customize focused border color here
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Color(0xff2b888d), // This is the color for the focused border
+                          color: Color(0xff414370), // This is the color for the focused border
                           width: 2.0, // Optionally adjust the border width
                         ),
                         borderRadius: BorderRadius.circular(30),
@@ -405,7 +396,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 // Search Button
                 _isLoading
                     ? Center(
-                  child: CircularProgressIndicator(color: Color(0xff2b888d)),
+                  child: CircularProgressIndicator(color: Color(0xff414370)),
                 )
                     : SizedBox(
                   width: 200,
@@ -418,13 +409,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      backgroundColor: Color(0xff2b888d),
-                      shadowColor: Color(0xff2b888d).withOpacity(0.6),
+                      backgroundColor: Color(0xff414370),
+                      shadowColor: Color(0xff414370).withOpacity(0.6),
                       elevation: 6,
                     ),
                     child: Text(
                       'Search',
-                      style: TextStyle(color: Colors.white, fontSize: 22),
+                      style: TextStyle(color: Colors.white70, fontSize: 22),
                     ),
                   ),
                 ),
@@ -462,13 +453,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            color: Colors.white,
+                            color: Colors.white70,
                             child: ListTile(
                               leading: CircleAvatar(
-                                backgroundColor: Color(0xff2f9a8f),
+                                backgroundColor: Color(0xff414370),
                                 child: Text(
                                   ehr['patient_name'][0].toUpperCase(),
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Colors.white70),
                                 ),
                               ),
                               title: Text(
