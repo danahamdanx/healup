@@ -244,7 +244,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                 const Center(
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundImage: AssetImage('images/img_2.png'),
+                    backgroundImage: AssetImage('images/img_7.png'),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -405,7 +405,6 @@ class _PatLoginPageState extends State<PatLoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   // Center content vertically
                   children: [
-                    const SizedBox(height: 40), // Add space above the form
                     Align(
                       alignment: Alignment.topLeft,
                       child: IconButton(
@@ -420,10 +419,10 @@ class _PatLoginPageState extends State<PatLoginPage> {
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.fromLTRB(30.0,0.0,30,0.30),
                       child: Container(
                         width: 420,
-                        height: 500,// Adjust the width for web layout
+                        height: 650,// Adjust the width for web layout
                         child: Form(
                           key: _formKey,
                           child: Container(
@@ -447,6 +446,13 @@ class _PatLoginPageState extends State<PatLoginPage> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                SizedBox(height: 40),
+                                const Center(
+                                  child: CircleAvatar(
+                                    radius: 70,
+                                    backgroundImage: AssetImage('images/img_7.png'),
+                                  ),
+                                ),
                                 const SizedBox(height: 25),
 
                                 ShaderMask(
