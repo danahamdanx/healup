@@ -38,8 +38,8 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _yearExperienceController =
   TextEditingController();
-  Color? sectionBorderColor = Colors.white;
-  Color _borderColor = Colors.white;
+  Color? sectionBorderColor = Color(0xff414370);
+  Color _borderColor = Color(0xff414370);
 
   late AnimationController _animationController;
 
@@ -246,7 +246,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
 
 
 
-  Widget _buildSectionDivider({Color color = Colors.white}) {
+  Widget _buildSectionDivider({Color color = const Color(0xff414370)}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       height: 2,
@@ -262,36 +262,39 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-          color: Colors.grey[900],
+          color: Color(0xff414370), // Label text color
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
-        // Larger font size for label
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-        // Ensures the label floats above the input field
+        floatingLabelBehavior: FloatingLabelBehavior.auto, // Label floats above the input field
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15), // Increased border thickness
+          borderRadius: BorderRadius.circular(15), // Rounded corners
           borderSide: BorderSide(
-              color: _borderColor, width: 3), // Default border color
+            color: Color(0xff414370), // Border color
+            width: 2, // Border thickness
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide(
-              color: _borderColor, width: 3), // Default border color
+            color: Color(0xff414370), // Border color when enabled
+            width: 2,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Color(0xff2f9a8f),
-              width: 3), // Border color when focused (clicked)
+          borderSide: BorderSide(
+            color: Color(0xff414370), // Border color when focused
+            width: 2,
+          ),
         ),
-        fillColor: Colors.white.withOpacity(0.8),
-        // White with 50% opacity
-        filled: true,
+        fillColor: Color(0xffcbdbfe), // Fill color of the text field
+        filled: true, // Enable fill color
       ),
       style: TextStyle(
-        color: Color(0xff2f9a8f), // Text color
+        color: Color(0xff414370), // Text color
         fontWeight: FontWeight.bold,
-        fontSize: 18, // Larger font size for input text
+        fontSize: 18, // Font size for input text
       ),
     );
   }
@@ -310,7 +313,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
             "Doctor Profile",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: const Color(0xff6be4d7),
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
               icon: Icon(Icons.settings, color: Colors.white),
@@ -322,13 +325,11 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
           children: [
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'),
-                  fit: BoxFit.cover,
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-              ),
-              child: Container(
-                color: Colors.black.withOpacity(0.3),
               ),
             ),
             isLoading
@@ -364,7 +365,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
                         child: ElevatedButton(
                           onPressed: _updateDoctorProfile,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2f9a8f),
+                            backgroundColor: const Color(0xff414370),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 15),
                             shape: RoundedRectangleBorder(
@@ -401,7 +402,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
             "Doctor Profile",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
               icon: Icon(Icons.settings, color: Colors.white),
@@ -413,13 +414,11 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
           children: [
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'),
-                  fit: BoxFit.cover,
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-              ),
-              child: Container(
-                color: Colors.black.withOpacity(0.3),
               ),
             ),
             isLoading
@@ -456,7 +455,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
                         child: ElevatedButton(
                           onPressed: _updateDoctorProfile,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2f9a8f),
+                            backgroundColor: const Color(0xff414370),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 15),
                             shape: RoundedRectangleBorder(
