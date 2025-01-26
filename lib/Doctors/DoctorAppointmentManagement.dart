@@ -539,7 +539,7 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
         padding: const EdgeInsets.all(16.0),
         child: Text(
           "No appointments available.",
-          style: TextStyle(color: Colors.white.withOpacity(0.8)),
+          style: TextStyle(color: Color(0xff414370),fontSize: 17,fontWeight: FontWeight.bold),
         ),
       );
     }
