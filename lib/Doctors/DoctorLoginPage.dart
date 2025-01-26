@@ -158,8 +158,8 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                         ShaderMask(
                           shaderCallback: (bounds) =>  LinearGradient(
                             colors: [
-                              Color(0xff414370), // Soft teal (primary color)
-                              Colors.blue, // Soft blue (secondary color)
+                              Color(0xffb25dcc), // Soft teal (primary color)
+                              Color(0xfff08486),// Soft blue (secondary color)
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -310,8 +310,8 @@ class _DoctorLoginPageState extends State<DoctorLoginPage> {
                             ShaderMask(
                               shaderCallback: (bounds) =>  LinearGradient(
                                 colors: [
-                                  Color(0xff414370), // Soft teal (primary color)
-                                  Colors.blue, // Soft blue (secondary color)
+                                  Color(0xffb25dcc), // Soft teal (primary color)
+                                  Color(0xfff08486), // Soft blue (secondary color)
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,

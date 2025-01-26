@@ -169,7 +169,7 @@ class _WelcomePageState extends State<WelcomePage>
                             height: 100, // Constrain the height of the HandwrittenText
                             child: HandwrittenText(
                               text: 'Welcome to HealUp',
-                              duration: Duration(milliseconds: 1000), // Adjust the duration as needed
+                              duration: Duration(milliseconds: 2000), // Adjust the duration as needed
                             ),
                           ),
                         ),
