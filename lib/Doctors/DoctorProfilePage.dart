@@ -518,7 +518,7 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Settings"),
+          title: const Text("Settings",style: TextStyle(color: Color(0xff414370)),),
           content: Container(
             width: 300, // Set the desired width for the dialog
             child: Column(
@@ -529,10 +529,9 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
                     themeNotifier.isDarkMode
                         ? Icons.nightlight_round
                         : Icons.wb_sunny,
-                    color: themeNotifier.isDarkMode ? Colors.white : Colors
-                        .black,
+                    color: themeNotifier.isDarkMode ? Colors.white : Color(0xff414370),
                   ),
-                  title: const Text("Dark Mode"),
+                  title: const Text("Dark Mode",style: TextStyle(color: Color(0xff414370)),),
                   trailing: Switch(
                     value: themeNotifier.isDarkMode,
                     onChanged: (value) {
@@ -542,8 +541,8 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
                 ),
 
                 ListTile(
-                  leading: const Icon(Icons.info),
-                  title: const Text("About"),
+                  leading: const Icon(Icons.info,color: Color(0xff414370),),
+                  title: const Text("About",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () {
                     showAboutDialog(
                       context: context,
@@ -554,23 +553,23 @@ class _DoctorProfilePageState extends State<DoctorProfilePage>
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.star),
-                  title: const Text("Rate the App"),
+                  leading: const Icon(Icons.star,color: Color(0xff414370)),
+                  title: const Text("Rate the App",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () {
                     _showRatingDialog();
                   },
                 ),
 
                 ListTile(
-                  leading: const Icon(Icons.lock),
-                  title: const Text("Privacy Policy"),
+                  leading: const Icon(Icons.lock,color: Color(0xff414370)),
+                  title: const Text("Privacy Policy",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () {
                     _showPrivacyPolicyDialog(context);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.exit_to_app),
-                  title: const Text("Log Out"),
+                  leading: const Icon(Icons.exit_to_app,color: Color(0xff414370)),
+                  title: const Text("Log Out",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () async {
                     // Clear the secure storage
                     await _storage.deleteAll();

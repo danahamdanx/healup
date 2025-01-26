@@ -698,16 +698,6 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
       return Scaffold(
         appBar: AppBar(title: const Text("Prescription Form")),
         body:  Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xfff3efd9), Colors.white],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
-
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SingleChildScrollView(
@@ -971,17 +961,8 @@ class _PrescriptionFormState extends State<PrescriptionForm> {
     else{
       return Scaffold(
         appBar: AppBar(title: const Text("Prescription Form")),
-        backgroundColor: Color(0xff414370),
         body: Stack(children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xfff3efd9), Colors.white],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-          ),
+
 
           Padding(
             padding: const EdgeInsets.all(16.0),
