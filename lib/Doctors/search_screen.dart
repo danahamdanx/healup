@@ -268,7 +268,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                color: Colors.white70,
+                                color: Color(0xffd4dcee),
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     backgroundColor: Color(0xff414370),

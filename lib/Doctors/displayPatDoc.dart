@@ -176,11 +176,14 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
         return Card(
           elevation: 3,
           margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          color: Color(0xffd4dcee),
+
           child: Stack(
             children: [
               ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10), // Adjust padding for centering
                 leading: CircleAvatar(
+                  radius: 25,
                   backgroundImage: doctor.photo.isNotEmpty
                       ? AssetImage(doctor.photo)
                       : null,
@@ -198,7 +201,7 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
                     SizedBox(height: 4),
                     Text(
                       doctor.specialization,
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(fontSize: 15, color: Colors.grey[800]),
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -212,7 +215,7 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 18.0),  // Add space to the left of the icon
-                      child: Icon(FontAwesomeIcons.comments, color: Color(0xff2f9a8f)),
+                      child: Icon(FontAwesomeIcons.comments, color: Color(0xff414370)),
                     ),
                   ],
                 ),
@@ -302,7 +305,7 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 18.0),  // Add space to the left of the icon
-                      child: Icon(FontAwesomeIcons.comments, color: Color(0xff2f9a8f)),
+                      child: Icon(FontAwesomeIcons.comments, color: Color(0xff414370)),
                     ),
                   ],
                 ),
@@ -349,13 +352,13 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
       appBar: AppBar(
         automaticallyImplyLeading: false,  // لإزالة سهم التراجع
 
-        title: Text('Messages',style: TextStyle(color: Colors.white,fontWeight:FontWeight.bold),),
-        backgroundColor: Color(0xff2f9a8f),
+        title: Text('Messages',style: TextStyle(color: Colors.white70,fontWeight:FontWeight.bold),),
+        backgroundColor: Color(0xff414370),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
           labelColor: Colors.white,
-          unselectedLabelColor: Colors.black,
+          unselectedLabelColor: Colors.grey,
           labelStyle: TextStyle(fontSize: 20),
           unselectedLabelStyle: TextStyle(fontSize: 18),
           tabs: [
@@ -366,9 +369,10 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
       ),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/back.jpg'),
-            fit: BoxFit.cover,
+          gradient: LinearGradient(
+            colors: [Color(0xfff3efd9), Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
         child: isLoading
@@ -381,7 +385,7 @@ class _DisplayPatDocState extends State<DisplayPatDoc> with SingleTickerProvider
                 decoration: InputDecoration(
                   hintText: 'Search...',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
                 onChanged: (query) {
