@@ -421,7 +421,7 @@ class DoctorCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        color:  Color(0xffb8e1f1), // Set the card's background color
+        color:  Color(0xffd4dcee), // Set the card's background color
 
         elevation: 5,
         child: ListTile(
