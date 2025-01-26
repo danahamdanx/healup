@@ -34,15 +34,17 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     if (kIsWeb) {
       return Scaffold(
-        body: _pages[_selectedPageIndex], // Display the selected page
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedPageIndex, // Highlight the selected index
-          onTap: _onPageSelected, // Handle tap on the bottom navigation items
-          selectedItemColor: Color(0xff414370),  // Set selected item icon color to white
-          unselectedItemColor: Colors.grey[500],  // Set unselected item icon color to grey
-          backgroundColor: Color(0xff414370),  // Set the background color here
-
-          items: const [
+          body: _pages[_selectedPageIndex], // Display the selected page
+          bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+        canvasColor: Color(0xff414370), // Set the background color here
+      ),
+    child: BottomNavigationBar(
+    currentIndex: _selectedPageIndex, // Highlight the selected index
+    onTap: _onPageSelected, // Handle tap on the bottom navigation items
+    selectedItemColor: Colors.white,  // Set selected item icon color to white
+    unselectedItemColor: Colors.grey[500],  // Set unselected item icon color to grey
+    items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today,size: 25,),
               label: "Appointments",
@@ -59,10 +61,10 @@ class _MainPageState extends State<MainPage> {
               icon: Icon(Icons.person,size: 25,),
               label: "Profile",
             ),
-          ],
-        ),
+    ],
+    ),
+          ),
       );
-
     }
     else{
       return Scaffold(

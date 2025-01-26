@@ -114,7 +114,7 @@ class _WelcomePageState extends State<WelcomePage>
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 30), // Reduce space between buttons
-                        buildSignUpButton(context, 'Doctor', Icons.local_hospital),
+                        buildSignUpButton(context, 'A Doctor', Icons.local_hospital),
                         buildSignUpButton(context, 'Patient', Icons.person),
                         buildSignUpButton(
                             context, 'Management', Icons.admin_panel_settings),
