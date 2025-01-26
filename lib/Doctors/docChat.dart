@@ -92,7 +92,7 @@ class _docChatState extends State<docChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white70,
+        backgroundColor: Color(0xff414370),
         title: Row(
           children: [
             CircleAvatar(
@@ -104,7 +104,7 @@ class _docChatState extends State<docChat> {
                   : null,
             ),
             SizedBox(width: 10),
-            Text('${widget.receiverName}'),
+            Text('${widget.receiverName}',style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
           ],
         ),
       ),
@@ -145,7 +145,7 @@ class _docChatState extends State<docChat> {
                                 Container(
                                   padding: EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: isSender ? Color(0xff2f9a8f) : Colors.grey[300],
+                                    color: isSender ? Color(0xff414370) : Colors.grey[300],
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: message['fileUrl'] != null
