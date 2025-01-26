@@ -337,11 +337,11 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
     if (kIsWeb) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Prescription Details (Web)"),
-          backgroundColor: const Color(0xff6be4d7),
+          title: const Text("Prescription Details (Web)",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
-              icon: const Icon(Icons.save),
+              icon: const Icon(Icons.save,color: Colors.white70,),
               onPressed: savePrescriptionAsPdf,
             ),
           ],
@@ -371,17 +371,22 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Color(0xff414370)
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text("Doctor Name: ${widget.doctorName}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,                                color: Color(0xff414370)
+                                )),
                             Text("Specialization: ${widget.doctorSpecialization}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,                                color: Color(0xff414370)
+                                )),
                             Text("Phone: ${widget.doctorPhone}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,                                color: Color(0xff414370)
+                                )),
                             Text("Hospital: ${widget.doctorHospital}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370)
+                                )),
                           ],
                         ),
                       ),
@@ -404,15 +409,20 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                  color: Color(0xff414370)
+
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text("Patient Name: ${widget.patientName}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370)
+                                )),
                             Text("Age: ${widget.patientAge}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370)
+                                )),
                             Text("Prescription Date: ${widget.date}",
-                                style: const TextStyle(fontSize: 16)),
+                                style: const TextStyle(fontSize: 16,color: Color(0xff414370)
+                                )),
                           ],
                         ),
                       ),
@@ -427,7 +437,7 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
               // Medications Section
               const Text(
                 "Medications:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370)),
               ),
               const SizedBox(height: 10),
               ...widget.medications.map((med) {
@@ -438,11 +448,11 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                     contentPadding: const EdgeInsets.all(16.0),
                     title: Text(
                       "Name: ${med['name']}",
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Color(0xff414370)),
                     ),
                     subtitle: Text(
                       "Quantity: ${med['quantity']}\nDosage: ${med['dosage']}",
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16,color: Color(0xff414370)),
                     ),
                   ),
                 );
@@ -457,7 +467,7 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                     getPrescriptionByAppointmentId();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff6be4d7),
+                    backgroundColor: const Color(0xff414370),
                     padding: const EdgeInsets.symmetric(
                       vertical: 14,
                       horizontal: 30,
@@ -469,7 +479,7 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                   ),
                   child: const Text(
                     "Add Order by Prescription",
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white70),
                   ),
                 ),
               ),
@@ -480,16 +490,27 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
     }  else {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Prescription Details"),
-          backgroundColor: const Color(0xff6be4d7),
+          title: const Text("Prescription Details",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+          backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
-              icon: Icon(Icons.save),
+              icon: Icon(Icons.save,color: Colors.white70,),
               onPressed: savePrescriptionAsPdf,
             ),
           ],
         ),
-        body: Padding(
+        body: Stack(children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+
+          Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,16 +525,21 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Doctor Information", style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                            fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370)
+                        )),
                         SizedBox(height: 8),
                         Text("Doctor Name: ${widget.doctorName}",
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16,color: Color(0xff414370)
+                            )),
                         Text('Specialization: ${widget.doctorSpecialization}',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16,color: Color(0xff414370)
+                            )),
                         Text('Phone: ${widget.doctorPhone}',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16,color: Color(0xff414370)
+                            )),
                         Text('Hospital: ${widget.doctorHospital}',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16,color: Color(0xff414370)
+                            )),
                       ],
                     ),
                   ),
@@ -524,14 +550,18 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Patient Information", style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                            fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370)
+                        )),
                         SizedBox(height: 8),
                         Text('Patient Name: ${widget.patientName}',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16,color: Color(0xff414370)
+                            )),
                         Text("Age: ${widget.patientAge}",
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16,color: Color(0xff414370)
+                            )),
                         Text('Prescription Date: ${widget.date}',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16,color: Color(0xff414370)
+                            )),
                       ],
                     ),
                   ),
@@ -541,7 +571,8 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
               Divider(color: Colors.black, thickness: 2),
               SizedBox(height: 20),
               Text("Medications:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color(0xff414370)
+                  )),
 
               ...widget.medications.map((med) {
                 return Card(
@@ -550,7 +581,8 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                   child: ListTile(
                     title: Text(
                       "Name: ${med['name']}\nQuantity: ${med['quantity']}\nDosage: ${med['dosage']}",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Color(0xff414370)
+                      ),
                     ),
                   ),
                 );
@@ -568,7 +600,7 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                       getPrescriptionByAppointmentId();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xff6be4d7), // لون الزر
+                      backgroundColor: Color(0xff414370), // لون الزر
                       padding: EdgeInsets.symmetric(
                           vertical: 14, horizontal: 30),
                       textStyle: TextStyle(
@@ -576,14 +608,14 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                     ),
                     child: Text(
                       "Add Order by Prescription",
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(fontSize: 20,color: Colors.white70),
                     ),
                   ),
                 ),
               ),
             ],
           ),
-        ),
+        ),],)
       );
     }
   }

@@ -348,7 +348,7 @@ class _PatAppState extends State<PatApp> {
       return Scaffold(
         appBar: AppBar(
           title: Text(widget.name),
-          backgroundColor: const Color(0xff6be4d7),
+          backgroundColor: const Color(0xff414370),
         ),
         body: Container(
           color: const Color(0xfff0f0f0), // Set the color of the background here
@@ -362,56 +362,61 @@ class _PatAppState extends State<PatApp> {
                   Row(
                     children: [
                       CircleAvatar(
-                        radius: 80,
+                        radius: 50,
                         backgroundImage: AssetImage(widget.photo),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               widget.name,
-                              style: const TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Color(0xff414370)),
                             ),
                             Text(
                               widget.specialization,
-                              style: const TextStyle(
-                                  fontSize: 22, color: Colors.grey),
+                              style:  TextStyle(fontSize: 20, color: Colors.grey,fontWeight: FontWeight.bold),
                             ),
-                            Text('${widget.yearsOfExperience} years Experience'),
-                            const SizedBox(height: 10),
+                            Text('${widget.yearsOfExperience} years Experience',style: TextStyle(color: Color(0xff414370),)),
+                            const SizedBox(height: 8), // Add some space
+                            // Wrap the Rating Row with GestureDetector
                             GestureDetector(
                               onTap: () {
-                                _showRatingDialog(context);
+                                _showRatingDialog(context); // Call the dialog when tapped
                               },
                               child: Row(
                                 children: [
-                                  const Icon(Icons.star, color: Colors.amber, size: 24),
+                                  const Icon(Icons.star, color: Colors.amber, size: 20), // Star Icon
                                   const SizedBox(width: 8),
                                   Text(
                                     '${widget.rating.toStringAsFixed(1)} (${widget.reviews} reviews)',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370)),
                                   ),
                                 ],
                               ),
                             ),
-                            Text('\₪${widget.price}/hr',
-                                style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 10),
+
+
+                            Text('\₪${widget.price}/hr', style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370))),
+
+                            // Hospital Address with Location Icon
+                            const SizedBox(height: 8), // Adding some space between price and address
+                            // Address Section with Location Icon
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.location_on,
-                                  color: Colors.red,
-                                  size: 24,
+                                  color: Colors.red, // Red color for location icon
+                                  size: 20,
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: 8), // Space between icon and address text
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () async {
+                                      // Get the coordinates of the address
                                       LatLng coordinates = await _getCoordinates(widget.hospital);
+                                      // Navigate to MapScreen with the address and location
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -422,24 +427,19 @@ class _PatAppState extends State<PatApp> {
                                         ),
                                       );
                                     },
-
                                     child: Text(
-
                                       widget.hospital,
                                       style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: Color(0xff414370), // Address text color
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-
+                                      overflow: TextOverflow.ellipsis, // To avoid text overflow
+                                      maxLines: 1, // To display address on a single line
                                     ),
-
                                   ),
                                 ),
                               ],
-
                             ),
                           ],
                         ),
@@ -505,7 +505,7 @@ class _PatAppState extends State<PatApp> {
                             margin: const EdgeInsets.symmetric(horizontal: 6.0),
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: isSelected ? const Color(0xff6be4d7) : Colors.white,
+                              color: isSelected ? const Color(0xff8aa2d4) : Colors.white,
                               borderRadius: BorderRadius.circular(25),
                               border: Border.all(
                                 color: isPast ? Colors.grey : Colors.black,
@@ -562,7 +562,7 @@ class _PatAppState extends State<PatApp> {
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff6be4d7),
+                    backgroundColor: const Color(0xff414370),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
@@ -617,17 +617,21 @@ class _PatAppState extends State<PatApp> {
   else{
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.name),
-        backgroundColor: const Color(0xff6be4d7),
+        title: Text(widget.name,style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold,fontSize: 25),),
+        backgroundColor: const Color(0xff414370),
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'images/back.jpg',
-              fit: BoxFit.cover,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
+
           SingleChildScrollView(
             child: Container(
               color: Colors.white.withOpacity(0.6),
@@ -649,13 +653,13 @@ class _PatAppState extends State<PatApp> {
                           children: [
                             Text(
                               widget.name,
-                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Color(0xff414370)),
                             ),
                             Text(
                               widget.specialization,
-                              style: const TextStyle(fontSize: 18, color: Colors.grey),
+                              style:  TextStyle(fontSize: 20, color: Colors.grey,fontWeight: FontWeight.bold),
                             ),
-                            Text('${widget.yearsOfExperience} years Experience'),
+                            Text('${widget.yearsOfExperience} years Experience',style: TextStyle(color: Color(0xff414370),)),
                             const SizedBox(height: 8), // Add some space
                             // Wrap the Rating Row with GestureDetector
                             GestureDetector(
@@ -668,14 +672,14 @@ class _PatAppState extends State<PatApp> {
                                   const SizedBox(width: 8),
                                   Text(
                                     '${widget.rating.toStringAsFixed(1)} (${widget.reviews} reviews)',
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370)),
                                   ),
                                 ],
                               ),
                             ),
 
 
-                            Text('\₪${widget.price}/hr', style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text('\₪${widget.price}/hr', style: const TextStyle(fontWeight: FontWeight.bold,color: Color(0xff414370))),
 
                             // Hospital Address with Location Icon
                             const SizedBox(height: 8), // Adding some space between price and address
@@ -708,8 +712,8 @@ class _PatAppState extends State<PatApp> {
                                       widget.hospital,
                                       style: const TextStyle(
                                         fontSize: 16,
-                                        color: Colors.black, // Address text color
-                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff414370), // Address text color
+                                        fontWeight: FontWeight.bold,
                                       ),
                                       overflow: TextOverflow.ellipsis, // To avoid text overflow
                                       maxLines: 1, // To display address on a single line
@@ -791,7 +795,7 @@ class _PatAppState extends State<PatApp> {
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: isSelected ? const Color(0xff6be4d7) : Colors.white,
+                            color: isSelected ? const Color(0xff8aa2d4) : Colors.white,
                             borderRadius: BorderRadius.circular(25), // Oval shape
                             border: Border.all(
                               color: isPast ? Colors.grey : Colors.black,
@@ -845,7 +849,7 @@ class _PatAppState extends State<PatApp> {
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff6be4d7),
+                          backgroundColor: const Color(0xff414370),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         ),
@@ -896,13 +900,13 @@ class _PatAppState extends State<PatApp> {
           color: isExpiredToday
               ? Colors.grey // Grey for expired time slots
               : (isReserved
-              ? Color(0xff6BA3BE) // Red for reserved times
+              ? Color(0xff800020) // Red for reserved times
               : (isSelected
-              ? const Color(0xff6be4d7) // Highlight color for selected time
+              ? const Color(0xff8aa2d4) // Highlight color for selected time
               : Colors.white)), // Default white for unselected time
           borderRadius: BorderRadius.circular(25), // Oval shape
           border: Border.all(
-            color: isReserved ? Color(0xff6be4d7) : (isSelected
+            color: isReserved ? Color(0xff8aa2d4) : (isSelected
                 ? Colors.black
                 : Colors.grey), // Black edges for selected time
             width: isSelected ? 2 : 1, // Thicker edges for selected time

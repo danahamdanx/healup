@@ -104,16 +104,19 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
       // Web layout
       return Scaffold(
         appBar: AppBar(
-          title: const Text('All Doctors'),
-          backgroundColor: const Color(0xff6be4d7),
+          title: const Text('All Doctors',style: TextStyle(color: Colors.white70,fontSize: 25,fontWeight: FontWeight.bold),),
+          backgroundColor: const Color(0xff414370),
         ),
         body: Stack(
           children: [
             // Background Image
-            Positioned.fill(
-              child: Image.asset(
-                'images/pat.jpg', // Replace with your image path
-                fit: BoxFit.cover,
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
             ),
             // Content for Web
@@ -132,10 +135,12 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
                           });
                         },
                         decoration: InputDecoration(
+                          fillColor: Colors.grey,
                           hintText: "Search for doctors",
                           prefixIcon: const Icon(Icons.search),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25.0),
+
                           ),
                         ),
                       ),
@@ -159,8 +164,8 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
                                 style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20), // Adjust button size for Web
                                   backgroundColor: selectedSpecialty == specialty
-                                      ? Color(0xff0C969C) // Highlight selected
-                                      : Color(0xff6be4d7),
+                                      ? Color(0xff414370) // Highlight selected
+                                      : Color(0xff8aa2d4),
                                   foregroundColor: Colors.white, // Text color
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
@@ -225,16 +230,19 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
     }else{
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Doctors'),
-        backgroundColor: const Color(0xff6be4d7),
+        title: const Text('All Doctors',style: TextStyle(color: Colors.white70,fontSize: 25,fontWeight: FontWeight.bold),),
+        backgroundColor: const Color(0xff414370),
       ),
       body: Stack(
         children: [
           // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'images/pat.jpg', // Replace with your image path
-              fit: BoxFit.cover,
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xfff3efd9), Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
           ),
           // Content
@@ -244,12 +252,14 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
+
                   onChanged: (value) {
                     setState(() {
                       searchText = value;
                     });
                   },
                   decoration: InputDecoration(
+
                     hintText: "Search for doctors",
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
@@ -277,8 +287,8 @@ class _AllDoctorsPageState extends State<AllDoctorsPage> {
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                             backgroundColor: selectedSpecialty == specialty
-                                ? Color(0xff0C969C) // Highlight selected
-                                : Color(0xff6be4d7),
+                                ? Color(0xff414370) // Highlight selected
+                                : Color(0xff8aa2d4),
                             foregroundColor: Colors.white,  // Text color
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -411,6 +421,8 @@ class DoctorCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
+        color:  Color(0xffb8e1f1), // Set the card's background color
+
         elevation: 5,
         child: ListTile(
           leading: CircleAvatar(
