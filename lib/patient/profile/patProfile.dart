@@ -269,10 +269,9 @@ class _PatProfileState extends State<PatProfile> {
                     themeNotifier.isDarkMode
                         ? Icons.nightlight_round
                         : Icons.wb_sunny,
-                    color: themeNotifier.isDarkMode ? Colors.white : Colors
-                        .black,
+                    color: themeNotifier.isDarkMode ? Colors.white : Color(0xff414370),
                   ),
-                  title: const Text("Dark Mode"),
+                  title: const Text("Dark Mode",style: TextStyle(color: Color(0xff414370)),),
                   trailing: Switch(
                     value: themeNotifier.isDarkMode,
                     onChanged: (value) {
@@ -290,8 +289,8 @@ class _PatProfileState extends State<PatProfile> {
                   ),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.info),
-                  title: const Text("About"),
+                  leading: const Icon(Icons.info,color: Color(0xff414370)),
+                  title: const Text("About",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () {
                     showAboutDialog(
                       context: context,
@@ -302,22 +301,22 @@ class _PatProfileState extends State<PatProfile> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.star),
-                  title: const Text("Rate the App"),
+                  leading: const Icon(Icons.star,color: Color(0xff414370)),
+                  title: const Text("Rate the App",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () {
                     _showRatingDialog();
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.lock),
-                  title: const Text("Privacy Policy"),
+                  leading: const Icon(Icons.lock,color: Color(0xff414370)),
+                  title: const Text("Privacy Policy",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () {
                     _showPrivacyPolicyDialog(context);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.exit_to_app),
-                  title: const Text("Log Out"),
+                  leading: const Icon(Icons.exit_to_app,color: Color(0xff414370)),
+                  title: const Text("Log Out",style: TextStyle(color: Color(0xff414370)),),
                   onTap: () async {
                     // Clear the secure storage
                     await _storage.deleteAll();
@@ -635,11 +634,11 @@ class _PatProfileState extends State<PatProfile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Rate the App"),
+          title: const Text("Rate the App",style: TextStyle(color: Color(0xff414370)),),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Please rate our app:"),
+              const Text("Please rate our app:",style: TextStyle(color: Color(0xff414370)),),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -693,7 +692,7 @@ void _showPrivacyPolicyDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("Privacy Policy"),
+        title: Text("Privacy Policy",style: TextStyle(color: Color(0xff414370)),),
         content: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
