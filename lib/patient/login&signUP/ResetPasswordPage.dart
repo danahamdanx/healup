@@ -78,7 +78,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reset Password'),
+        title: const Text('Reset Password',style: TextStyle(color: Colors.white70),),
         backgroundColor: const Color(0xff414370),
       ),
       body: SingleChildScrollView(
@@ -155,7 +155,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
                 child: const Text(
                   'Reset Password',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18,color: Colors.white70),
                 ),
               ),
               const SizedBox(height: 20),

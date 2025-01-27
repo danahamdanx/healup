@@ -163,8 +163,8 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
         title:  ShaderMask(
           shaderCallback: (bounds) =>  LinearGradient(
             colors: [
-              Color(0xfff08486), // Soft teal (primary color)
-            Color(0xff9bb8f5), // Soft blue (secondary color)
+              Color(0xffb25dcc), // Soft teal (primary color)
+              Color(0xfff08486),// Soft blue (secondary color)
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -351,7 +351,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                         Text(
                                           "\$$finalPrice",
                                           style: const TextStyle(
-                                            color: Colors.red,
+                                            color: Color(0xff800020),
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -526,8 +526,8 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
         title:  ShaderMask(
           shaderCallback: (bounds) =>  LinearGradient(
             colors: [
-              Color(0xfff08486), // Soft teal (primary color)
-              Color(0xff9bb8f5), // Soft blue (secondary color)
+              Color(0xffb25dcc), // Soft teal (primary color)
+              Color(0xfff08486), // Soft blue (secondary color)
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -599,9 +599,9 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                   ],
                 ),
                 const SizedBox(height: 20),
-                 Text(
+                Text(
                   'Discounted Medications',
-                  style: TextStyle(color:Colors.grey[800],fontSize: 22, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.grey[800], fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 medications.isEmpty
@@ -616,18 +616,20 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       final medicationName = medication['name'] ?? 'Unknown Medication';
                       final imageUrl = medication['image'] ?? 'images/default_image.jpg';
                       final discount = medication['discount'] ?? 0;
-                      // final price = medication['price'] ?? 0.0;
-                      // final finalPrice = medication['final_price'] ?? price;
-                      final price = medication['price'] ?? 0.0;
-                      final finalPrice = (medication['final_price'] ?? price).toDouble();
+                      final price = (medication['price'] ?? 0.0).toDouble(); // Ensure price is double
+                      final finalPrice = (medication['final_price'] ?? price).toDouble(); // Ensure finalPrice is double
+                      final description = medication['description'] ?? 'No description available';
+                      final type = medication['type'] ?? 'Unknown';
+                      final dosage = medication['dosage'] ?? 'Not specified';
 
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: GestureDetector(
                           onTap: () {
-                            final description = medication['description'] ?? 'No description available';
-                            final type = medication['type'] ?? 'Unknown';
-                            final dosage = medication['dosage'] ?? 'Not specified'; // Get the dosage here
+                            // Debugging: Print to confirm the GestureDetector is working
+                            print('Card tapped: $medicationName');
+
+                            // Create the Medicine object
                             final selectedMedicine = Medicine(
                               id: medication['_id'] ?? '',
                               medication_name: medicationName,
@@ -636,10 +638,11 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                               price: price,
                               final_price: finalPrice,
                               type: type,
-                              dosage: dosage,  // Pass the dosage here
+                              dosage: dosage,
                               quantity: 1,
                             );
 
+                            // Navigate to the MedicineDetailPage
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -678,7 +681,7 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 21,
                                             color: medicationName == 'Unknown Medication'
-                                                ? Colors.red
+                                                ? Color(0xff800020)
                                                 : Color(0xff414370),
                                           ),
                                         ),
@@ -704,8 +707,8 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                                         ),
                                         Text(
                                           "\$$finalPrice",
-                                          style: const TextStyle(
-                                            color: Colors.red,
+                                          style: TextStyle(
+                                            color: Color(0xff800020),
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -793,9 +796,9 @@ class _HomeTabState extends State<HomeTab> with TickerProviderStateMixin {
                       ),
                       DoctorSpecialityCard(
                         icon: FontAwesomeIcons.xRay,
-                        title: 'Radiology  ',
+                        title: 'Radiology',
                         onTap: () {
-                          _navigateToSpecialty('Radiology ');
+                          _navigateToSpecialty('Radiology');
                         },
                       ),
                       DoctorSpecialityCard(

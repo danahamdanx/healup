@@ -431,7 +431,7 @@ class DoctorCard extends StatelessWidget {
           ),
           title: Text(
             name.isNotEmpty ? name : 'No Name',
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,11 +440,11 @@ class DoctorCard extends StatelessWidget {
                 children: [
                   Text(
                     '$specialization | ',
-                    style: const TextStyle(fontSize: 14, color: Colors.black),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
                   Text(
                     hospital.isNotEmpty ? hospital : 'No Hospital',
-                    style: const TextStyle(fontSize: 14, color: Colors.black),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
                 ],
               ),

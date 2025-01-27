@@ -434,12 +434,12 @@ class CartPageState extends State<CartPage> {
                               Row(
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.remove),
+                                    icon: const Icon(Icons.remove,color: Color(0xff800020),),
                                     onPressed: () => decrementQuantity(index),
                                   ),
-                                  Text("${item['quantity']}"),
+                                  Text("${item['quantity']}",style: TextStyle(color: Color(0xff800020)),),
                                   IconButton(
-                                    icon: const Icon(Icons.add),
+                                    icon: const Icon(Icons.add,color: Color(0xff800020),),
                                     onPressed: () => incrementQuantity(index),
                                   ),
                                 ],
@@ -447,7 +447,7 @@ class CartPageState extends State<CartPage> {
                             ],
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete),
+                            icon: const Icon(Icons.delete,color: Color(0xff800020),),
                             onPressed: () => showDeleteConfirmationDialog(context, index),
                           ),
                         ),
@@ -662,12 +662,12 @@ class CartPageState extends State<CartPage> {
                               Row(
                                 children: [
                                   IconButton(
-                                    icon: const Icon(Icons.remove),
+                                    icon: const Icon(Icons.remove,color: Color(0xff800020),),
                                     onPressed: () => decrementQuantity(index),
                                   ),
-                                  Text("${item['quantity']}"),
+                                  Text("${item['quantity']}",style: TextStyle(color: Color(0xff800020)),),
                                   IconButton(
-                                    icon: const Icon(Icons.add),
+                                    icon: const Icon(Icons.add,color: Color(0xff800020),),
                                     onPressed: () => incrementQuantity(index),
                                   ),
                                 ],
@@ -675,7 +675,7 @@ class CartPageState extends State<CartPage> {
                             ],
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete),
+                            icon: const Icon(Icons.delete,color: Color(0xff800020),),
                             onPressed: () =>
                                 showDeleteConfirmationDialog(context, index),
                           ),

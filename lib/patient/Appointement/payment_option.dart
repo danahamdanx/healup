@@ -333,15 +333,16 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       return Scaffold(
         appBar: AppBar(
           title: const Text("Confirm order"),
-          backgroundColor: const Color(0xff2f9a8f),
+          backgroundColor: const Color(0xff414370),
         ),
         body: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('images/back.jpg'),
-                  fit: BoxFit.cover,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xfff3efd9), Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
             ),
@@ -349,7 +350,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Color(0xffd4dcee),
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
@@ -397,7 +398,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                         style: TextStyle(
                           fontSize: 24,
                           color: Color(
-                              0xff2f9a8f), // Use the desired color for the text
+                              0xff414370), // Use the desired color for the text
                         ),
                       ),
                     ),
@@ -427,7 +428,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Color(0xff800020),
                         ),
                       ),
                     ),
@@ -461,7 +462,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                 // Make sure to call the addOrder_card method here
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff2f9a8f),
+                                backgroundColor: const Color(0xff414370),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30, vertical: 12),
                               ),
@@ -482,7 +483,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                     widget.prescriptionId, orderDate);
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff2f9a8f),
+                                backgroundColor: const Color(0xff414370),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30, vertical: 12),
                               ),
@@ -509,15 +510,16 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   return Scaffold(
     appBar: AppBar(
       title: const Text("Confirm order"),
-      backgroundColor: const Color(0xff2f9a8f),
+      backgroundColor: const Color(0xff414370),
     ),
     body: Stack(
       children: [
         Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/back.jpg'),
-              fit: BoxFit.cover,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xfff3efd9), Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
         ),
@@ -525,7 +527,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
           child: Container(
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Color(0xffd4dcee),
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -573,7 +575,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                     style: TextStyle(
                       fontSize: 24,
                       color: Color(
-                          0xff2f9a8f), // Use the desired color for the text
+                          0xff414370), // Use the desired color for the text
                     ),
                   ),
                 ),
@@ -603,7 +605,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Color(0xff800020),
                     ),
                   ),
                 ),
@@ -637,7 +639,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                             // Make sure to call the addOrder_card method here
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2f9a8f),
+                            backgroundColor: const Color(0xff414370),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 30, vertical: 12),
                           ),
@@ -658,7 +660,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                                 widget.prescriptionId, orderDate);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2f9a8f),
+                            backgroundColor: const Color(0xff414370),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 30, vertical: 12),
                           ),

@@ -242,7 +242,7 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
             pendingRequests.removeWhere(
                     (appointment) => appointment['_id'] == appointmentId);
             confirmedAppointments.add(updatedAppointment);
-          } else if (newStatus == 'Canceled') {
+          } else if (newStatus == 'Cancelled') {
             pendingRequests.removeWhere(
                     (appointment) => appointment['_id'] == appointmentId);
           }
@@ -270,7 +270,7 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
             pendingRequests.removeWhere(
                     (appointment) => appointment['_id'] == appointmentId);
             confirmedAppointments.add(updatedAppointment);
-          } else if (newStatus == 'Canceled') {
+          } else if (newStatus == 'Cancelled') {
             pendingRequests.removeWhere(
                     (appointment) => appointment['_id'] == appointmentId);
           }
@@ -585,7 +585,7 @@ class _AppointmentManagementPageState extends State<AppointmentManagementPage>
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.red),
                     onPressed: () {
-                      _updateAppointmentStatus(appointmentId, 'Canceled');
+                      _updateAppointmentStatus(appointmentId, 'Cancelled');
                     },
                   ),
                 ],

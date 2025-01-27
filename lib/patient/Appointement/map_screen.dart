@@ -174,7 +174,8 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Map"),
+        title: const Text("Map",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
+        backgroundColor: Color(0xff414370),
       ),
       body: kIsWeb
           ? _buildWebMap() // Use InAppWebView for web

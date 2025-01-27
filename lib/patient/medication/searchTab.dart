@@ -357,7 +357,7 @@ if(kIsWeb){
       backgroundColor: const Color(0xff414370),
       actions: [
         IconButton(
-          icon: const Icon(Icons.shopping_cart,color: Colors.white70,),
+          icon: const Icon(Icons.shopping_cart,color: Color(0xff800020),),
           onPressed: () {
             Navigator.push(
               context,
@@ -574,7 +574,7 @@ if(kIsWeb){
           backgroundColor: const Color(0xff414370),
           actions: [
             IconButton(
-              icon: const Icon(Icons.shopping_cart,color: Colors.white70,),
+              icon: const Icon(Icons.shopping_cart,color: Color(0xff800020),),
               onPressed: () {
                 Navigator.push(
                   context,
