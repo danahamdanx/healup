@@ -45,7 +45,7 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
           'address': _addressController.text,
           'hospital': _hospitalController.text,
           'availability': _availabilityController.text,
-          'duration':_durationController,
+          'duration': _durationController.text, // Use .text to get the string value
           'yearExperience': int.parse(_yearExperienceController.text),
           'pricePerHour': int.parse(_pricePerHourController.text),
           'seal': _sealController.text,
@@ -56,7 +56,6 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Doctor added successfully')),
         );
-        //Navigator.pop(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => DoctorListPage()),
@@ -66,7 +65,6 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
           SnackBar(content: Text('Failed to add doctor')),
         );
       }
-
     }
     else{
       final url = 'http://10.0.2.2:5000/api/healup/doctors/register';
@@ -83,7 +81,7 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
           'address': _addressController.text,
           'hospital': _hospitalController.text,
           'availability': _availabilityController.text,
-          'duration':_durationController,
+          'duration': _durationController.text, // Use .text to get the string value
           'yearExperience': int.parse(_yearExperienceController.text),
           'pricePerHour': int.parse(_pricePerHourController.text),
           'seal': _sealController.text,
@@ -94,17 +92,15 @@ class _AddDoctorPageState extends State<AddDoctorPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Doctor added successfully')),
         );
-        //Navigator.pop(context);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => DoctorListPage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add doctor')),
+            SnackBar(content: Text('Failed to add doctor')),
         );
-      }
-
+    }
     }
 
   }

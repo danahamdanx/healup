@@ -212,7 +212,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Confirm Delete"),
-          content: Text("Are you sure you want to delete Dr. $doctorName?"),
+          content: Text("Are you sure you want to delete $doctorName?"),
           actions: [
             TextButton(
               onPressed: () {

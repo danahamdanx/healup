@@ -345,6 +345,7 @@ class _MedicationListPageState extends State<MedicationListPage> {
 
   void _filterMedications() {
     setState(() {
+      // تصفية الأدوية بناءً على الفئة المحددة
       if (_selectedCategory == "All") {
         filteredMedications = medications;
       } else if (_selectedCategory == "Discount List") {
@@ -360,9 +361,19 @@ class _MedicationListPageState extends State<MedicationListPage> {
               .toList();
         }
       }
-    });
-  }
 
+      // تطبيق البحث بناءً على النص المكتوب في مربع البحث
+      if (_searchText.isNotEmpty) {
+        filteredMedications = filteredMedications.where((med) {
+          final medicationName = med['medication_name']
+              .toLowerCase(); // اسم الدواء
+          final searchText = _searchText
+              .toLowerCase(); // النص المكتوب في مربع البحث
+          return medicationName.contains(searchText);
+        }).toList();
+      }
+      });
+  }
 
   void _deleteMedication(String medicationId) async {
     if(kIsWeb){
