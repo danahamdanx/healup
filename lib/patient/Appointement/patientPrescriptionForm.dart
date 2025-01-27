@@ -478,7 +478,7 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                     ),
                   ),
                   child: const Text(
-                    "Add Order by Prescription",
+                    "Order Prescription",
                     style: TextStyle(color: Colors.white70),
                   ),
                 ),
@@ -607,7 +607,7 @@ class _PrescriptionPageState extends State<PrescriptionPage> {
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     child: Text(
-                      "Add Order by Prescription",
+                      "Order Prescription",
                       style: TextStyle(fontSize: 20,color: Colors.white70),
                     ),
                   ),

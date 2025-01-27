@@ -332,7 +332,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
       // Web version
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Confirm order"),
+          title: const Text("Confirm order",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
           backgroundColor: const Color(0xff414370),
         ),
         body: Stack(
@@ -509,7 +509,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     else {
   return Scaffold(
     appBar: AppBar(
-      title: const Text("Confirm order"),
+      title: const Text("Confirm order",style: TextStyle(color: Colors.white70,fontWeight: FontWeight.bold),),
       backgroundColor: const Color(0xff414370),
     ),
     body: Stack(
