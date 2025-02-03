@@ -7,6 +7,8 @@ import 'dart:io'; // Import for the File class
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
+import 'package:cached_network_image/cached_network_image.dart';
+
 
 class ChatPage extends StatefulWidget {
   final String patientId;
@@ -129,165 +131,163 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
-      // Web layout (larger view, possibly horizontal layout)
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xff414370),
           title: Row(
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage(widget.doctorPhoto),
-                radius: 20,
+                backgroundImage: widget.doctorPhoto.isNotEmpty
+                    ? AssetImage(widget.doctorPhoto)
+                    : null,
+                child: widget.doctorPhoto.isEmpty
+                    ? Icon(Icons.person, color: Colors.white)
+                    : null,
               ),
               SizedBox(width: 10),
-              Text('${widget.doctorName}',style: TextStyle(color: Colors.white70),),
+              Text('${widget.doctorName}', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
             ],
           ),
         ),
-        body: Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/chatBack.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    // Chat message list
-                    Expanded(
-                      child: StreamBuilder<List<Map<String, dynamic>>>(
-                        stream: _getMessages(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Center(child: Text('Error: ${snapshot.error}'));
-                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return Center(child: Text('No messages yet.'));
-                          } else {
-                            final messages = snapshot.data!;
-                            return ListView.builder(
-                              reverse: true,
-                              itemCount: messages.length,
-                              itemBuilder: (context, index) {
-                                final message = messages[index];
-                                final isSender = message['senderId'] == widget.patientId;
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/chatBack.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<List<Map<String, dynamic>>>(
+                  stream: _getMessages(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No messages yet.'));
+                    } else {
+                      final messages = snapshot.data!;
+                      return ListView.builder(
+                        reverse: true,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          final message = messages[index];
+                          final isSender = message['senderId'] == widget.patientId;
 
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                                  child: ListTile(
-                                    title: Align(
-                                      alignment: isSender
-                                          ? Alignment.centerRight
-                                          : Alignment.centerLeft,
-                                      child: Column(
-                                        crossAxisAlignment: isSender
-                                            ? CrossAxisAlignment.end
-                                            : CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                              color: isSender
-                                                  ? Color(0xff414370)
-                                                  : Colors.grey[300],
-                                              borderRadius: BorderRadius.circular(30),
-                                            ),
-                                            child: message['fileUrl'] != null
-                                                ? Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                if (message['message'].isNotEmpty)
-                                                  Text(
-                                                    message['message'],
-                                                    style: TextStyle(
-                                                      color: isSender ? Colors.white : Colors.black,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                SizedBox(height: 8),
-                                                Image.network(
-                                                  message['fileUrl'], // Display the image
-                                                  height: 200, // Adjust as needed
-                                                  width: 200,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ],
-                                            )
-                                                : Text(
-                                              message['message'],
-                                              style: TextStyle(
-                                                color: isSender ? Colors.white : Colors.black,
-                                                fontSize: 16,
-                                              ),
+                          return ListTile(
+                            title: Align(
+                              alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+                              child: Column(
+                                crossAxisAlignment: isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: isSender ? Color(0xff414370) : Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: message['fileUrl'] != null
+                                        ? Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        if (message['message'].isNotEmpty)
+                                          Text(
+                                            message['message'],
+                                            style: TextStyle(
+                                              color: isSender ? Colors.white : Colors.black,
+                                              fontSize: 16,
                                             ),
                                           ),
-                                          if (!isSender)
-                                            Text(
-                                              message['isRead'] ? 'Read' : 'Unread',
-                                              style: TextStyle(
-                                                color: message['isRead'] ? Colors.grey : Colors.red,
-                                                fontSize: 12,
-                                                fontStyle: FontStyle.italic,
-                                              ),
-                                            ),
-                                          SizedBox(height: 5),
-
-                                        ],
+                                        SizedBox(height: 8),
+                                        CachedNetworkImage(
+                                          imageUrl: message['fileUrl'],
+                                          height: 200,
+                                          width: 200,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                        ),
+                                      ],
+                                    )
+                                        : Text(
+                                      message['message'],
+                                      style: TextStyle(
+                                        color: isSender ? Colors.white : Colors.black,
+                                        fontSize: 16,
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    // Message input area
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _messageController,
-                              decoration: InputDecoration(
-                                hintText: 'Type your message...',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: BorderSide.none,
-                                ),
-                                filled: true,
-                                fillColor: Colors.white70,
-                                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    message['status'] ?? 'sent',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onSubmitted: (value) => _sendMessage(value),
                             ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                          hintText: 'Type your message...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                          ListTile(
-                            leading: Icon(Icons.image),
-                            title: Text('Pick Image'),
-                            onTap: () {
-                              Navigator.pop(context); // Close the bottom sheet
-                              _pickImage();  // Trigger the image picker
+                          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.attach_file),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ListTile(
+                                        leading: Icon(Icons.image),
+                                        title: Text('Pick Image'),
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          _pickImage();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
-                          IconButton(
-                            icon: Icon(Icons.send),
-                            onPressed: () => _sendMessage(_messageController.text),
-                          ),
-                        ],
+                        ),
                       ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        _sendMessage(_messageController.text.trim());
+                      },
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     } else {

@@ -188,7 +188,7 @@ class _PatProfileState extends State<PatProfile> {
         'DOB': _dobController.text,
         'phone': _phoneController.text,
         'medical_history': _medicalHistoryController.text,
-        'pic': base64Image, // Ensure base64 string is valid
+        'pic': "images/manar.jpg", // Ensure base64 string is valid
       });
 
 

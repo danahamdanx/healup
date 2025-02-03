@@ -82,6 +82,7 @@ dev_dependencies:
   google_maps_flutter: ^2.0.10 # Or the latest version
   intl: ^0.19.0  # Add this line
   uni_links: ^0.5.1
+  cached_network_image: ^3.2.0
 
 
 
@@ -161,8 +162,6 @@ flutter:
     - images/14_medication_image.png
     - images/15_medication_image.png
     - images/16_medication_image.png
-    - images/17_medication_image.png
-    - images/67458a3b47a7c2ca4fdeed7a_profile_image.png
     - images/img_2.png
     - images/mays.jpg
     - images/anwar.jpg

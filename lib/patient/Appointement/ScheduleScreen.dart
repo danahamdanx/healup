@@ -616,6 +616,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     ),
     body: Stack(
       children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: SafeArea(
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color(0xff414370),
+                size: 30,
+              ),
+              onPressed: () =>
+                  Navigator.of(context).pushReplacementNamed("welcomePage"),
+            ),
+          ),
+        ),
         Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

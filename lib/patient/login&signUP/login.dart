@@ -277,7 +277,7 @@ class _PatLoginPageState extends State<PatLoginPage> {
                                   ),
                                 ),
 
-                                const SizedBox(height: 70),
+                                const SizedBox(height: 30),
                                 TextFormField(
                                   controller: _emailController,
                                   decoration: InputDecoration(

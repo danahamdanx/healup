@@ -104,7 +104,8 @@ class _PatientPageState extends State<PatientPage> {
         appBar: AppBar(
           title: ShaderMask(
             shaderCallback: (bounds) => const LinearGradient(
-              colors: [Colors.lightBlue, Colors.lightGreen],
+              colors: [Color(0xffb25dcc), // Soft teal (primary color)
+                Color(0xfff08486),],
               tileMode: TileMode.clamp,
             ).createShader(bounds),
             child: const Text(
@@ -113,7 +114,7 @@ class _PatientPageState extends State<PatientPage> {
                 fontSize: 40,
                 fontFamily: 'Hello Valentina',
                 fontWeight: FontWeight.bold,
-                color: Colors.lightBlue,
+                color: Colors.white,
               ),
             ),
           ),

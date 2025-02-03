@@ -143,7 +143,27 @@ class _ManagementListPageState extends State<ManagementListPage> {
   }
 
   void _deleteManagement(String managementId) async {
-    try {
+    if(kIsWeb){ try {
+      final response = await http.delete(
+        Uri.parse("http://localhost:5000/api/healup/management/delete/$managementId"),
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          filteredManagements.removeWhere((management) => management['id'] == managementId);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Management data deleted successfully.")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to delete management: ${response.reasonPhrase}")),
+        );
+      }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occurred: $error")),
+      );
+    }}else{ try {
       final response = await http.delete(
         Uri.parse("http://10.0.2.2:5000/api/healup/management/delete/$managementId"),
       );
@@ -163,7 +183,8 @@ class _ManagementListPageState extends State<ManagementListPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("An error occurred: $error")),
       );
-    }
+    }}
+
   }
 
   void _showDeleteDialog(String managementId, String managementName) {
